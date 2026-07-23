@@ -28,7 +28,13 @@ import ItineraryPage from "./Pages/ItineraryPage.jsx";
 
 import Login from "./Pages/Login.jsx";
 import { PackageProvider } from "./Context/PackageContext.jsx";
-import Profile, { BookingsTab, EnquiriesTab, OverviewTab, SavedTab, SettingsTab } from "./Components/ProfileDropdown/Profile.jsx";
+import Profile, {
+  BookingsTab,
+  EnquiriesTab,
+  OverviewTab,
+  SavedTab,
+  SettingsTab,
+} from "./Components/ProfileDropdown/Profile.jsx";
 import ProfilePopup from "./Components/Profile/Profile.jsx";
 import AdminInquiries from "./Pages/Admin/AdminInquiries.jsx";
 import { GiOak } from "react-icons/gi";
@@ -38,6 +44,10 @@ import GoaBeachShacks from "./Pages/Domestic/Goa/Goabeachshacks.jsx";
 import LocationDetail from "./Pages/Domestic/Maharashtra/Locationdetail.jsx";
 import GoaWaterSports from "./Pages/Domestic/Goa/Goawatersports.jsx";
 import GoaVillasHomestays from "./Pages/Domestic/Goa/Goavillashomestays.jsx";
+import Trainsearch from "./Pages/IRCTC/Trainsearch.jsx";
+import SearchPage from "./Pages/Hotel/Staysearch.jsx";
+import StayListPage from "./Pages/Hotel/Staylistpage.jsx";
+import HotelDetailsPage from "./Pages/Hotel/Hoteldetailspage.jsx";
 /* Lazy Pages */
 const Start = lazy(() => import("./Pages/Start"));
 const CustomTourP = lazy(() => import("./Pages/Packages/CustomTourP"));
@@ -53,13 +63,11 @@ const Maharashtra = lazy(() => import("./Pages/Domestic/Maharashtra"));
 const App = () => {
   return (
     <>
-      <Header />
-      
+      {/* <Header /> */}
 
       <PackageProvider>
         <Suspense fallback={<div className="loading">Loading...</div>}>
           <Routes>
-
             {/* Landing */}
             <Route path="/" element={<Start />} />
             <Route path="/services" element={<Services />} />
@@ -76,7 +84,10 @@ const App = () => {
             <Route path="/custom-tours" element={<CustomTourP />} />
 
             {/* Package Details */}
-            <Route path="/package/:type/:location" element={<ItineraryPage />} />
+            <Route
+              path="/package/:type/:location"
+              element={<ItineraryPage />}
+            />
 
             {/* Legacy redirect */}
             <Route
@@ -110,7 +121,7 @@ const App = () => {
             <Route path="/maharashtra" element={<Maharashtra />} />
 
             {/* Maharashtra */}
-            <Route path="/Goa" element={<Goa/>} />
+            <Route path="/Goa" element={<Goa />} />
             <Route path="/profile" element={<Profile />} />
             {/* Goa */}
             <Route path="/stay" element={<GoaStay />} />
@@ -123,13 +134,21 @@ const App = () => {
             {/* <Route path="/overview" element={<OverviewTab />} /> */}
             <Route path="/bookings" element={<BookingsTab />} />
             <Route path="/enquiries" element={<EnquiriesTab />} />
-          <Route path="/saved" element={<SavedTab />} />
+            <Route path="/saved" element={<SavedTab />} />
             <Route path="/settings" element={<SettingsTab />} />
 
- 
+            {/*   IRCTC */}
+
+            <Route path="/trains" element={<Trainsearch />} />
+            <Route path="/hotel" element={<SearchPage />} />
+            <Route path="/stays" element={<StayListPage />} />
+            <Route
+              path="/stays/hotel/:hotelId"
+              element={<HotelDetailsPage />}
+            />
+
             {/* 404 */}
             <Route path="*" element={<PageNotFound />} />
-
           </Routes>
         </Suspense>
       </PackageProvider>

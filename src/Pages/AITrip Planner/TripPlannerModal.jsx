@@ -4,7 +4,7 @@ import {
   searchAreas,
   getPlaceDetails,
   highlightMatch,
-} from '../../Data/destination.js';
+} from '../../utils/places.js';
 import api from '../../utils/api.js';
 
 const TP_STYLES = `
@@ -562,39 +562,43 @@ export default function TripPlannerModal({ open, onClose, onItinerary }) {
   }
 
   async function submit() {
-  const err = validate(3);
-  if (Object.keys(err).length) { setErrors(err); return; }
-  setErrors({});
-  setLoading(true);
-  try {
-    const res = await api.post('/plan-trip', {
-      destination: dest.value.trim(),
-      area: area.value.trim(),
-      checkin,
-      checkout,
-      travelers,
-      tripType,
-      pace,
-      diet,
-      budget,
-    });
+    const err = validate(3);
+    if (Object.keys(err).length) { setErrors(err); return; }
+    setErrors({});
+    setLoading(true);
+    try {
+      const res = await api.post('/plan-trip', {
+        destination: dest.value.trim(),
+        area: area.value.trim(),
+        checkin,
+        checkout,
+        travelers,
+        tripType,
+        pace,
+        diet,
+        budget,
+      });
 
-    const data = await res.json();
+      const data = res.data; // axios already parses JSON — no res.json(), no res.ok
 
-    if (!res.ok || !data.success) {
-      setErrors({ api: data.errors?.join(', ') || data.error || 'Something went wrong' });
+      if (!data.success) {
+        setErrors({ api: data.errors?.join(', ') || data.error || 'Something went wrong' });
+        setLoading(false);
+        return;
+      }
+
+      onItinerary(data.itinerary);
+      onClose();
+    } catch (e) {
+      console.error('[plan-trip] request failed:', e);
+      const msg =
+        e.response?.data?.error ||
+        e.response?.data?.errors?.join(', ') ||
+        'Network error. Is the server running on port 5000?';
+      setErrors({ api: msg });
       setLoading(false);
-      return;
     }
-
-    onItinerary(data.itinerary);
-    onClose();
-  } catch (e) {
-    console.error('[plan-trip] request failed:', e);
-    setErrors({ api: 'Network error. Is the server running on port 5000?' });
-    setLoading(false);
   }
-}
 
   // ── Dropdown ──────────────────────────────────────────────────────────────
   function Dropdown({ ac, onPick }) {

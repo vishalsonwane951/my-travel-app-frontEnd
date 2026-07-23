@@ -7,6 +7,7 @@ import PackageContext from "../../Context/PackageContext";
 import { FaSearch, FaArrowUp, FaPhone, FaEnvelope, FaWhatsapp, FaFilter, FaTimes, FaSortAmountDown, FaThLarge, FaList, FaStar, FaMapMarkerAlt, FaArrowRight } from "react-icons/fa";
 // import Header from "../../Components/Header/Header";
 import api from '../../utils/api.js'
+import Header from "../../Components/Header/Header.jsx";
 
 // ── Skeleton Card ─────────────────────────────────────────────────────────────
 const SkeletonCard = () => (
@@ -198,6 +199,7 @@ const BaseTourPage = () => {
 
   return (
     <>
+    <Header/>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap');
         :root {

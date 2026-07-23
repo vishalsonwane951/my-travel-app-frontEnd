@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Header from '../Components/Header/Header';
 import PackageContext from '../Context/PackageContext';
 import NewsletterSubscribe from '../Components/Newslettersubscribe';
+import header from '../Components/Header/Header'
 
 const useCountUp = (target, duration = 2000) => {
   const [count, setCount] = useState(0);
@@ -170,6 +171,7 @@ export default function Services() {
 
   return (
     <>
+    <Header/>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600&display=swap');
 

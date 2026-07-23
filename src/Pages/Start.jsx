@@ -24,6 +24,8 @@ import TripPlannerModal from '../Pages/AITrip Planner/TripPlannerModal.jsx';
 import ItineraryResult from '../Components/ItineraryResult.jsx';
 import NewsletterSubscribe from '../Components/Newslettersubscribe.jsx';
 import ItineraryTimeline from './AITrip Planner/Itinerarytimeline.jsx';
+import HotelHeader from './Hotel/component/Header.jsx';
+import Header from '../Components/Header/Header.jsx';
 
 // ─── FIX 1: Lazy-load heavy sections (code splitting) ─────────
 const Domestic = lazy(() => import('./Domestic.jsx'));
@@ -704,7 +706,9 @@ const WidgetsRow = React.memo(() => {
   }, [amount, rates, toCurrency]);
 
   return (
+    
     <div style={{ maxWidth: 1400, margin: '0 auto', padding: '40px 24px 0' }}>
+              <HotelHeader/>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: 20 }}>
         <div className="weather-card">
           <div style={{ fontSize: '0.75rem', fontFamily: 'Outfit', letterSpacing: 2, textTransform: 'uppercase', opacity: 0.7, marginBottom: 12 }}>Travel Weather</div>
@@ -1221,6 +1225,8 @@ function Start() {
 
   return (
     <>
+    <Header/>
+    <HotelHeader/>
       <GlobalStyles />
 
       {/* Alert Toast */}
