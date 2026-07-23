@@ -9,7 +9,7 @@ import {
 } from 'react-icons/fa';
 import api from '../../utils/api.js';
 import { AuthContext } from '../../Context/AuthContext.jsx';
-import TrainBookingModal from './TrainBookingModal.jsx';
+import TrainBookingModal from '../../Services/IRCTC/IRCTC.listModel.js';
 import HotelHeader from '../Hotel/component/Header.jsx';
 import Header from '../../Components/Header/Header.jsx';
 
