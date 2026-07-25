@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback, useRef, useContext } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useContext,
+} from "react";
 import { createPortal } from "react-dom";
 import { AuthContext } from "../Context/AuthContext";
 import api from "../utils/api";
@@ -37,7 +43,7 @@ const LoginRegister = ({ onClose }) => {
 
   // Handle mode switch with animation
   const toggleMode = useCallback(() => {
-    setAnimationDirection(isLogin ? 'to-register' : 'to-login');
+    setAnimationDirection(isLogin ? "to-register" : "to-login");
     setIsAnimating(true);
 
     setTimeout(() => {
@@ -76,15 +82,16 @@ const LoginRegister = ({ onClose }) => {
 
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    setErrors(prev => ({ ...prev, [name]: "" }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
     setBackendError("");
   }, []);
 
   const validateLogin = useCallback(() => {
     const newErrors = {};
     if (!formData.email.trim()) newErrors.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Invalid email format";
+    else if (!/\S+@\S+\.\S+/.test(formData.email))
+      newErrors.email = "Invalid email format";
 
     if (loginMethod === "password" && !formData.password.trim()) {
       newErrors.password = "Password is required";
@@ -103,11 +110,14 @@ const LoginRegister = ({ onClose }) => {
     const newErrors = {};
     if (!formData.name.trim()) newErrors.name = "Name is required";
     if (!formData.email.trim()) newErrors.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Invalid email format";
+    else if (!/\S+@\S+\.\S+/.test(formData.email))
+      newErrors.email = "Invalid email format";
     if (!formData.password.trim()) newErrors.password = "Password is required";
-    else if (formData.password.length < 6) newErrors.password = "Minimum 6 characters";
+    else if (formData.password.length < 6)
+      newErrors.password = "Minimum 6 characters";
     if (!formData.mobile.trim()) newErrors.mobile = "Mobile is required";
-    else if (!/^\d{10}$/.test(formData.mobile)) newErrors.mobile = "10 digits required";
+    else if (!/^\d{10}$/.test(formData.mobile))
+      newErrors.mobile = "10 digits required";
     if (!formData.city.trim()) newErrors.city = "City is required";
     return newErrors;
   }, [formData]);
@@ -120,8 +130,8 @@ const LoginRegister = ({ onClose }) => {
 
     try {
       setIsSubmitting(true);
-      const res = await api.post('/users/generate-login-otp', {
-        email: formData.email
+      const res = await api.post("/users/generate-login-otp", {
+        email: formData.email,
       });
 
       if (res.data.success) {
@@ -139,86 +149,92 @@ const LoginRegister = ({ onClose }) => {
     }
   }, [formData.email]);
 
-  const handleLogin = useCallback(async (e) => {
-    e.preventDefault();
-    setErrors({});
-    setBackendError("");
+  const handleLogin = useCallback(
+    async (e) => {
+      e.preventDefault();
+      setErrors({});
+      setBackendError("");
 
-    const validationErrors = validateLogin();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      let res;
-      if (loginMethod === "password") {
-        res = await api.post('/users/login', {
-          email: formData.email,
-          password: formData.password
-        });
-      } else {
-        res = await api.post('/users/login', {
-          email: formData.email,
-          otp: formData.otp
-        });
+      const validationErrors = validateLogin();
+      if (Object.keys(validationErrors).length > 0) {
+        setErrors(validationErrors);
+        return;
       }
 
-      const { token, user } = res.data;
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
-      login(user, token);
+      setIsSubmitting(true);
 
-      setSuccessMsg("Login successful! Redirecting...");
-      setTimeout(() => onClose(), 1500);
-    } catch (err) {
-      setBackendError(err.response?.data?.message || "Invalid credentials");
-    } finally {
-      setIsSubmitting(false);
-    }
-  }, [formData, loginMethod, validateLogin, login, onClose]);
+      try {
+        let res;
+        if (loginMethod === "password") {
+          res = await api.post("/users/login", {
+            email: formData.email,
+            password: formData.password,
+          });
+        } else {
+          res = await api.post("/users/login", {
+            email: formData.email,
+            otp: formData.otp,
+          });
+        }
 
-  const handleRegister = useCallback(async (e) => {
-    e.preventDefault();
-    setErrors({});
-    setBackendError("");
+        const { token, user } = res.data;
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
+        login(user, token);
 
-    const validationErrors = validateRegister();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      const res = await api.post("/users/register", {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-        mobile: formData.mobile,
-        city: formData.city,
-      });
-
-      if (res.data.success) {
-        setSuccessMsg("Registration successful! Redirecting to login...");
-        setTimeout(() => {
-          toggleMode();
-        }, 1500);
+        setSuccessMsg("Login successful! Redirecting...");
+        setTimeout(() => onClose(), 1500);
+      } catch (err) {
+        setBackendError(err.response?.data?.message || "Invalid credentials");
+      } finally {
+        setIsSubmitting(false);
       }
-    } catch (err) {
-      setBackendError(err.response?.data?.message || "Registration failed");
-    } finally {
-      setIsSubmitting(false);
-    }
-  }, [formData, validateRegister, toggleMode]);
+    },
+    [formData, loginMethod, validateLogin, login, onClose],
+  );
+
+  const handleRegister = useCallback(
+    async (e) => {
+      e.preventDefault();
+      setErrors({});
+      setBackendError("");
+
+      const validationErrors = validateRegister();
+      if (Object.keys(validationErrors).length > 0) {
+        setErrors(validationErrors);
+        return;
+      }
+
+      setIsSubmitting(true);
+
+      try {
+        const res = await api.post("/users/register", {
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          mobile: formData.mobile,
+          city: formData.city,
+        });
+
+        if (res.data.success) {
+          setSuccessMsg("Registration successful! Redirecting to login...");
+          setTimeout(() => {
+            toggleMode();
+          }, 1500);
+        }
+      } catch (err) {
+        setBackendError(err.response?.data?.message || "Registration failed");
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [formData, validateRegister, toggleMode],
+  );
 
   const switchToPasswordLogin = useCallback(() => {
     setLoginMethod("password");
     setOtpSent(false);
-    setFormData(prev => ({ ...prev, otp: "" }));
+    setFormData((prev) => ({ ...prev, otp: "" }));
   }, []);
 
   // Responsive styles based on screen size
@@ -226,8 +242,8 @@ const LoginRegister = ({ onClose }) => {
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize, { passive: true });
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize, { passive: true });
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const isMobile = windowWidth < 768;
@@ -236,14 +252,14 @@ const LoginRegister = ({ onClose }) => {
   const getLeftPanelAnimation = () => {
     if (!isAnimating) return {};
 
-    if (animationDirection === 'to-register') {
+    if (animationDirection === "to-register") {
       return {
-        transform: isMobile ? 'translateY(-100%)' : 'translateX(-100%)',
+        transform: isMobile ? "translateY(-100%)" : "translateX(-100%)",
         opacity: 0,
       };
-    } else if (animationDirection === 'to-login') {
+    } else if (animationDirection === "to-login") {
       return {
-        transform: isMobile ? 'translateY(100%)' : 'translateX(100%)',
+        transform: isMobile ? "translateY(100%)" : "translateX(100%)",
         opacity: 0,
       };
     }
@@ -253,14 +269,14 @@ const LoginRegister = ({ onClose }) => {
   const getRightPanelAnimation = () => {
     if (!isAnimating) return {};
 
-    if (animationDirection === 'to-register') {
+    if (animationDirection === "to-register") {
       return {
-        transform: isMobile ? 'translateY(100%)' : 'translateX(100%)',
+        transform: isMobile ? "translateY(100%)" : "translateX(100%)",
         opacity: 0,
       };
-    } else if (animationDirection === 'to-login') {
+    } else if (animationDirection === "to-login") {
       return {
-        transform: isMobile ? 'translateY(-100%)' : 'translateX(-100%)',
+        transform: isMobile ? "translateY(-100%)" : "translateX(-100%)",
         opacity: 0,
       };
     }
@@ -309,7 +325,7 @@ const LoginRegister = ({ onClose }) => {
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      order: isMobile ? (isLogin ? 1 : 2) : (isLogin ? 1 : 2),
+      order: isMobile ? (isLogin ? 1 : 2) : isLogin ? 1 : 2,
       ...getLeftPanelAnimation(),
     },
     leftContent: {
@@ -360,8 +376,12 @@ const LoginRegister = ({ onClose }) => {
       justifyContent: "center",
       padding: isMobile ? "20px" : "40px",
       position: "relative",
-      height: isMobile ? (isLogin ? "calc(100% - 200px)" : "calc(100% - 250px)") : "100%",
-      order: isMobile ? (isLogin ? 2 : 1) : (isLogin ? 2 : 1),
+      height: isMobile
+        ? isLogin
+          ? "calc(100% - 200px)"
+          : "calc(100% - 250px)"
+        : "100%",
+      order: isMobile ? (isLogin ? 2 : 1) : isLogin ? 2 : 1,
       transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
       ...getRightPanelAnimation(),
     },
@@ -685,13 +705,19 @@ const LoginRegister = ({ onClose }) => {
                       onChange={handleChange}
                       style={{
                         ...styles.input,
-                        borderColor: errors.email ? "#ef4444" : focusedField === 'email' ? "#4158D0" : "#e2e8f0",
+                        borderColor: errors.email
+                          ? "#ef4444"
+                          : focusedField === "email"
+                            ? "#4158D0"
+                            : "#e2e8f0",
                       }}
-                      onFocus={() => setFocusedField('email')}
+                      onFocus={() => setFocusedField("email")}
                       onBlur={() => setFocusedField(null)}
                     />
                   </div>
-                  {errors.email && <span style={styles.fieldError}>{errors.email}</span>}
+                  {errors.email && (
+                    <span style={styles.fieldError}>{errors.email}</span>
+                  )}
                 </div>
 
                 {loginMethod === "otp" && otpSent ? (
@@ -717,7 +743,9 @@ const LoginRegister = ({ onClose }) => {
                           {countdown > 0 ? `Resend (${countdown}s)` : "Resend"}
                         </button>
                       </div>
-                      {errors.otp && <span style={styles.fieldError}>{errors.otp}</span>}
+                      {errors.otp && (
+                        <span style={styles.fieldError}>{errors.otp}</span>
+                      )}
                     </div>
                     <button
                       type="button"
@@ -740,9 +768,13 @@ const LoginRegister = ({ onClose }) => {
                           onChange={handleChange}
                           style={{
                             ...styles.input,
-                            borderColor: errors.password ? "#ef4444" : focusedField === 'password' ? "#4158D0" : "#e2e8f0",
+                            borderColor: errors.password
+                              ? "#ef4444"
+                              : focusedField === "password"
+                                ? "#4158D0"
+                                : "#e2e8f0",
                           }}
-                          onFocus={() => setFocusedField('password')}
+                          onFocus={() => setFocusedField("password")}
                           onBlur={() => setFocusedField(null)}
                         />
                         <button
@@ -753,7 +785,9 @@ const LoginRegister = ({ onClose }) => {
                           {showPassword ? "👁️" : "👁️‍🗨️"}
                         </button>
                       </div>
-                      {errors.password && <span style={styles.fieldError}>{errors.password}</span>}
+                      {errors.password && (
+                        <span style={styles.fieldError}>{errors.password}</span>
+                      )}
                     </div>
 
                     <div style={styles.otpContainer}>
@@ -782,13 +816,15 @@ const LoginRegister = ({ onClose }) => {
                   onMouseEnter={(e) => {
                     if (!isSubmitting) {
                       e.target.style.transform = "translateY(-2px)";
-                      e.target.style.boxShadow = "0 15px 30px rgba(65, 88, 208, 0.4)";
+                      e.target.style.boxShadow =
+                        "0 15px 30px rgba(65, 88, 208, 0.4)";
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!isSubmitting) {
                       e.target.style.transform = "translateY(0)";
-                      e.target.style.boxShadow = "0 10px 25px rgba(65, 88, 208, 0.3)";
+                      e.target.style.boxShadow =
+                        "0 10px 25px rgba(65, 88, 208, 0.3)";
                     }
                   }}
                 >
@@ -807,12 +843,18 @@ const LoginRegister = ({ onClose }) => {
                     onChange={handleChange}
                     style={{
                       ...styles.input,
-                      borderColor: errors.name ? "#ef4444" : focusedField === 'name' ? "#4158D0" : "#e2e8f0",
+                      borderColor: errors.name
+                        ? "#ef4444"
+                        : focusedField === "name"
+                          ? "#4158D0"
+                          : "#e2e8f0",
                     }}
-                    onFocus={() => setFocusedField('name')}
+                    onFocus={() => setFocusedField("name")}
                     onBlur={() => setFocusedField(null)}
                   />
-                  {errors.name && <span style={styles.fieldError}>{errors.name}</span>}
+                  {errors.name && (
+                    <span style={styles.fieldError}>{errors.name}</span>
+                  )}
                 </div>
 
                 <div style={styles.inputGroup}>
@@ -825,12 +867,18 @@ const LoginRegister = ({ onClose }) => {
                     onChange={handleChange}
                     style={{
                       ...styles.input,
-                      borderColor: errors.email ? "#ef4444" : focusedField === 'email' ? "#4158D0" : "#e2e8f0",
+                      borderColor: errors.email
+                        ? "#ef4444"
+                        : focusedField === "email"
+                          ? "#4158D0"
+                          : "#e2e8f0",
                     }}
-                    onFocus={() => setFocusedField('email')}
+                    onFocus={() => setFocusedField("email")}
                     onBlur={() => setFocusedField(null)}
                   />
-                  {errors.email && <span style={styles.fieldError}>{errors.email}</span>}
+                  {errors.email && (
+                    <span style={styles.fieldError}>{errors.email}</span>
+                  )}
                 </div>
 
                 <div style={styles.inputGroup}>
@@ -844,9 +892,13 @@ const LoginRegister = ({ onClose }) => {
                       onChange={handleChange}
                       style={{
                         ...styles.input,
-                        borderColor: errors.password ? "#ef4444" : focusedField === 'password' ? "#4158D0" : "#e2e8f0",
+                        borderColor: errors.password
+                          ? "#ef4444"
+                          : focusedField === "password"
+                            ? "#4158D0"
+                            : "#e2e8f0",
                       }}
-                      onFocus={() => setFocusedField('password')}
+                      onFocus={() => setFocusedField("password")}
                       onBlur={() => setFocusedField(null)}
                     />
                     <button
@@ -857,7 +909,9 @@ const LoginRegister = ({ onClose }) => {
                       {showPassword ? "👁️" : "👁️‍🗨️"}
                     </button>
                   </div>
-                  {errors.password && <span style={styles.fieldError}>{errors.password}</span>}
+                  {errors.password && (
+                    <span style={styles.fieldError}>{errors.password}</span>
+                  )}
                 </div>
 
                 <div style={styles.row}>
@@ -872,12 +926,18 @@ const LoginRegister = ({ onClose }) => {
                       maxLength="10"
                       style={{
                         ...styles.input,
-                        borderColor: errors.mobile ? "#ef4444" : focusedField === 'mobile' ? "#4158D0" : "#e2e8f0",
+                        borderColor: errors.mobile
+                          ? "#ef4444"
+                          : focusedField === "mobile"
+                            ? "#4158D0"
+                            : "#e2e8f0",
                       }}
-                      onFocus={() => setFocusedField('mobile')}
+                      onFocus={() => setFocusedField("mobile")}
                       onBlur={() => setFocusedField(null)}
                     />
-                    {errors.mobile && <span style={styles.fieldError}>{errors.mobile}</span>}
+                    {errors.mobile && (
+                      <span style={styles.fieldError}>{errors.mobile}</span>
+                    )}
                   </div>
 
                   <div style={styles.halfInputGroup}>
@@ -890,12 +950,18 @@ const LoginRegister = ({ onClose }) => {
                       onChange={handleChange}
                       style={{
                         ...styles.input,
-                        borderColor: errors.city ? "#ef4444" : focusedField === 'city' ? "#4158D0" : "#e2e8f0",
+                        borderColor: errors.city
+                          ? "#ef4444"
+                          : focusedField === "city"
+                            ? "#4158D0"
+                            : "#e2e8f0",
                       }}
-                      onFocus={() => setFocusedField('city')}
+                      onFocus={() => setFocusedField("city")}
                       onBlur={() => setFocusedField(null)}
                     />
-                    {errors.city && <span style={styles.fieldError}>{errors.city}</span>}
+                    {errors.city && (
+                      <span style={styles.fieldError}>{errors.city}</span>
+                    )}
                   </div>
                 </div>
 
@@ -906,13 +972,15 @@ const LoginRegister = ({ onClose }) => {
                   onMouseEnter={(e) => {
                     if (!isSubmitting) {
                       e.target.style.transform = "translateY(-2px)";
-                      e.target.style.boxShadow = "0 15px 30px rgba(65, 88, 208, 0.4)";
+                      e.target.style.boxShadow =
+                        "0 15px 30px rgba(65, 88, 208, 0.4)";
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!isSubmitting) {
                       e.target.style.transform = "translateY(0)";
-                      e.target.style.boxShadow = "0 10px 25px rgba(65, 88, 208, 0.3)";
+                      e.target.style.boxShadow =
+                        "0 10px 25px rgba(65, 88, 208, 0.3)";
                     }
                   }}
                 >
@@ -923,7 +991,9 @@ const LoginRegister = ({ onClose }) => {
 
             <div style={styles.footer}>
               <p style={styles.footerText}>
-                {isLogin ? "Don't have an account?" : "Already have an account?"}
+                {isLogin
+                  ? "Don't have an account?"
+                  : "Already have an account?"}
                 <button
                   style={styles.footerLink}
                   onClick={toggleMode}
@@ -1034,7 +1104,7 @@ const LoginRegister = ({ onClose }) => {
         }
       `}</style>
     </div>,
-    document.body
+    document.body,
   );
 };
 

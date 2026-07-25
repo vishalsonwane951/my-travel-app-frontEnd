@@ -26,7 +26,17 @@
 //    <LocationMap lat={28.6139} lng={77.2090} title="New Delhi" height={220} compact />
 
 import React, { useState, useCallback, useRef } from "react";
-import { FaMapMarkerAlt, FaDirections, FaExternalLinkAlt, FaCopy, FaCheck, FaExpand, FaCompress, FaSatellite, FaMap } from "react-icons/fa";
+import {
+  FaMapMarkerAlt,
+  FaDirections,
+  FaExternalLinkAlt,
+  FaCopy,
+  FaCheck,
+  FaExpand,
+  FaCompress,
+  FaSatellite,
+  FaMap,
+} from "react-icons/fa";
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
 
@@ -34,9 +44,11 @@ import { FaMapMarkerAlt, FaDirections, FaExternalLinkAlt, FaCopy, FaCheck, FaExp
 function extractLatLng(url) {
   if (!url) return null;
   const atMatch = url.match(/@(-?\d+\.?\d*),(-?\d+\.?\d*)/);
-  if (atMatch) return { lat: parseFloat(atMatch[1]), lng: parseFloat(atMatch[2]) };
+  if (atMatch)
+    return { lat: parseFloat(atMatch[1]), lng: parseFloat(atMatch[2]) };
   const llMatch = url.match(/[?&](?:ll|center|q)=(-?\d+\.?\d*),(-?\d+\.?\d*)/);
-  if (llMatch) return { lat: parseFloat(llMatch[1]), lng: parseFloat(llMatch[2]) };
+  if (llMatch)
+    return { lat: parseFloat(llMatch[1]), lng: parseFloat(llMatch[2]) };
   return null;
 }
 
@@ -44,79 +56,58 @@ function extractLatLng(url) {
 
 const THEMES = {
   navy: {
-    header:        "#1A2340",
-    headerBorder:  "rgba(255,255,255,0.10)",
-    titleColor:    "#ffffff",
+    header: "#1A2340",
+    headerBorder: "rgba(255,255,255,0.10)",
+    titleColor: "#ffffff",
     subtitleColor: "rgba(255,255,255,0.55)",
-    chipBg:        "rgba(255,255,255,0.10)",
-    chipColor:     "rgba(255,255,255,0.75)",
-    chipHover:     "rgba(255,255,255,0.20)",
-    chipBorder:    "rgba(255,255,255,0.18)",
-    pinColor:      "#F04B5A",
-    cardBorder:    "#E5E7EB",
-    cardShadow:    "0 4px 24px rgba(0,0,0,0.10)",
-    footerBg:      "#F5F6F8",
-    footerColor:   "#6B7280",
-    expandBg:      "rgba(26,35,64,0.85)",
-    expandColor:   "#fff",
+    chipBg: "rgba(255,255,255,0.10)",
+    chipColor: "rgba(255,255,255,0.75)",
+    chipHover: "rgba(255,255,255,0.20)",
+    chipBorder: "rgba(255,255,255,0.18)",
+    pinColor: "#F04B5A",
+    cardBorder: "#E5E7EB",
+    cardShadow: "0 4px 24px rgba(0,0,0,0.10)",
+    footerBg: "#F5F6F8",
+    footerColor: "#6B7280",
+    expandBg: "rgba(26,35,64,0.85)",
+    expandColor: "#fff",
   },
   light: {
-    header:        "#ffffff",
-    headerBorder:  "#E5E7EB",
-    titleColor:    "#111827",
+    header: "#ffffff",
+    headerBorder: "#E5E7EB",
+    titleColor: "#111827",
     subtitleColor: "#6B7280",
-    chipBg:        "#F3F4F6",
-    chipColor:     "#374151",
-    chipHover:     "#E5E7EB",
-    chipBorder:    "#E5E7EB",
-    pinColor:      "#F04B5A",
-    cardBorder:    "#E5E7EB",
-    cardShadow:    "0 4px 24px rgba(0,0,0,0.07)",
-    footerBg:      "#F9FAFB",
-    footerColor:   "#9CA3AF",
-    expandBg:      "rgba(17,24,39,0.80)",
-    expandColor:   "#fff",
+    chipBg: "#F3F4F6",
+    chipColor: "#374151",
+    chipHover: "#E5E7EB",
+    chipBorder: "#E5E7EB",
+    pinColor: "#F04B5A",
+    cardBorder: "#E5E7EB",
+    cardShadow: "0 4px 24px rgba(0,0,0,0.07)",
+    footerBg: "#F9FAFB",
+    footerColor: "#9CA3AF",
+    expandBg: "rgba(17,24,39,0.80)",
+    expandColor: "#fff",
   },
   dark: {
-    header:        "#111827",
-    headerBorder:  "rgba(255,255,255,0.08)",
-    titleColor:    "#F9FAFB",
+    header: "#111827",
+    headerBorder: "rgba(255,255,255,0.08)",
+    titleColor: "#F9FAFB",
     subtitleColor: "rgba(249,250,251,0.50)",
-    chipBg:        "rgba(255,255,255,0.07)",
-    chipColor:     "rgba(249,250,251,0.70)",
-    chipHover:     "rgba(255,255,255,0.15)",
-    chipBorder:    "rgba(255,255,255,0.12)",
-    pinColor:      "#F04B5A",
-    cardBorder:    "#374151",
-    cardShadow:    "0 4px 24px rgba(0,0,0,0.30)",
-    footerBg:      "#1F2937",
-    footerColor:   "#6B7280",
-    expandBg:      "rgba(0,0,0,0.85)",
-    expandColor:   "#fff",
+    chipBg: "rgba(255,255,255,0.07)",
+    chipColor: "rgba(249,250,251,0.70)",
+    chipHover: "rgba(255,255,255,0.15)",
+    chipBorder: "rgba(255,255,255,0.12)",
+    pinColor: "#F04B5A",
+    cardBorder: "#374151",
+    cardShadow: "0 4px 24px rgba(0,0,0,0.30)",
+    footerBg: "#1F2937",
+    footerColor: "#6B7280",
+    expandBg: "rgba(0,0,0,0.85)",
+    expandColor: "#fff",
   },
 };
 
-// ─── LocationMap ──────────────────────────────────────────────────────────────
-
-/**
- * LocationMap — reusable Google Maps embed component
- *
- * Props:
- *   lat            {number}   — latitude  (preferred)
- *   lng            {number}   — longitude (preferred)
- *   locationUrl    {string}   — Google Maps share URL (fallback if no lat/lng)
- *   title          {string}   — location name shown in header
- *   subtitle       {string}   — secondary line (e.g. "Rajasthan, India")
- *   height         {number}   — iframe height in px  (default: 340)
- *   zoom           {number}   — map zoom level 1–20  (default: 13)
- *   theme          {string}   — "navy" | "light" | "dark"  (default: "navy")
- *   compact        {boolean}  — hides footer bar
- *   showDirections {boolean}  — show "Get Directions" chip
- *   showCopyCoords {boolean}  — show copy-coordinates chip
- *   className      {string}   — extra wrapper class
- *   style          {object}   — extra wrapper style
- *   apiKey         {string}   — Google Maps Embed API key (optional; uses no-key fallback if omitted)
- */
 export default function LocationMap({
   lat,
   lng,
@@ -129,7 +120,7 @@ export default function LocationMap({
   compact = false,
   showDirections = true,
   showCopyCoords = false,
-  defaultView = "roadmap",   // "roadmap" | "satellite"
+  defaultView = "roadmap", // "roadmap" | "satellite"
   className = "",
   style = {},
   apiKey,
@@ -137,22 +128,23 @@ export default function LocationMap({
   const tk = THEMES[theme] || THEMES.navy;
 
   // resolve coordinates
-  const resolved = (lat != null && lng != null)
-    ? { lat, lng }
-    : extractLatLng(locationUrl);
+  const resolved =
+    lat != null && lng != null ? { lat, lng } : extractLatLng(locationUrl);
 
-  const [copied, setCopied]         = useState(false);
-  const [expanded, setExpanded]     = useState(false);
-  const [mapLoaded, setMapLoaded]   = useState(false);
-  const [mapView, setMapView]       = useState(defaultView); // "roadmap" | "satellite"
-  const iframeRef                   = useRef(null);
+  const [copied, setCopied] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [mapLoaded, setMapLoaded] = useState(false);
+  const [mapView, setMapView] = useState(defaultView); // "roadmap" | "satellite"
+  const iframeRef = useRef(null);
 
   const handleCopy = useCallback(() => {
     if (!resolved) return;
-    navigator.clipboard.writeText(`${resolved.lat}, ${resolved.lng}`).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
+    navigator.clipboard
+      .writeText(`${resolved.lat}, ${resolved.lng}`)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      });
   }, [resolved]);
 
   // ── no coords → graceful empty state ──────────────────────────────────────
@@ -191,7 +183,7 @@ export default function LocationMap({
     return `https://maps.google.com/maps?q=${resolved.lat},${resolved.lng}&z=${zoom}&t=${mapType}&output=embed`;
   };
 
-  const iframeSrc   = buildSrc(mapView);
+  const iframeSrc = buildSrc(mapView);
   const expandedSrc = buildSrc(mapView);
 
   const googleMapsUrl = `https://www.google.com/maps?q=${resolved.lat},${resolved.lng}`;
@@ -220,16 +212,28 @@ export default function LocationMap({
     };
     if (href) {
       return (
-        <a href={href} target="_blank" rel="noreferrer" title={chipTitle} style={shared}
-          onMouseOver={() => setHovered(true)} onMouseOut={() => setHovered(false)}>
+        <a
+          href={href}
+          target="_blank"
+          rel="noreferrer"
+          title={chipTitle}
+          style={shared}
+          onMouseOver={() => setHovered(true)}
+          onMouseOut={() => setHovered(false)}
+        >
           {icon} {label}
         </a>
       );
     }
     return (
-      <button type="button" title={chipTitle} style={{ ...shared, outline: "none" }}
+      <button
+        type="button"
+        title={chipTitle}
+        style={{ ...shared, outline: "none" }}
         onClick={onClick}
-        onMouseOver={() => setHovered(true)} onMouseOut={() => setHovered(false)}>
+        onMouseOver={() => setHovered(true)}
+        onMouseOut={() => setHovered(false)}
+      >
         {icon} {label}
       </button>
     );
@@ -238,63 +242,136 @@ export default function LocationMap({
   // ── expand / fullscreen overlay ────────────────────────────────────────────
   const ExpandedOverlay = () => (
     <div
-      onClick={e => { if (e.target === e.currentTarget) setExpanded(false); }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) setExpanded(false);
+      }}
       style={{
-        position: "fixed", inset: 0, zIndex: 9999,
+        position: "fixed",
+        inset: 0,
+        zIndex: 9999,
         background: "rgba(0,0,0,0.80)",
         backdropFilter: "blur(8px)",
-        display: "flex", alignItems: "center", justifyContent: "center",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
         padding: "1.5rem",
         animation: "lm-fade-in .2s ease both",
       }}
     >
-      <div style={{
-        width: "100%", maxWidth: 1100,
-        borderRadius: 20, overflow: "hidden",
-        boxShadow: "0 40px 100px rgba(0,0,0,0.5)",
-        display: "flex", flexDirection: "column",
-        maxHeight: "90vh",
-      }}>
+      <div
+        style={{
+          width: "100%",
+          maxWidth: 1100,
+          borderRadius: 20,
+          overflow: "hidden",
+          boxShadow: "0 40px 100px rgba(0,0,0,0.5)",
+          display: "flex",
+          flexDirection: "column",
+          maxHeight: "90vh",
+        }}
+      >
         {/* header */}
-        <div style={{
-          background: tk.header,
-          borderBottom: `1px solid ${tk.headerBorder}`,
-          padding: "14px 20px",
-          display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap",
-        }}>
+        <div
+          style={{
+            background: tk.header,
+            borderBottom: `1px solid ${tk.headerBorder}`,
+            padding: "14px 20px",
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            flexWrap: "wrap",
+          }}
+        >
           <FaMapMarkerAlt size={14} color={tk.pinColor} />
-          <span style={{ color: tk.titleColor, fontWeight: 700, fontSize: ".95rem", flex: 1 }}>
-            {title}{subtitle && <span style={{ color: tk.subtitleColor, fontWeight: 400, marginLeft: 8, fontSize: ".82rem" }}>{subtitle}</span>}
+          <span
+            style={{
+              color: tk.titleColor,
+              fontWeight: 700,
+              fontSize: ".95rem",
+              flex: 1,
+            }}
+          >
+            {title}
+            {subtitle && (
+              <span
+                style={{
+                  color: tk.subtitleColor,
+                  fontWeight: 400,
+                  marginLeft: 8,
+                  fontSize: ".82rem",
+                }}
+              >
+                {subtitle}
+              </span>
+            )}
           </span>
 
           {/* view toggle in expanded overlay */}
-          <div style={{ display: "flex", background: "rgba(255,255,255,0.08)", borderRadius: 50, border: `1px solid ${tk.chipBorder}`, padding: 3, gap: 2 }}>
+          <div
+            style={{
+              display: "flex",
+              background: "rgba(255,255,255,0.08)",
+              borderRadius: 50,
+              border: `1px solid ${tk.chipBorder}`,
+              padding: 3,
+              gap: 2,
+            }}
+          >
             {[
-              { key: "roadmap",   icon: <FaMap size={10} />,      label: "Map"       },
-              { key: "satellite", icon: <FaSatellite size={10} />, label: "Satellite" },
-            ].map(v => {
+              { key: "roadmap", icon: <FaMap size={10} />, label: "Map" },
+              {
+                key: "satellite",
+                icon: <FaSatellite size={10} />,
+                label: "Satellite",
+              },
+            ].map((v) => {
               const isActive = mapView === v.key;
               return (
-                <button key={v.key} type="button"
-                  onClick={() => { setMapLoaded(false); setMapView(v.key); }}
+                <button
+                  key={v.key}
+                  type="button"
+                  onClick={() => {
+                    setMapLoaded(false);
+                    setMapView(v.key);
+                  }}
                   style={{
-                    display: "inline-flex", alignItems: "center", gap: 4,
-                    fontSize: ".72rem", fontWeight: 600, padding: "4px 10px",
-                    borderRadius: 50, border: "none", cursor: "pointer",
-                    fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 4,
+                    fontSize: ".72rem",
+                    fontWeight: 600,
+                    padding: "4px 10px",
+                    borderRadius: 50,
+                    border: "none",
+                    cursor: "pointer",
+                    fontFamily: "'DM Sans', sans-serif",
+                    whiteSpace: "nowrap",
                     transition: "all .18s",
                     background: isActive ? "#fff" : "transparent",
                     color: isActive ? "#111827" : tk.chipColor,
                     boxShadow: isActive ? "0 1px 6px rgba(0,0,0,0.18)" : "none",
                   }}
-                >{v.icon} {v.label}</button>
+                >
+                  {v.icon} {v.label}
+                </button>
               );
             })}
           </div>
 
           <button
             onClick={() => setExpanded(false)}
-            style={{ background: "rgba(255,255,255,.12)", border: "none", borderRadius: "50%", width: 32, height: 32, cursor: "pointer", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}
+            style={{
+              background: "rgba(255,255,255,.12)",
+              border: "none",
+              borderRadius: "50%",
+              width: 32,
+              height: 32,
+              cursor: "pointer",
+              color: "#fff",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
             <FaCompress size={13} />
           </button>
@@ -302,9 +379,11 @@ export default function LocationMap({
         {/* iframe */}
         <iframe
           src={expandedSrc}
-          width="100%" height="600"
+          width="100%"
+          height="600"
           style={{ border: 0, display: "block", flex: 1 }}
-          allowFullScreen loading="lazy"
+          allowFullScreen
+          loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
           title={`Map of ${title} — expanded`}
         />
@@ -335,44 +414,62 @@ export default function LocationMap({
         }}
       >
         {/* ── Header ── */}
-        <div style={{
-          background: tk.header,
-          borderBottom: `1px solid ${tk.headerBorder}`,
-          padding: "13px 18px",
-          display: "flex",
-          alignItems: "center",
-          gap: 10,
-          flexWrap: "wrap",
-          minHeight: 52,
-        }}>
-          <FaMapMarkerAlt size={13} color={tk.pinColor} style={{ flexShrink: 0 }} />
+        <div
+          style={{
+            background: tk.header,
+            borderBottom: `1px solid ${tk.headerBorder}`,
+            padding: "13px 18px",
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            flexWrap: "wrap",
+            minHeight: 52,
+          }}
+        >
+          <FaMapMarkerAlt
+            size={13}
+            color={tk.pinColor}
+            style={{ flexShrink: 0 }}
+          />
 
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{
-              color: tk.titleColor,
-              fontWeight: 700,
-              fontSize: ".9rem",
-              fontFamily: "'DM Sans', sans-serif",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}>
+            <div
+              style={{
+                color: tk.titleColor,
+                fontWeight: 700,
+                fontSize: ".9rem",
+                fontFamily: "'DM Sans', sans-serif",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
               {title}
             </div>
             {subtitle && (
-              <div style={{
-                color: tk.subtitleColor,
-                fontSize: ".72rem",
-                fontFamily: "'DM Sans', sans-serif",
-                marginTop: 1,
-              }}>
+              <div
+                style={{
+                  color: tk.subtitleColor,
+                  fontSize: ".72rem",
+                  fontFamily: "'DM Sans', sans-serif",
+                  marginTop: 1,
+                }}
+              >
                 {subtitle}
               </div>
             )}
           </div>
 
           {/* chips */}
-          <div style={{ display: "flex", gap: 6, flexShrink: 0, flexWrap: "wrap", alignItems: "center" }}>
+          <div
+            style={{
+              display: "flex",
+              gap: 6,
+              flexShrink: 0,
+              flexWrap: "wrap",
+              alignItems: "center",
+            }}
+          >
             {showDirections && (
               <Chip
                 href={directionsUrl}
@@ -385,7 +482,11 @@ export default function LocationMap({
               <Chip
                 onClick={handleCopy}
                 icon={copied ? <FaCheck size={10} /> : <FaCopy size={10} />}
-                label={copied ? "Copied!" : `${resolved.lat.toFixed(4)}, ${resolved.lng.toFixed(4)}`}
+                label={
+                  copied
+                    ? "Copied!"
+                    : `${resolved.lat.toFixed(4)}, ${resolved.lng.toFixed(4)}`
+                }
                 chipTitle="Copy coordinates"
               />
             )}
@@ -397,26 +498,35 @@ export default function LocationMap({
             />
 
             {/* ── View toggle: Roadmap / Satellite ── */}
-            <div style={{
-              display: "flex",
-              background: "rgba(255,255,255,0.08)",
-              borderRadius: 50,
-              border: `1px solid ${tk.chipBorder}`,
-              padding: 3,
-              gap: 2,
-              flexShrink: 0,
-            }}>
+            <div
+              style={{
+                display: "flex",
+                background: "rgba(255,255,255,0.08)",
+                borderRadius: 50,
+                border: `1px solid ${tk.chipBorder}`,
+                padding: 3,
+                gap: 2,
+                flexShrink: 0,
+              }}
+            >
               {[
-                { key: "roadmap",   icon: <FaMap size={10} />,       label: "Map"       },
-                { key: "satellite", icon: <FaSatellite size={10} />,  label: "Satellite" },
-              ].map(v => {
+                { key: "roadmap", icon: <FaMap size={10} />, label: "Map" },
+                {
+                  key: "satellite",
+                  icon: <FaSatellite size={10} />,
+                  label: "Satellite",
+                },
+              ].map((v) => {
                 const isActive = mapView === v.key;
                 return (
                   <button
                     key={v.key}
                     type="button"
                     title={`Switch to ${v.label} view`}
-                    onClick={() => { setMapLoaded(false); setMapView(v.key); }}
+                    onClick={() => {
+                      setMapLoaded(false);
+                      setMapView(v.key);
+                    }}
                     style={{
                       display: "inline-flex",
                       alignItems: "center",
@@ -431,12 +541,18 @@ export default function LocationMap({
                       whiteSpace: "nowrap",
                       transition: "all .18s",
                       background: isActive
-                        ? (theme === "light" ? "#111827" : "#fff")
+                        ? theme === "light"
+                          ? "#111827"
+                          : "#fff"
                         : "transparent",
                       color: isActive
-                        ? (theme === "light" ? "#fff" : "#111827")
+                        ? theme === "light"
+                          ? "#fff"
+                          : "#111827"
                         : tk.chipColor,
-                      boxShadow: isActive ? "0 1px 6px rgba(0,0,0,0.18)" : "none",
+                      boxShadow: isActive
+                        ? "0 1px 6px rgba(0,0,0,0.18)"
+                        : "none",
                     }}
                   >
                     {v.icon} {v.label}
@@ -462,7 +578,12 @@ export default function LocationMap({
             src={iframeSrc}
             width="100%"
             height={height}
-            style={{ border: 0, display: "block", opacity: mapLoaded ? 1 : 0, transition: "opacity .4s" }}
+            style={{
+              border: 0,
+              display: "block",
+              opacity: mapLoaded ? 1 : 0,
+              transition: "opacity .4s",
+            }}
             allowFullScreen
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
@@ -486,27 +607,45 @@ export default function LocationMap({
 
         {/* ── Footer (coordinates bar) ── */}
         {!compact && (
-          <div style={{
-            background: tk.footerBg,
-            borderTop: `1px solid ${tk.cardBorder}`,
-            padding: "8px 18px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: 6,
-          }}>
-            <span style={{
-              fontSize: ".7rem",
-              color: tk.footerColor,
-              fontFamily: "'DM Sans', sans-serif",
-              letterSpacing: ".02em",
-            }}>
+          <div
+            style={{
+              background: tk.footerBg,
+              borderTop: `1px solid ${tk.cardBorder}`,
+              padding: "8px 18px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: 6,
+            }}
+          >
+            <span
+              style={{
+                fontSize: ".7rem",
+                color: tk.footerColor,
+                fontFamily: "'DM Sans', sans-serif",
+                letterSpacing: ".02em",
+              }}
+            >
               📍 {resolved.lat.toFixed(5)}, {resolved.lng.toFixed(5)}
             </span>
-            <span style={{ fontSize: ".68rem", color: tk.footerColor, fontFamily: "'DM Sans', sans-serif", display: "flex", alignItems: "center", gap: 5 }}>
-              {mapView === "satellite" ? <FaSatellite size={10} /> : <FaMap size={10} />}
-              {mapView === "satellite" ? "Satellite View" : "Map View"} · Powered by Google Maps
+            <span
+              style={{
+                fontSize: ".68rem",
+                color: tk.footerColor,
+                fontFamily: "'DM Sans', sans-serif",
+                display: "flex",
+                alignItems: "center",
+                gap: 5,
+              }}
+            >
+              {mapView === "satellite" ? (
+                <FaSatellite size={10} />
+              ) : (
+                <FaMap size={10} />
+              )}
+              {mapView === "satellite" ? "Satellite View" : "Map View"} ·
+              Powered by Google Maps
             </span>
           </div>
         )}

@@ -55,7 +55,7 @@ import ReviewsAndQA from "../Components/ReviewPage.jsx";
 import ContributeSection from "../Components/Contributesection.jsx";
 import ReviewProvider from "../Context/Reviewcontext.jsx";
 import LoginRegister from "./LoginRegister.jsx";
-import Header from "../Components/Header/Header.jsx";
+import Header from "../Components/Header.jsx";
 
 // Bootstrap CDN injector
 (function injectBootstrap() {
@@ -1556,7 +1556,7 @@ export default function ItineraryPage() {
 
   return (
     <>
-    <Header/>
+      <Header />
       <style>{globalStyles}</style>
 
       {/* ── HERO ── */}

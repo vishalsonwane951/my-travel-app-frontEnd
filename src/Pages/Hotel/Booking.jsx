@@ -383,7 +383,9 @@ export default function BookingPage() {
               <Link to="">
                 <button
                   type="submit"
-                  onClick={()=>{setShowModal(true)}}
+                  onClick={() => {
+                    setShowModal(true);
+                  }}
                   className="bk-submit-btn"
                   disabled={!canSubmit}
                 >

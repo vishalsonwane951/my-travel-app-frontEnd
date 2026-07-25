@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Link, Outlet, useNavigate, useSearchParams } from "react-router-dom";
 import api from "../../utils/api";
-import Header from "../../Components/Header/Header";
+import Header from "../../Components/Header";
 
 // ── Hooks ──────────────────────────────────────────────────────────────────────
 const useCountUp = (target, duration = 2000) => {

@@ -5,7 +5,7 @@ import {
   getBestDeals,
   getOffers,
 } from "../../Services/stayService.js";
-import Header from "../../Components/Header/Header.jsx";
+import Header from "../../Components/Header.jsx";
 import HotelHeader from "./component/Header.jsx";
 
 const POPULAR_DESTINATIONS = [

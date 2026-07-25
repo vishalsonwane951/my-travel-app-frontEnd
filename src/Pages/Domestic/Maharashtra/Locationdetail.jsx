@@ -1,20 +1,21 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import api from "../../../utils/api.js";
 
 // ── Category meta (kept in sync with Maharashtra.jsx) ───────────────────────────
 const CATEGORY_META = {
-  essential:  { label: 'Essentials',           icon: '⭐' },
-  traveller:  { label: "Travellers' Choice",   icon: '🏆' },
-  family:     { label: 'Family Friendly',       icon: '👨‍👩‍👧‍👦' },
-  hidden:     { label: 'Hidden Gems',           icon: '💎' },
-  museums:    { label: 'Museums',               icon: '🏛️' },
-  outdoors:   { label: 'Outdoors',              icon: '🌿' },
-  arts:       { label: 'Arts & Theatre',        icon: '🎭' },
-  nightlife:  { label: 'Night Life',            icon: '🌙' },
+  essential: { label: "Essentials", icon: "⭐" },
+  traveller: { label: "Travellers' Choice", icon: "🏆" },
+  family: { label: "Family Friendly", icon: "👨‍👩‍👧‍👦" },
+  hidden: { label: "Hidden Gems", icon: "💎" },
+  museums: { label: "Museums", icon: "🏛️" },
+  outdoors: { label: "Outdoors", icon: "🌿" },
+  arts: { label: "Arts & Theatre", icon: "🎭" },
+  nightlife: { label: "Night Life", icon: "🌙" },
 };
 
-const getCategoryMeta = (key) => CATEGORY_META[key] || { label: key || 'Maharashtra', icon: '📍' };
+const getCategoryMeta = (key) =>
+  CATEGORY_META[key] || { label: key || "Maharashtra", icon: "📍" };
 
 // ── Small hook: reveal-on-scroll, matches Maharashtra.jsx's .mh-reveal pattern ──
 // Uses a callback ref so the observer attaches whenever the node actually mounts —
@@ -22,20 +23,25 @@ const getCategoryMeta = (key) => CATEGORY_META[key] || { label: key || 'Maharash
 const useReveal = (threshold = 0.1) => {
   const obsRef = useRef(null);
 
-  const setRef = useCallback((node) => {
-    if (obsRef.current) {
-      obsRef.current.disconnect();
-      obsRef.current = null;
-    }
-    if (node) {
-      const obs = new IntersectionObserver(
-        ([e]) => { if (e.isIntersecting) node.classList.add('revealed'); },
-        { threshold }
-      );
-      obs.observe(node);
-      obsRef.current = obs;
-    }
-  }, [threshold]);
+  const setRef = useCallback(
+    (node) => {
+      if (obsRef.current) {
+        obsRef.current.disconnect();
+        obsRef.current = null;
+      }
+      if (node) {
+        const obs = new IntersectionObserver(
+          ([e]) => {
+            if (e.isIntersecting) node.classList.add("revealed");
+          },
+          { threshold },
+        );
+        obs.observe(node);
+        obsRef.current = obs;
+      }
+    },
+    [threshold],
+  );
 
   return setRef;
 };
@@ -43,13 +49,25 @@ const useReveal = (threshold = 0.1) => {
 // ── Skeleton state ───────────────────────────────────────────────────────────
 function DetailSkeleton() {
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--cream)' }}>
-      <div className="skeleton" style={{ height: '62vh', width: '100%', borderRadius: 0 }} />
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '3rem 2rem' }}>
-        <div className="skeleton" style={{ height: 32, width: '40%', marginBottom: 18 }} />
-        <div className="skeleton" style={{ height: 16, width: '85%', marginBottom: 10 }} />
-        <div className="skeleton" style={{ height: 16, width: '70%', marginBottom: 10 }} />
-        <div className="skeleton" style={{ height: 16, width: '60%' }} />
+    <div style={{ minHeight: "100vh", background: "var(--cream)" }}>
+      <div
+        className="skeleton"
+        style={{ height: "62vh", width: "100%", borderRadius: 0 }}
+      />
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "3rem 2rem" }}>
+        <div
+          className="skeleton"
+          style={{ height: 32, width: "40%", marginBottom: 18 }}
+        />
+        <div
+          className="skeleton"
+          style={{ height: 16, width: "85%", marginBottom: 10 }}
+        />
+        <div
+          className="skeleton"
+          style={{ height: 16, width: "70%", marginBottom: 10 }}
+        />
+        <div className="skeleton" style={{ height: 16, width: "60%" }} />
       </div>
     </div>
   );
@@ -60,8 +78,16 @@ function RatingStars({ rating = 0 }) {
   const full = Math.round(rating);
   return (
     <span style={{ letterSpacing: 2 }} aria-label={`Rated ${rating} out of 5`}>
-      {[1, 2, 3, 4, 5].map(i => (
-        <span key={i} style={{ color: i <= full ? 'var(--gold)' : '#e2e2ee', fontSize: '0.95rem' }}>★</span>
+      {[1, 2, 3, 4, 5].map((i) => (
+        <span
+          key={i}
+          style={{
+            color: i <= full ? "var(--gold)" : "#e2e2ee",
+            fontSize: "0.95rem",
+          }}
+        >
+          ★
+        </span>
       ))}
     </span>
   );
@@ -106,10 +132,16 @@ function LocationDetail() {
 
         // Pull more from the same category to fill the "More like this" rail
         try {
-          const relRes = await api.get(`/packages/maharashtra-cards/${data.category}`);
-          const list = Array.isArray(relRes?.data?.data) ? relRes.data.data : [];
+          const relRes = await api.get(
+            `/packages/maharashtra-cards/${data.category}`,
+          );
+          const list = Array.isArray(relRes?.data?.data)
+            ? relRes.data.data
+            : [];
           if (active) {
-            setRelated(list.filter(item => item._id !== data._id).slice(0, 4));
+            setRelated(
+              list.filter((item) => item._id !== data._id).slice(0, 4),
+            );
           }
         } catch (relErr) {
           console.error("Related cards error:", relErr);
@@ -127,46 +159,71 @@ function LocationDetail() {
     };
 
     if (id) fetchLocation();
-    else { setNotFound(true); setLoading(false); }
+    else {
+      setNotFound(true);
+      setLoading(false);
+    }
 
-    return () => { active = false; };
+    return () => {
+      active = false;
+    };
   }, [id]);
 
-  if (loading) return (
-    <>
-      <DetailStyles />
-      <DetailSkeleton />
-    </>
-  );
+  if (loading)
+    return (
+      <>
+        <DetailStyles />
+        <DetailSkeleton />
+      </>
+    );
 
-  if (notFound || !location) return (
-    <>
-      <DetailStyles />
-    </>
-  );
+  if (notFound || !location)
+    return (
+      <>
+        <DetailStyles />
+      </>
+    );
 
   const meta = getCategoryMeta(location.category);
-  const isFree = !location.price || location.price === '₹0' || location.price === '0';
+  const isFree =
+    !location.price || location.price === "₹0" || location.price === "0";
 
   // ── Derived flags for the new, optional content blocks ──
   // Every one of these is optional on older documents, so each section
   // only renders when the data is actually there.
-  const hasEntryDetail = location.entryFee && (location.entryFee.indianAdult || location.entryFee.indianChild || location.entryFee.foreignNational);
-  const hasHowToReach = location.howToReach && (location.howToReach.byRoad || location.howToReach.byRail || location.howToReach.byAir);
-  const hasBestTime = location.bestTimeToVisit && ((location.bestTimeToVisit.months && location.bestTimeToVisit.months.length > 0) || location.bestTimeToVisit.note);
+  const hasEntryDetail =
+    location.entryFee &&
+    (location.entryFee.indianAdult ||
+      location.entryFee.indianChild ||
+      location.entryFee.foreignNational);
+  const hasHowToReach =
+    location.howToReach &&
+    (location.howToReach.byRoad ||
+      location.howToReach.byRail ||
+      location.howToReach.byAir);
+  const hasBestTime =
+    location.bestTimeToVisit &&
+    ((location.bestTimeToVisit.months &&
+      location.bestTimeToVisit.months.length > 0) ||
+      location.bestTimeToVisit.note);
   const hasHighlights = location.highlights && location.highlights.length > 0;
-  const hasThingsToCarry = location.thingsToCarry && location.thingsToCarry.length > 0;
+  const hasThingsToCarry =
+    location.thingsToCarry && location.thingsToCarry.length > 0;
   const hasTravelTips = location.travelTips && location.travelTips.length > 0;
   const hasGallery = location.gallery && location.gallery.length > 0;
-  const hasNearby = location.nearbyAttractions && location.nearbyAttractions.length > 0;
+  const hasNearby =
+    location.nearbyAttractions && location.nearbyAttractions.length > 0;
   const hasIdealFor = location.idealFor && location.idealFor.length > 0;
-  const hasDistanceChips = location.distanceFromCity && location.distanceFromCity.length > 0;
-  const hasPermitNotice = location.permitRequired && location.permitRequired.required;
+  const hasDistanceChips =
+    location.distanceFromCity && location.distanceFromCity.length > 0;
+  const hasPermitNotice =
+    location.permitRequired && location.permitRequired.required;
   const hasPlanSection = hasBestTime || hasThingsToCarry || hasTravelTips;
 
-  const mapsUrl = (location.coordinates && location.coordinates.lat && location.coordinates.lng)
-    ? `https://www.google.com/maps/search/?api=1&query=${location.coordinates.lat},${location.coordinates.lng}`
-    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location.location)}`;
+  const mapsUrl =
+    location.coordinates && location.coordinates.lat && location.coordinates.lng
+      ? `https://www.google.com/maps/search/?api=1&query=${location.coordinates.lat},${location.coordinates.lng}`
+      : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location.location)}`;
 
   return (
     <>
@@ -174,7 +231,12 @@ function LocationDetail() {
 
       {/* ── HERO ────────────────────────────────────────────────────────────── */}
       <section className="ld-hero">
-        {!imgLoaded && <div className="skeleton" style={{ position: 'absolute', inset: 0, borderRadius: 0 }} />}
+        {!imgLoaded && (
+          <div
+            className="skeleton"
+            style={{ position: "absolute", inset: 0, borderRadius: 0 }}
+          />
+        )}
         <img
           src={location.images}
           alt={location.title}
@@ -210,7 +272,10 @@ function LocationDetail() {
               <span className="ld-hero-rating">
                 <RatingStars rating={location.rating} /> {location.rating}
                 {location.reviewsCount > 0 && (
-                  <span className="ld-review-count"> ({location.reviewsCount.toLocaleString()} reviews)</span>
+                  <span className="ld-review-count">
+                    {" "}
+                    ({location.reviewsCount.toLocaleString()} reviews)
+                  </span>
                 )}
               </span>
             )}
@@ -219,19 +284,25 @@ function LocationDetail() {
       </section>
 
       {/* ── BODY ────────────────────────────────────────────────────────────── */}
-      <section style={{ background: 'var(--cream)', padding: '0 2rem 5rem' }}>
+      <section style={{ background: "var(--cream)", padding: "0 2rem 5rem" }}>
         <div ref={storyRef} className="ld-body-grid ld-reveal">
-
           {/* Left: story */}
           <div className="ld-story">
             <span className="ld-eyebrow">The Story</span>
-            <h2 className="ld-story-title">A Glimpse Into {location.title.split(',')[0]}</h2>
-            <p className="ld-description">{location.story || location.description}</p>
+            <h2 className="ld-story-title">
+              A Glimpse Into {location.title.split(",")[0]}
+            </h2>
+            <p className="ld-description">
+              {location.story || location.description}
+            </p>
 
             {hasHighlights && (
               <ul className="ld-highlights">
                 {location.highlights.map((h, i) => (
-                  <li key={i}><span className="ld-highlight-mark">✦</span>{h}</li>
+                  <li key={i}>
+                    <span className="ld-highlight-mark">✦</span>
+                    {h}
+                  </li>
                 ))}
               </ul>
             )}
@@ -241,7 +312,9 @@ function LocationDetail() {
                 <span className="ld-ideal-label">Perfect For</span>
                 <div className="ld-ideal-pills">
                   {location.idealFor.map((tag, i) => (
-                    <span key={i} className="ld-ideal-pill">{tag}</span>
+                    <span key={i} className="ld-ideal-pill">
+                      {tag}
+                    </span>
                   ))}
                 </div>
               </div>
@@ -250,7 +323,9 @@ function LocationDetail() {
             {location.tags && location.tags.length > 0 && (
               <div className="ld-tags">
                 {location.tags.map((tag, i) => (
-                  <span key={i} className="ld-tag">#{tag}</span>
+                  <span key={i} className="ld-tag">
+                    #{tag}
+                  </span>
                 ))}
               </div>
             )}
@@ -282,11 +357,15 @@ function LocationDetail() {
             <div className="ld-ticket-rows">
               <div className="ld-ticket-row">
                 <span className="ld-ticket-key">💰 Entry</span>
-                <span className="ld-ticket-val">{isFree ? 'Free Entry' : location.price}</span>
+                <span className="ld-ticket-val">
+                  {isFree ? "Free Entry" : location.price}
+                </span>
               </div>
               <div className="ld-ticket-row">
                 <span className="ld-ticket-key">⏱️ Suggested Time</span>
-                <span className="ld-ticket-val">{location.duration || 'Flexible'}</span>
+                <span className="ld-ticket-val">
+                  {location.duration || "Flexible"}
+                </span>
               </div>
               {location.openingHours && (
                 <div className="ld-ticket-row">
@@ -304,7 +383,9 @@ function LocationDetail() {
                 <div className="ld-ticket-row">
                   <span className="ld-ticket-key">🥾 Difficulty</span>
                   <span className="ld-ticket-val">
-                    <span className={`ld-difficulty-badge ld-difficulty-${location.difficultyLevel.toLowerCase()}`}>
+                    <span
+                      className={`ld-difficulty-badge ld-difficulty-${location.difficultyLevel.toLowerCase()}`}
+                    >
                       {location.difficultyLevel}
                     </span>
                   </span>
@@ -312,7 +393,11 @@ function LocationDetail() {
               )}
               <div className="ld-ticket-row">
                 <span className="ld-ticket-key">⭐ Rating</span>
-                <span className="ld-ticket-val">{location.rating != null ? `${location.rating} / 5` : 'Not rated'}</span>
+                <span className="ld-ticket-val">
+                  {location.rating != null
+                    ? `${location.rating} / 5`
+                    : "Not rated"}
+                </span>
               </div>
               <div className="ld-ticket-row">
                 <span className="ld-ticket-key">📍 Region</span>
@@ -326,25 +411,44 @@ function LocationDetail() {
 
             {hasEntryDetail && (
               <div className="ld-ticket-feenote">
-                {location.entryFee.indianAdult && <span><strong>Indian Adult:</strong> {location.entryFee.indianAdult}</span>}
-                {location.entryFee.indianChild && <span> &nbsp;·&nbsp; <strong>Child:</strong> {location.entryFee.indianChild}</span>}
-                {location.entryFee.foreignNational && <span> &nbsp;·&nbsp; <strong>Foreign National:</strong> {location.entryFee.foreignNational}</span>}
+                {location.entryFee.indianAdult && (
+                  <span>
+                    <strong>Indian Adult:</strong>{" "}
+                    {location.entryFee.indianAdult}
+                  </span>
+                )}
+                {location.entryFee.indianChild && (
+                  <span>
+                    {" "}
+                    &nbsp;·&nbsp; <strong>Child:</strong>{" "}
+                    {location.entryFee.indianChild}
+                  </span>
+                )}
+                {location.entryFee.foreignNational && (
+                  <span>
+                    {" "}
+                    &nbsp;·&nbsp; <strong>Foreign National:</strong>{" "}
+                    {location.entryFee.foreignNational}
+                  </span>
+                )}
                 {location.entryFee.notes && <em>{location.entryFee.notes}</em>}
               </div>
             )}
 
             <div className="ld-ticket-perf" />
 
-            <div className="ld-ticket-foot">
-              Admit one curious traveller
-            </div>
+            <div className="ld-ticket-foot">Admit one curious traveller</div>
           </aside>
         </div>
       </section>
 
       {/* ── PLAN YOUR VISIT ─────────────────────────────────────────────────── */}
       {hasPlanSection && (
-        <section ref={planRef} className="ld-reveal" style={{ background: 'white', padding: '1.5rem 2rem' }}>
+        <section
+          ref={planRef}
+          className="ld-reveal"
+          style={{ background: "white", padding: "1.5rem 2rem" }}
+        >
           <div className="ld-section-head">
             <span className="ld-eyebrow">Plan Your Visit</span>
             <h2 className="ld-section-title">Make the Most of Your Trip</h2>
@@ -355,14 +459,21 @@ function LocationDetail() {
               <div className="ld-plan-card">
                 <span className="ld-plan-icon">🗓️</span>
                 <h4 className="ld-plan-title">Best Time to Visit</h4>
-                {location.bestTimeToVisit.months && location.bestTimeToVisit.months.length > 0 && (
-                  <div className="ld-plan-months">
-                    {location.bestTimeToVisit.months.map((m, i) => (
-                      <span key={i} className="ld-month-chip">{m}</span>
-                    ))}
-                  </div>
+                {location.bestTimeToVisit.months &&
+                  location.bestTimeToVisit.months.length > 0 && (
+                    <div className="ld-plan-months">
+                      {location.bestTimeToVisit.months.map((m, i) => (
+                        <span key={i} className="ld-month-chip">
+                          {m}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                {location.bestTimeToVisit.note && (
+                  <p className="ld-plan-note">
+                    {location.bestTimeToVisit.note}
+                  </p>
                 )}
-                {location.bestTimeToVisit.note && <p className="ld-plan-note">{location.bestTimeToVisit.note}</p>}
               </div>
             )}
 
@@ -371,7 +482,9 @@ function LocationDetail() {
                 <span className="ld-plan-icon">🎒</span>
                 <h4 className="ld-plan-title">Things to Carry</h4>
                 <ul className="ld-plan-list">
-                  {location.thingsToCarry.map((t, i) => <li key={i}>{t}</li>)}
+                  {location.thingsToCarry.map((t, i) => (
+                    <li key={i}>{t}</li>
+                  ))}
                 </ul>
               </div>
             )}
@@ -381,7 +494,9 @@ function LocationDetail() {
                 <span className="ld-plan-icon">💡</span>
                 <h4 className="ld-plan-title">Travel Tips</h4>
                 <ul className="ld-plan-list">
-                  {location.travelTips.map((t, i) => <li key={i}>{t}</li>)}
+                  {location.travelTips.map((t, i) => (
+                    <li key={i}>{t}</li>
+                  ))}
                 </ul>
               </div>
             )}
@@ -391,9 +506,19 @@ function LocationDetail() {
 
       {/* ── HOW TO REACH ────────────────────────────────────────────────────── */}
       {hasHowToReach && (
-        <section ref={reachRef} className="ld-reveal" style={{ background: 'var(--cream)', padding: '3.5rem 2rem' }}>
+        <section
+          ref={reachRef}
+          className="ld-reveal"
+          style={{ background: "var(--cream)", padding: "3.5rem 2rem" }}
+        >
           <div className="ld-section-head">
-            <span className="ld-eyebrow" style={{ color: 'var(--indigo)', background: 'rgba(61,82,160,0.08)' }}>
+            <span
+              className="ld-eyebrow"
+              style={{
+                color: "var(--indigo)",
+                background: "rgba(61,82,160,0.08)",
+              }}
+            >
               Getting There
             </span>
             <h2 className="ld-section-title">How to Reach</h2>
@@ -402,7 +527,10 @@ function LocationDetail() {
           {hasPermitNotice && (
             <div className="ld-permit-notice">
               <span>⚠️</span>
-              <span>{location.permitRequired.details || 'A permit is required for entry.'}</span>
+              <span>
+                {location.permitRequired.details ||
+                  "A permit is required for entry."}
+              </span>
             </div>
           )}
 
@@ -433,7 +561,9 @@ function LocationDetail() {
           {hasDistanceChips && (
             <div className="ld-distance-row">
               {location.distanceFromCity.map((d, i) => (
-                <span key={i} className="ld-distance-chip">📏 {d.distanceKm} km from {d.city}</span>
+                <span key={i} className="ld-distance-chip">
+                  📏 {d.distanceKm} km from {d.city}
+                </span>
               ))}
             </div>
           )}
@@ -442,15 +572,30 @@ function LocationDetail() {
 
       {/* ── GALLERY ─────────────────────────────────────────────────────────── */}
       {hasGallery && (
-        <section ref={galleryRef} className="ld-reveal" style={{ background: 'white', padding: '1.5rem 2rem' }}>
+        <section
+          ref={galleryRef}
+          className="ld-reveal"
+          style={{ background: "white", padding: "1.5rem 2rem" }}
+        >
           <div className="ld-section-head">
             <span className="ld-eyebrow">In Pictures</span>
             <h2 className="ld-section-title">Gallery</h2>
           </div>
           <div className="ld-gallery-grid">
             {location.gallery.map((src, i) => (
-              <a key={i} href={src} target="_blank" rel="noopener noreferrer" className="ld-gallery-img-wrap">
-                <img src={src} alt={`${location.title} photo ${i + 1}`} loading="lazy" className="ld-gallery-img" />
+              <a
+                key={i}
+                href={src}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ld-gallery-img-wrap"
+              >
+                <img
+                  src={src}
+                  alt={`${location.title} photo ${i + 1}`}
+                  loading="lazy"
+                  className="ld-gallery-img"
+                />
               </a>
             ))}
           </div>
@@ -459,9 +604,19 @@ function LocationDetail() {
 
       {/* ── NEARBY ATTRACTIONS ──────────────────────────────────────────────── */}
       {hasNearby && (
-        <section ref={nearbyRef} className="ld-reveal" style={{ background: 'var(--cream)', padding: '1.5rem 2rem' }}>
+        <section
+          ref={nearbyRef}
+          className="ld-reveal"
+          style={{ background: "var(--cream)", padding: "1.5rem 2rem" }}
+        >
           <div className="ld-section-head">
-            <span className="ld-eyebrow" style={{ color: 'var(--indigo)', background: 'rgba(61,82,160,0.08)' }}>
+            <span
+              className="ld-eyebrow"
+              style={{
+                color: "var(--indigo)",
+                background: "rgba(61,82,160,0.08)",
+              }}
+            >
               While You're Here
             </span>
             <h2 className="ld-section-title">Nearby Attractions</h2>
@@ -480,16 +635,29 @@ function LocationDetail() {
 
       {/* ── MORE LIKE THIS ──────────────────────────────────────────────────── */}
       {related.length > 0 && (
-        <section ref={relatedRef} className="ld-reveal" style={{ background: 'white', padding: '4.5rem 2rem' }}>
-          <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+        <section
+          ref={relatedRef}
+          className="ld-reveal"
+          style={{ background: "white", padding: "4.5rem 2rem" }}
+        >
+          <div style={{ maxWidth: 1200, margin: "0 auto" }}>
             <div className="ld-related-head">
               <div>
-                <span className="ld-eyebrow" style={{ color: 'var(--indigo)', background: 'rgba(61,82,160,0.08)' }}>
+                <span
+                  className="ld-eyebrow"
+                  style={{
+                    color: "var(--indigo)",
+                    background: "rgba(61,82,160,0.08)",
+                  }}
+                >
                   Keep Exploring
                 </span>
                 <h2 className="ld-related-title">More in {meta.label}</h2>
               </div>
-              <Link to={`/maharashtra?category=${location.category}`} className="ld-view-all">
+              <Link
+                to={`/maharashtra?category=${location.category}`}
+                className="ld-view-all"
+              >
                 View All →
               </Link>
             </div>
@@ -502,12 +670,19 @@ function LocationDetail() {
                   className="ld-related-card"
                 >
                   <div className="ld-related-img-wrap">
-                    <img src={card.images} alt={card.title} loading="lazy" className="ld-related-img" />
+                    <img
+                      src={card.images}
+                      alt={card.title}
+                      loading="lazy"
+                      className="ld-related-img"
+                    />
                   </div>
                   <div className="ld-related-body">
                     <h4>{card.title}</h4>
                     <span className="ld-related-loc">📍 {card.location}</span>
-                    <span className="ld-related-price">{card.price === '₹0' ? 'Free' : card.price}</span>
+                    <span className="ld-related-price">
+                      {card.price === "₹0" ? "Free" : card.price}
+                    </span>
                   </div>
                 </Link>
               ))}

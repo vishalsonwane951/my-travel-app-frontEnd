@@ -37,7 +37,13 @@ const HoursDropdown = () => {
       </div>
 
       {/* Open/Close status */}
-      <p style={{ color: isOpen ? "green" : "red", fontWeight: "bold", marginBottom: "10px" }}>
+      <p
+        style={{
+          color: isOpen ? "green" : "red",
+          fontWeight: "bold",
+          marginBottom: "10px",
+        }}
+      >
         {isOpen ? "🟢 Open Now" : "🔴 Closed"}
       </p>
 
@@ -45,7 +51,9 @@ const HoursDropdown = () => {
         <tbody>
           {/* Always show today's hours */}
           <tr style={styles.todayRow}>
-            <td style={styles.dayCell}><strong>{today.day}</strong></td>
+            <td style={styles.dayCell}>
+              <strong>{today.day}</strong>
+            </td>
             <td style={styles.timeCell}>
               {formatTime(today.open)} - {formatTime(today.close)}
             </td>
@@ -63,8 +71,6 @@ const HoursDropdown = () => {
             ))}
         </tbody>
       </table>
-
-      
     </div>
   );
 };

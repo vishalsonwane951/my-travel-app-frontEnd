@@ -7,7 +7,7 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import api from "../../utils/api";
-import Header from "../../Components/Header/Header";
+import Header from "../../Components/Header";
 
 // ── Hooks ──────────────────────────────────────────────────────────────────────
 const useCountUp = (target, duration = 2000) => {
@@ -517,7 +517,7 @@ function Maharashtra() {
 
   return (
     <>
-    <Header/>
+      <Header />
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600;700&display=swap');
 

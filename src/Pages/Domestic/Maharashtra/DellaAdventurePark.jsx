@@ -1,7 +1,6 @@
-
-import React from 'react';
+import React from "react";
 // import "@fortawesome/fontawesome-free/css/all.min.css";
-import HoursDropdown from './HoursDropdown';
+import HoursDropdown from "./HoursDropdown";
 import { FaClock } from "react-icons/fa";
 import { FaPaw } from "react-icons/fa";
 
@@ -20,14 +19,22 @@ const DellaAdventurePark = () => {
     });
   };
 
-
-
   return (
     <div className="della-adventure-page">
       {/* About Section */}
       <section className="section">
         <div className="container">
-          <h1 className="section-title " style={{ color: "#04430eff", fontFamily: 'monospace', fontWeight: 'bold' }}> DELLA ADVENTURE PARK </h1>
+          <h1
+            className="section-title "
+            style={{
+              color: "#04430eff",
+              fontFamily: "monospace",
+              fontWeight: "bold",
+            }}
+          >
+            {" "}
+            DELLA ADVENTURE PARK{" "}
+          </h1>
 
           {/* Row 1: Images */}
           <div className="image-row">
@@ -54,31 +61,35 @@ const DellaAdventurePark = () => {
           <div className="about-row">
             <div className="about-text">
               <p>
-                Della Adventure Park is India's Largest Extreme Adventure park with 50 plus adventure activities.
-                Experience India's only Swoop swing (100 ft.), India's Longest Flying Fox (1250ft.), 5 kinds of zorbing
-                and 700cc yanncha raptor ATV only at Della Adventure, Lonavala.
+                Della Adventure Park is India's Largest Extreme Adventure park
+                with 50 plus adventure activities. Experience India's only Swoop
+                swing (100 ft.), India's Longest Flying Fox (1250ft.), 5 kinds
+                of zorbing and 700cc yanncha raptor ATV only at Della Adventure,
+                Lonavala.
               </p>
               <p>
-                Make sure you do not miss out on adrenaline-pumping adventure activities like Archery, Rocket Ejector,
-                Motocross dirt bike riding, Buggy Ride, Paintball and Rappelling.
+                Make sure you do not miss out on adrenaline-pumping adventure
+                activities like Archery, Rocket Ejector, Motocross dirt bike
+                riding, Buggy Ride, Paintball and Rappelling.
               </p>
 
               <div className="guidelines">
                 {/* <i className="fas fa-check-circle"></i> */}
-                 <FaPaw size={20} color="#1a2a6c"/> <span>Meets animal welfare guidelines</span>
+                <FaPaw size={20} color="#1a2a6c" />{" "}
+                <span>Meets animal welfare guidelines</span>
                 <br></br> <br></br>
-
-                 <div className="clock-container">
-                  <FaClock className="clockwise" size={23} color="#1a2a6c" /> <span>Time Duration - More than 3 hours</span>
+                <div className="clock-container">
+                  <FaClock className="clockwise" size={23} color="#1a2a6c" />{" "}
+                  <span>Time Duration - More than 3 hours</span>
                 </div>
               </div>
-              
 
               <div className="improve-listing">
                 <h3>Suggest edits to improve what we show.</h3>
-                <a href="#" className="btn">Improve this listing</a>
+                <a href="#" className="btn">
+                  Improve this listing
+                </a>
               </div>
-
             </div>
 
             <div className="hours-box">
@@ -92,7 +103,7 @@ const DellaAdventurePark = () => {
           </tbody>
         </table> */}
 
-              <div className='hours-dropdown'>
+              <div className="hours-dropdown">
                 <HoursDropdown></HoursDropdown>
               </div>
             </div>
@@ -100,14 +111,15 @@ const DellaAdventurePark = () => {
         </div>
       </section>
 
-
       {/* Experiences Section */}
       <section className="section" style={{ background: "#f0f2f5" }}>
         <div className="container">
           <h2 className="section-title">Recommended experiences nearby</h2>
 
           <div className="scroll-wrapper">
-            <button className="scroll-btn left" onClick={scrollLeft}>&lt;</button>
+            <button className="scroll-btn left" onClick={scrollLeft}>
+              &lt;
+            </button>
 
             <div className="experiences" id="scrollContainer">
               {[
@@ -115,59 +127,69 @@ const DellaAdventurePark = () => {
                   img: "https://i.pinimg.com/1200x/0e/fc/9c/0efc9c8da3e2ee7a901810f2a19926ca.jpg",
                   title: "Phang Nga Bay Sea Canoeing Trip with Lunch",
                   duration: "8h",
-                  price: "$9,255"
+                  price: "$9,255",
                 },
                 {
                   img: "https://i.pinimg.com/1200x/72/42/58/724258492a60d9d9e9187b84b25688c7.jpg",
-                  title: "Sanjay Gandhi National Park (SGNP) + Kenheri Caves Tour",
+                  title:
+                    "Sanjay Gandhi National Park (SGNP) + Kenheri Caves Tour",
                   duration: "5-6 hours",
-                  price: "$9,404"
+                  price: "$9,404",
                 },
                 {
                   img: "https://i.pinimg.com/1200x/87/0b/34/870b34bcdd989a71824a72dde77c6ec0.jpg",
                   title: "Hill-station & Heritage: Lonavala & Karla Caves Tour",
                   duration: "10-12 hours",
-                  price: "$6,500"
+                  price: "$6,500",
                 },
                 {
                   img: "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=600&q=80",
-                  title: "Private Taj Mahal Day Tour From Mumbai, Pune, Chennai",
+                  title:
+                    "Private Taj Mahal Day Tour From Mumbai, Pune, Chennai",
                   duration: "16-18 hours",
-                  price: "$8,500"
+                  price: "$8,500",
                 },
                 {
                   img: "https://i.pinimg.com/1200x/87/0b/34/870b34bcdd989a71824a72dde77c6ec0.jpg",
                   title: "Hill-station & Heritage: Lonavala & Karla Caves Tour",
                   duration: "10-12 hours",
-                  price: "$6,500"
+                  price: "$6,500",
                 },
                 {
                   img: "https://i.pinimg.com/1200x/72/42/58/724258492a60d9d9e9187b84b25688c7.jpg",
-                  title: "Sanjay Gandhi National Park (SGNP) + Kenheri Caves Tour",
+                  title:
+                    "Sanjay Gandhi National Park (SGNP) + Kenheri Caves Tour",
                   duration: "5-6 hours",
-                  price: "$9,404"
+                  price: "$9,404",
                 },
               ].map((exp, index) => (
                 <div className="experience-card" key={index}>
                   <div className="card-image">
-                    <img src={exp.img} alt={exp.title} loading='lazy' />
+                    <img src={exp.img} alt={exp.title} loading="lazy" />
                   </div>
                   <div className="card-content">
                     <h3>{exp.title}</h3>
                     <div className="card-details">
-                      <span><i className="fas fa-clock"></i> Duration: {exp.duration}</span>
+                      <span>
+                        <i className="fas fa-clock"></i> Duration:{" "}
+                        {exp.duration}
+                      </span>
                     </div>
                     <div className="badge">Free cancellation</div>
                     <div className="price">from {exp.price}</div>
                     <div className="card-action">
-                      <a href="#" className="btn">Reserve</a>
+                      <a href="#" className="btn">
+                        Reserve
+                      </a>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
 
-            <button className="scroll-btn right" onClick={scrollRight}>&gt;</button>
+            <button className="scroll-btn right" onClick={scrollRight}>
+              &gt;
+            </button>
           </div>
         </div>
       </section>
@@ -178,30 +200,58 @@ const DellaAdventurePark = () => {
           <div className="footer-content">
             <div className="footer-section">
               <h3>About Us</h3>
-              <p>We are a premier tours and travels company offering the best adventure experiences across India and beyond.</p>
+              <p>
+                We are a premier tours and travels company offering the best
+                adventure experiences across India and beyond.
+              </p>
             </div>
 
             <div className="footer-section">
               <h3>Quick Links</h3>
               <ul className="footer-links">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Destinations</a></li>
-                <li><a href="#">Adventure Tours</a></li>
-                <li><a href="#">Group Bookings</a></li>
-                <li><a href="#">Special Offers</a></li>
+                <li>
+                  <a href="#">Home</a>
+                </li>
+                <li>
+                  <a href="#">Destinations</a>
+                </li>
+                <li>
+                  <a href="#">Adventure Tours</a>
+                </li>
+                <li>
+                  <a href="#">Group Bookings</a>
+                </li>
+                <li>
+                  <a href="#">Special Offers</a>
+                </li>
               </ul>
             </div>
 
             <div className="footer-section">
               <h3>Contact Us</h3>
-              <p><i className="fas fa-map-marker-alt"></i> DesiVDesi Adventure Pune, Maharashtra, India</p>
-              <p><i className="fas fa-phone"></i> +91 7888251550</p>
-              <p><i className="fas fa-envelope"></i> desivdesi@gmail.com</p>
+              <p>
+                <i className="fas fa-map-marker-alt"></i> DesiVDesi Adventure
+                Pune, Maharashtra, India
+              </p>
+              <p>
+                <i className="fas fa-phone"></i> +91 7888251550
+              </p>
+              <p>
+                <i className="fas fa-envelope"></i> desivdesi@gmail.com
+              </p>
               <div className="social-icons">
-                <a href="#"><i className="fab fa-facebook-f"></i></a>
-                <a href="#"><i className="fab fa-twitter"></i></a>
-                <a href="#"><i className="fab fa-instagram"></i></a>
-                <a href="#"><i className="fab fa-youtube"></i></a>
+                <a href="#">
+                  <i className="fab fa-facebook-f"></i>
+                </a>
+                <a href="#">
+                  <i className="fab fa-twitter"></i>
+                </a>
+                <a href="#">
+                  <i className="fab fa-instagram"></i>
+                </a>
+                <a href="#">
+                  <i className="fab fa-youtube"></i>
+                </a>
               </div>
             </div>
           </div>

@@ -1,59 +1,85 @@
-import React, { useState, useCallback, useMemo } from 'react';
-import { FaTimes, FaPlus, FaTrash, FaTrain, FaCheckCircle, FaSpinner, FaCrown } from 'react-icons/fa';
-import api from '../../utils/api.js';
+import React, { useState, useCallback, useMemo } from "react";
+import {
+  FaTimes,
+  FaPlus,
+  FaTrash,
+  FaTrain,
+  FaCheckCircle,
+  FaSpinner,
+  FaCrown,
+} from "react-icons/fa";
+import api from "../../utils/api.js";
 
 // --gold #D4AF6A premium accent — same token introduced in TrainSearch.jsx
 
 const QUOTAS = [
-  { value: 'GN', label: 'General' },
-  { value: 'TQ', label: 'Tatkal' },
-  { value: 'LD', label: 'Ladies' },
-  { value: 'SS', label: 'Senior Citizen' },
+  { value: "GN", label: "General" },
+  { value: "TQ", label: "Tatkal" },
+  { value: "LD", label: "Ladies" },
+  { value: "SS", label: "Senior Citizen" },
 ];
 
-const STEP_LABELS = ['Passengers', 'Contact', 'Done'];
+const STEP_LABELS = ["Passengers", "Contact", "Done"];
 
-const emptyPassenger = () => ({ id: crypto.randomUUID?.() || String(Math.random()), name: '', age: '', gender: 'M' });
+const emptyPassenger = () => ({
+  id: crypto.randomUUID?.() || String(Math.random()),
+  name: "",
+  age: "",
+  gender: "M",
+});
 
 function isEliteClass(value) {
-  return value === '1A' || value === 'EC';
+  return value === "1A" || value === "EC";
 }
 
-function TrainBookingModal({ train, selectedClass, fromStation, toStation, journeyDate, user, onClose }) {
+function TrainBookingModal({
+  train,
+  selectedClass,
+  fromStation,
+  toStation,
+  journeyDate,
+  user,
+  onClose,
+}) {
   const [step, setStep] = useState(1); // 1: passengers, 2: contact, 3: confirmation
   const [passengers, setPassengers] = useState([emptyPassenger()]);
-  const [quota, setQuota] = useState('GN');
-  const [contactPhone, setContactPhone] = useState('');
-  const [contactEmail, setContactEmail] = useState(user?.email || '');
+  const [quota, setQuota] = useState("GN");
+  const [contactPhone, setContactPhone] = useState("");
+  const [contactEmail, setContactEmail] = useState(user?.email || "");
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [confirmation, setConfirmation] = useState(null);
 
   const classInfo = useMemo(
-    () => train.classes?.find(c => c.value === selectedClass),
-    [train.classes, selectedClass]
+    () => train.classes?.find((c) => c.value === selectedClass),
+    [train.classes, selectedClass],
   );
   const elite = isEliteClass(selectedClass);
 
   const addPassenger = useCallback(() => {
     if (passengers.length >= 6) return;
-    setPassengers(p => [...p, emptyPassenger()]);
+    setPassengers((p) => [...p, emptyPassenger()]);
   }, [passengers.length]);
 
   const removePassenger = useCallback((id) => {
-    setPassengers(p => (p.length > 1 ? p.filter(pax => pax.id !== id) : p));
+    setPassengers((p) => (p.length > 1 ? p.filter((pax) => pax.id !== id) : p));
   }, []);
 
   const updatePassenger = useCallback((id, field, value) => {
-    setPassengers(p => p.map(pax => (pax.id === id ? { ...pax, [field]: value } : pax)));
+    setPassengers((p) =>
+      p.map((pax) => (pax.id === id ? { ...pax, [field]: value } : pax)),
+    );
   }, []);
 
-  const validStep1 = passengers.every(p => p.name.trim() && p.age && Number(p.age) > 0);
-  const validStep2 = contactPhone.trim().length >= 10 && contactEmail.trim().includes('@');
+  const validStep1 = passengers.every(
+    (p) => p.name.trim() && p.age && Number(p.age) > 0,
+  );
+  const validStep2 =
+    contactPhone.trim().length >= 10 && contactEmail.trim().includes("@");
 
   const handleConfirmBooking = useCallback(async () => {
     setSubmitting(true);
-    setError('');
+    setError("");
     try {
       const payload = {
         trainNumber: train.trainNumber,
@@ -66,39 +92,90 @@ function TrainBookingModal({ train, selectedClass, fromStation, toStation, journ
         passengers: passengers.map(({ id, ...rest }) => rest),
         contact: { phone: contactPhone.trim(), email: contactEmail.trim() },
       };
-      const res = await api.post('/trains/book', payload, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      const res = await api.post("/trains/book", payload, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       setConfirmation(res.data);
       setStep(3);
     } catch (err) {
       console.error(err);
-      setError('Booking could not be confirmed. Please try again.');
+      setError("Booking could not be confirmed. Please try again.");
     } finally {
       setSubmitting(false);
     }
-  }, [train, selectedClass, quota, fromStation, toStation, journeyDate, passengers, contactPhone, contactEmail]);
+  }, [
+    train,
+    selectedClass,
+    quota,
+    fromStation,
+    toStation,
+    journeyDate,
+    passengers,
+    contactPhone,
+    contactEmail,
+  ]);
 
   return (
     <div className="modal-backdrop tbm-backdrop" onClick={onClose}>
-      <div className="modal-box train-booking-modal" onClick={e => e.stopPropagation()}>
+      <div
+        className="modal-box train-booking-modal"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="tbm-top-accent" aria-hidden="true" />
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            marginBottom: 20,
+          }}
+        >
           <div>
             <div className="tbm-eyebrow-row">
               <span className="section-eyebrow">Confirm Your Journey</span>
               <span className="tbm-hairline" aria-hidden="true" />
             </div>
-            <h3 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.5rem', fontWeight: 700, color: 'var(--ink)', display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-              {train.trainName} <span style={{ color: '#9CA3AF', fontSize: '1rem' }}>#{train.trainNumber}</span>
-              {elite && <span className="tbm-elite-tag"><FaCrown size={10} /> Premium</span>}
+            <h3
+              style={{
+                fontFamily: "Cormorant Garamond, serif",
+                fontSize: "1.5rem",
+                fontWeight: 700,
+                color: "var(--ink)",
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                flexWrap: "wrap",
+              }}
+            >
+              {train.trainName}{" "}
+              <span style={{ color: "#9CA3AF", fontSize: "1rem" }}>
+                #{train.trainNumber}
+              </span>
+              {elite && (
+                <span className="tbm-elite-tag">
+                  <FaCrown size={10} /> Premium
+                </span>
+              )}
             </h3>
-            <div style={{ fontFamily: 'Outfit', fontSize: '0.82rem', color: '#6B7280', marginTop: 4 }}>
-              {fromStation || 'Origin'} → {toStation || 'Destination'} {journeyDate ? `· ${journeyDate}` : ''} · {classInfo?.name || selectedClass}
+            <div
+              style={{
+                fontFamily: "Outfit",
+                fontSize: "0.82rem",
+                color: "#6B7280",
+                marginTop: 4,
+              }}
+            >
+              {fromStation || "Origin"} → {toStation || "Destination"}{" "}
+              {journeyDate ? `· ${journeyDate}` : ""} ·{" "}
+              {classInfo?.name || selectedClass}
             </div>
           </div>
-          <button onClick={onClose} className="tbm-close-btn" aria-label="Close">
+          <button
+            onClick={onClose}
+            className="tbm-close-btn"
+            aria-label="Close"
+          >
             <FaTimes />
           </button>
         </div>
@@ -107,14 +184,20 @@ function TrainBookingModal({ train, selectedClass, fromStation, toStation, journ
           <div className="tbm-steps">
             {STEP_LABELS.slice(0, 2).map((label, i) => {
               const n = i + 1;
-              const state = step > n ? 'done' : step === n ? 'active' : '';
+              const state = step > n ? "done" : step === n ? "active" : "";
               return (
                 <React.Fragment key={label}>
                   <div className={`tbm-step ${state}`}>
-                    <span className="tbm-step-dot">{step > n ? <FaCheckCircle size={11} /> : n}</span>
+                    <span className="tbm-step-dot">
+                      {step > n ? <FaCheckCircle size={11} /> : n}
+                    </span>
                     <span className="tbm-step-label">{label}</span>
                   </div>
-                  {i === 0 && <div className={`tbm-step-line ${step > 1 ? 'done' : ''}`} />}
+                  {i === 0 && (
+                    <div
+                      className={`tbm-step-line ${step > 1 ? "done" : ""}`}
+                    />
+                  )}
                 </React.Fragment>
               );
             })}
@@ -125,12 +208,19 @@ function TrainBookingModal({ train, selectedClass, fromStation, toStation, journ
         {step === 1 && (
           <div className="step-enter">
             <div className="field-label">Quota</div>
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 22 }}>
-              {QUOTAS.map(q => (
+            <div
+              style={{
+                display: "flex",
+                gap: 8,
+                flexWrap: "wrap",
+                marginBottom: 22,
+              }}
+            >
+              {QUOTAS.map((q) => (
                 <button
                   key={q.value}
                   type="button"
-                  className={`filter-pill tbm-pill ${quota === q.value ? 'active' : ''}`}
+                  className={`filter-pill tbm-pill ${quota === q.value ? "active" : ""}`}
                   onClick={() => setQuota(q.value)}
                 >
                   {q.label}
@@ -139,9 +229,17 @@ function TrainBookingModal({ train, selectedClass, fromStation, toStation, journ
             </div>
 
             <div className="field-label">
-              Passenger Details <span className="field-hint">(max 6 per booking)</span>
+              Passenger Details{" "}
+              <span className="field-hint">(max 6 per booking)</span>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 16 }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
+                marginBottom: 16,
+              }}
+            >
               {passengers.map((pax, i) => (
                 <div key={pax.id} className="tbm-pax-row">
                   <span className="tbm-pax-index">{i + 1}</span>
@@ -149,7 +247,9 @@ function TrainBookingModal({ train, selectedClass, fromStation, toStation, journ
                     className="input tbm-input"
                     placeholder={`Passenger ${i + 1} name`}
                     value={pax.name}
-                    onChange={e => updatePassenger(pax.id, 'name', e.target.value)}
+                    onChange={(e) =>
+                      updatePassenger(pax.id, "name", e.target.value)
+                    }
                   />
                   <input
                     className="input tbm-input"
@@ -158,12 +258,16 @@ function TrainBookingModal({ train, selectedClass, fromStation, toStation, journ
                     max="120"
                     placeholder="Age"
                     value={pax.age}
-                    onChange={e => updatePassenger(pax.id, 'age', e.target.value)}
+                    onChange={(e) =>
+                      updatePassenger(pax.id, "age", e.target.value)
+                    }
                   />
                   <select
                     className="input tbm-input"
                     value={pax.gender}
-                    onChange={e => updatePassenger(pax.id, 'gender', e.target.value)}
+                    onChange={(e) =>
+                      updatePassenger(pax.id, "gender", e.target.value)
+                    }
                   >
                     <option value="M">Male</option>
                     <option value="F">Female</option>
@@ -174,7 +278,11 @@ function TrainBookingModal({ train, selectedClass, fromStation, toStation, journ
                     onClick={() => removePassenger(pax.id)}
                     disabled={passengers.length === 1}
                     className="tbm-remove-btn"
-                    style={{ color: passengers.length === 1 ? '#E5E7EB' : '#E85757', cursor: passengers.length === 1 ? 'not-allowed' : 'pointer' }}
+                    style={{
+                      color: passengers.length === 1 ? "#E5E7EB" : "#E85757",
+                      cursor:
+                        passengers.length === 1 ? "not-allowed" : "pointer",
+                    }}
                   >
                     <FaTrash size={13} />
                   </button>
@@ -186,12 +294,20 @@ function TrainBookingModal({ train, selectedClass, fromStation, toStation, journ
               onClick={addPassenger}
               disabled={passengers.length >= 6}
               className="tbm-add-btn"
-              style={{ color: passengers.length >= 6 ? '#D1D5DB' : 'var(--saffron)', cursor: passengers.length >= 6 ? 'not-allowed' : 'pointer' }}
+              style={{
+                color: passengers.length >= 6 ? "#D1D5DB" : "var(--saffron)",
+                cursor: passengers.length >= 6 ? "not-allowed" : "pointer",
+              }}
             >
               <FaPlus size={11} /> Add Passenger
             </button>
 
-            <button className="btn-primary tbm-cta" style={{ width: '100%', padding: 14 }} disabled={!validStep1} onClick={() => setStep(2)}>
+            <button
+              className="btn-primary tbm-cta"
+              style={{ width: "100%", padding: 14 }}
+              disabled={!validStep1}
+              onClick={() => setStep(2)}
+            >
               Continue to Contact Details
             </button>
           </div>
@@ -201,26 +317,93 @@ function TrainBookingModal({ train, selectedClass, fromStation, toStation, journ
         {step === 2 && (
           <div className="step-enter">
             <div className="field-label">Contact Phone</div>
-            <input className="input tbm-input" style={{ marginBottom: 18 }} placeholder="10-digit mobile number" value={contactPhone} onChange={e => setContactPhone(e.target.value)} />
+            <input
+              className="input tbm-input"
+              style={{ marginBottom: 18 }}
+              placeholder="10-digit mobile number"
+              value={contactPhone}
+              onChange={(e) => setContactPhone(e.target.value)}
+            />
 
             <div className="field-label">Contact Email</div>
-            <input className="input tbm-input" style={{ marginBottom: 26 }} placeholder="you@example.com" value={contactEmail} onChange={e => setContactEmail(e.target.value)} />
+            <input
+              className="input tbm-input"
+              style={{ marginBottom: 26 }}
+              placeholder="you@example.com"
+              value={contactEmail}
+              onChange={(e) => setContactEmail(e.target.value)}
+            />
 
             <div className="tbm-summary-card">
               <div className="tbm-summary-label">Booking Summary</div>
-              <div style={{ fontFamily: 'Outfit', fontSize: '0.88rem', color: 'var(--ink)', display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <span><FaTrain style={{ color: 'var(--saffron)', marginRight: 8 }} />{train.trainName} · {classInfo?.name || selectedClass}{elite && <span className="tbm-elite-tag tbm-elite-tag-inline"><FaCrown size={9} /> Premium</span>}</span>
-                <span>{passengers.length} passenger{passengers.length > 1 ? 's' : ''} · Quota: {QUOTAS.find(q => q.value === quota)?.label}</span>
-                <span>{fromStation || 'Origin'} → {toStation || 'Destination'} {journeyDate ? `· ${journeyDate}` : ''}</span>
+              <div
+                style={{
+                  fontFamily: "Outfit",
+                  fontSize: "0.88rem",
+                  color: "var(--ink)",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 8,
+                }}
+              >
+                <span>
+                  <FaTrain
+                    style={{ color: "var(--saffron)", marginRight: 8 }}
+                  />
+                  {train.trainName} · {classInfo?.name || selectedClass}
+                  {elite && (
+                    <span className="tbm-elite-tag tbm-elite-tag-inline">
+                      <FaCrown size={9} /> Premium
+                    </span>
+                  )}
+                </span>
+                <span>
+                  {passengers.length} passenger
+                  {passengers.length > 1 ? "s" : ""} · Quota:{" "}
+                  {QUOTAS.find((q) => q.value === quota)?.label}
+                </span>
+                <span>
+                  {fromStation || "Origin"} → {toStation || "Destination"}{" "}
+                  {journeyDate ? `· ${journeyDate}` : ""}
+                </span>
               </div>
             </div>
 
             {error && <div className="train-modal-error">{error}</div>}
 
-            <div style={{ display: 'flex', gap: 10 }}>
-              <button className="btn-outline" style={{ flex: 1, padding: 13, color: 'var(--ink)', border: '1.5px solid #E5E7EB' }} onClick={() => setStep(1)}>Back</button>
-              <button className="btn-primary tbm-cta" style={{ flex: 2, padding: 13, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }} disabled={!validStep2 || submitting} onClick={handleConfirmBooking}>
-                {submitting ? <><FaSpinner className="spinner" /> Confirming…</> : 'Confirm Booking'}
+            <div style={{ display: "flex", gap: 10 }}>
+              <button
+                className="btn-outline"
+                style={{
+                  flex: 1,
+                  padding: 13,
+                  color: "var(--ink)",
+                  border: "1.5px solid #E5E7EB",
+                }}
+                onClick={() => setStep(1)}
+              >
+                Back
+              </button>
+              <button
+                className="btn-primary tbm-cta"
+                style={{
+                  flex: 2,
+                  padding: 13,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 8,
+                }}
+                disabled={!validStep2 || submitting}
+                onClick={handleConfirmBooking}
+              >
+                {submitting ? (
+                  <>
+                    <FaSpinner className="spinner" /> Confirming…
+                  </>
+                ) : (
+                  "Confirm Booking"
+                )}
               </button>
             </div>
           </div>
@@ -228,19 +411,49 @@ function TrainBookingModal({ train, selectedClass, fromStation, toStation, journ
 
         {/* ─── Step 3: Confirmation ───────────────────────── */}
         {step === 3 && (
-          <div className="step-enter tbm-confirm" style={{ textAlign: 'center', padding: '24px 0 6px' }}>
+          <div
+            className="step-enter tbm-confirm"
+            style={{ textAlign: "center", padding: "24px 0 6px" }}
+          >
             <div className="tbm-check-ring">
-              <FaCheckCircle style={{ fontSize: '2.6rem', color: 'var(--forest)' }} />
+              <FaCheckCircle
+                style={{ fontSize: "2.6rem", color: "var(--forest)" }}
+              />
             </div>
-            <h4 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.7rem', fontWeight: 700, color: 'var(--ink)', marginBottom: 10 }}>Booking Confirmed!</h4>
+            <h4
+              style={{
+                fontFamily: "Cormorant Garamond, serif",
+                fontSize: "1.7rem",
+                fontWeight: 700,
+                color: "var(--ink)",
+                marginBottom: 10,
+              }}
+            >
+              Booking Confirmed!
+            </h4>
             {confirmation?.pnr ? (
-              <div className="tbm-pnr-badge">PNR&nbsp;<strong>{confirmation.pnr}</strong></div>
+              <div className="tbm-pnr-badge">
+                PNR&nbsp;<strong>{confirmation.pnr}</strong>
+              </div>
             ) : (
-              <p style={{ fontFamily: 'Outfit', fontSize: '0.88rem', color: '#6B7280', marginBottom: 24 }}>
+              <p
+                style={{
+                  fontFamily: "Outfit",
+                  fontSize: "0.88rem",
+                  color: "#6B7280",
+                  marginBottom: 24,
+                }}
+              >
                 A confirmation with your PNR has been sent to your email.
               </p>
             )}
-            <button className="btn-primary tbm-cta" style={{ padding: '13px 32px', marginTop: 24 }} onClick={onClose}>Done</button>
+            <button
+              className="btn-primary tbm-cta"
+              style={{ padding: "13px 32px", marginTop: 24 }}
+              onClick={onClose}
+            >
+              Done
+            </button>
           </div>
         )}
       </div>

@@ -122,7 +122,10 @@ export default function HotelBookingPage() {
   const [confirmed, setConfirmed] = useState(null);
 
   const selectedRoom = ROOMS.find((r) => r.id === selectedId) || null;
-  const nights = useMemo(() => diffNights(checkIn, checkOut), [checkIn, checkOut]);
+  const nights = useMemo(
+    () => diffNights(checkIn, checkOut),
+    [checkIn, checkOut],
+  );
   const subtotal = selectedRoom ? selectedRoom.price * nights : 0;
   const fee = Math.round(subtotal * 0.12);
   const total = subtotal + fee;
@@ -639,7 +642,9 @@ export default function HotelBookingPage() {
       {/* NAV */}
       <header className="wh-nav">
         <div className="wh-brand">
-          <span className="wh-brand-mark"><Anchor size={15} /></span>
+          <span className="wh-brand-mark">
+            <Anchor size={15} />
+          </span>
           <span className="wh-brand-name wh-display">Windward House</span>
         </div>
         <nav className="wh-navlinks">
@@ -650,20 +655,44 @@ export default function HotelBookingPage() {
 
       {/* HERO */}
       <section className="wh-hero">
-        <svg className="wh-hero-lines" viewBox="0 0 800 400" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M0,320 Q100,280 200,320 T400,320 T600,320 T800,320" stroke="#3c6e71" strokeWidth="1" fill="none" />
-          <path d="M0,350 Q100,310 200,350 T400,350 T600,350 T800,350" stroke="#b8863f" strokeWidth="1" fill="none" />
-          <path d="M0,380 Q100,340 200,380 T400,380 T600,380 T800,380" stroke="#3c6e71" strokeWidth="1" fill="none" />
+        <svg
+          className="wh-hero-lines"
+          viewBox="0 0 800 400"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M0,320 Q100,280 200,320 T400,320 T600,320 T800,320"
+            stroke="#3c6e71"
+            strokeWidth="1"
+            fill="none"
+          />
+          <path
+            d="M0,350 Q100,310 200,350 T400,350 T600,350 T800,350"
+            stroke="#b8863f"
+            strokeWidth="1"
+            fill="none"
+          />
+          <path
+            d="M0,380 Q100,340 200,380 T400,380 T600,380 T800,380"
+            stroke="#3c6e71"
+            strokeWidth="1"
+            fill="none"
+          />
         </svg>
         <div className="wh-hero-inner">
-          <div className="wh-eyebrow"><MapPin size={13} /> A five-room inn on the harbor</div>
+          <div className="wh-eyebrow">
+            <MapPin size={13} /> A five-room inn on the harbor
+          </div>
           <h1 className="wh-display">Anchor here for the night.</h1>
           <p>
             Five rooms, each named for what it looks out on. No two nights on
-            the water are quite the same — check what's open below and hold
-            a room before the tide turns.
+            the water are quite the same — check what's open below and hold a
+            room before the tide turns.
           </p>
-          <a href="#rooms" className="wh-cta">See the rooms <ArrowRight size={16} /></a>
+          <a href="#rooms" className="wh-cta">
+            See the rooms <ArrowRight size={16} />
+          </a>
         </div>
       </section>
 
@@ -673,7 +702,10 @@ export default function HotelBookingPage() {
           <div className="wh-section-head">
             <div className="wh-section-eyebrow">The manifest</div>
             <h2 className="wh-display">Five rooms, in order</h2>
-            <p>Pick one to see what it's like, then hold it in the ticket alongside.</p>
+            <p>
+              Pick one to see what it's like, then hold it in the ticket
+              alongside.
+            </p>
           </div>
 
           <div className="wh-room-list">
@@ -691,7 +723,9 @@ export default function HotelBookingPage() {
                 >
                   <div className="wh-room-row-head">
                     <span className="wh-room-num wh-mono">{room.code}</span>
-                    <span className="wh-room-icon"><Icon size={18} /></span>
+                    <span className="wh-room-icon">
+                      <Icon size={18} />
+                    </span>
                     <div className="wh-room-info">
                       <h3 className="wh-display">{room.name}</h3>
                       <div className="wh-room-meta">
@@ -707,7 +741,10 @@ export default function HotelBookingPage() {
                   </div>
 
                   {isExpanded && (
-                    <div className="wh-room-detail" onClick={(e) => e.stopPropagation()}>
+                    <div
+                      className="wh-room-detail"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <p>{room.blurb}</p>
                       <div className="wh-amenities">
                         {room.amenities.map((a) => {
@@ -724,7 +761,9 @@ export default function HotelBookingPage() {
                         className={`wh-select-btn${isSelected ? " is-selected" : ""}`}
                         onClick={() => handleSelectRoom(room)}
                       >
-                        {isSelected ? "Selected for booking" : "Select this room"}
+                        {isSelected
+                          ? "Selected for booking"
+                          : "Select this room"}
                       </button>
                     </div>
                   )}
@@ -766,7 +805,11 @@ export default function HotelBookingPage() {
                   <span className="label">Total paid at stay</span>
                   <span className="val">${confirmed.total}</span>
                 </div>
-                <button type="button" className="wh-again-btn" onClick={handleReset}>
+                <button
+                  type="button"
+                  className="wh-again-btn"
+                  onClick={handleReset}
+                >
                   Book another room
                 </button>
               </>
@@ -823,10 +866,15 @@ export default function HotelBookingPage() {
                       type="button"
                       onClick={() =>
                         setGuests((g) =>
-                          Math.min(selectedRoom ? selectedRoom.capacity : 4, g + 1)
+                          Math.min(
+                            selectedRoom ? selectedRoom.capacity : 4,
+                            g + 1,
+                          ),
                         )
                       }
-                      disabled={!selectedRoom || guests >= selectedRoom.capacity}
+                      disabled={
+                        !selectedRoom || guests >= selectedRoom.capacity
+                      }
                       aria-label="More guests"
                     >
                       <Plus size={14} />
@@ -837,13 +885,21 @@ export default function HotelBookingPage() {
                 <div className="wh-ticket-perf" />
 
                 <div className="wh-line-row">
-                  <span><Clock size={13} style={{ verticalAlign: "-2px", marginRight: "4px" }} />Nights</span>
+                  <span>
+                    <Clock
+                      size={13}
+                      style={{ verticalAlign: "-2px", marginRight: "4px" }}
+                    />
+                    Nights
+                  </span>
                   <span className="val">{nights || "—"}</span>
                 </div>
                 <div className="wh-line-row">
                   <span>Room rate</span>
                   <span className="val">
-                    {selectedRoom ? `$${selectedRoom.price} × ${nights || 0}` : "—"}
+                    {selectedRoom
+                      ? `$${selectedRoom.price} × ${nights || 0}`
+                      : "—"}
                   </span>
                 </div>
                 <div className="wh-line-row">
@@ -874,14 +930,23 @@ export default function HotelBookingPage() {
       <footer className="wh-footer">
         <div className="wh-footer-inner">
           <div className="wh-footer-col">
-            <span className="wh-display" style={{ color: "#f4efe4", fontSize: "1.05rem" }}>
+            <span
+              className="wh-display"
+              style={{ color: "#f4efe4", fontSize: "1.05rem" }}
+            >
               Windward House
             </span>
-            <span className="wh-footer-item"><MapPin size={13} /> Harbor Road, dock end</span>
+            <span className="wh-footer-item">
+              <MapPin size={13} /> Harbor Road, dock end
+            </span>
           </div>
           <div className="wh-footer-col">
-            <span className="wh-footer-item"><Clock size={13} /> Check-in from 3pm</span>
-            <span className="wh-footer-item"><Clock size={13} /> Check-out by 11am</span>
+            <span className="wh-footer-item">
+              <Clock size={13} /> Check-in from 3pm
+            </span>
+            <span className="wh-footer-item">
+              <Clock size={13} /> Check-out by 11am
+            </span>
           </div>
         </div>
       </footer>

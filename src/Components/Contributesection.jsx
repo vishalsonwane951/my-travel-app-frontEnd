@@ -1,21 +1,3 @@
-// Components/ContributeSection.jsx
-// Reusable "Share Your Experience" section extracted from ItineraryPage.
-//
-// Props:
-//   packageTitle    {string}   – displayed in the modal header
-//   onReviewSubmit  {Function} – (reviewObj) => void  called after submit
-//   onQuestionSubmit{Function} – (questionString) => void  called after submit
-//   user            {Object}   – current user (from AuthContext); used to
-//                                 populate the review author name
-//   sectionRef      {React.Ref} – forwarded ref for scroll-spy
-//   BRAND           {Object}   – optional design-token override
-//
-// Controlled / imperative usage
-//   You can also force the modal open from a parent by calling:
-//     <ContributeSection ref={ref} ... />
-//   and then:
-//     ref.current.openModal("qa")   // or "review" / "photo"
-
 import React, { useState, useImperativeHandle, useCallback } from "react";
 import {
   FaPencilAlt,
@@ -25,58 +7,49 @@ import {
   FaTimes,
 } from "react-icons/fa";
 
-// ─── Default design tokens ────────────────────────────────────────────────────
+// Default design tokens
 const DEFAULT_BRAND = {
-  primary:     "#F04B5A",
+  primary: "#F04B5A",
   primaryDark: "#D03848",
-  navy:        "#1A2340",
-  charcoal:    "#111827",
-  bodyText:    "#374151",
-  meta:        "#6B7280",
+  navy: "#1A2340",
+  charcoal: "#111827",
+  bodyText: "#374151",
+  meta: "#6B7280",
   placeholder: "#9CA3AF",
-  border:      "#E5E7EB",
+  border: "#E5E7EB",
   borderLight: "#F3F4F6",
-  bgCard:      "#fafbff",
-  amber:       "#F97316",
-  teal:        "#14B8A6",
+  bgCard: "#fafbff",
+  amber: "#F97316",
+  teal: "#14B8A6",
 };
 
-// ─── ContributeSection ────────────────────────────────────────────────────────
-
-/**
- * ContributeSection
- *
- * Renders three CTA cards (Write a Review, Add Photos, Ask a Question) that
- * each open a shared modal with tabs for the selected contribution type.
- *
- * Exposes an imperative handle so a parent (e.g. ReviewsAndQA) can
- * programmatically open the modal on a specific tab:
- *
- *   const contributeRef = useRef();
- *   ...
- *   contributeRef.current.openModal("qa");
- */
 const ContributeSection = React.forwardRef(function ContributeSection(
   {
-    packageTitle      = "",
-    onReviewSubmit    = () => {},
-    onQuestionSubmit  = () => {},
-    user              = null,
+    packageTitle = "",
+    onReviewSubmit = () => {},
+    onQuestionSubmit = () => {},
+    user = null,
     sectionRef,
     BRAND: brandOverride,
   },
-  imperativeRef
+  imperativeRef,
 ) {
   const B = { ...DEFAULT_BRAND, ...brandOverride };
 
-  // ── State ──────────────────────────────────────────────────────────────────
-  const [modalOpen,     setModalOpen]     = useState(false);
-  const [contributeTab, setContributeTab] = useState("review"); // "review" | "photo" | "qa"
-  const [done,          setDone]          = useState(false);
-  const [newReview,     setNewReview]     = useState({ rating: 0, hoverRating: 0, title: "", text: "", tripType: "Family" });
-  const [newQuestion,   setNewQuestion]   = useState("");
+  // State
+  const [modalOpen, setModalOpen] = useState(false);
+  const [contributeTab, setContributeTab] = useState("review");
+  const [done, setDone] = useState(false);
+  const [newReview, setNewReview] = useState({
+    rating: 0,
+    hoverRating: 0,
+    title: "",
+    text: "",
+    tripType: "Family",
+  });
+  const [newQuestion, setNewQuestion] = useState("");
 
-  // ── Imperative handle ──────────────────────────────────────────────────────
+  //  Imperative handle
   // Allows parent to call: ref.current.openModal("qa")
   useImperativeHandle(imperativeRef, () => ({
     openModal: (tab = "review") => {
@@ -86,43 +59,62 @@ const ContributeSection = React.forwardRef(function ContributeSection(
     },
   }));
 
-  // ── Handlers ───────────────────────────────────────────────────────────────
   const openModal = useCallback((tab) => {
     setContributeTab(tab);
     setDone(false);
-    setModalOpen(false); // reset first to avoid stale state
+    setModalOpen(false);
     requestAnimationFrame(() => setModalOpen(true));
   }, []);
 
   const closeModal = useCallback(() => {
     setModalOpen(false);
     setDone(false);
-    setNewReview({ rating: 0, hoverRating: 0, title: "", text: "", tripType: "Family" });
+    setNewReview({
+      rating: 0,
+      hoverRating: 0,
+      title: "",
+      text: "",
+      tripType: "Family",
+    });
     setNewQuestion("");
   }, []);
 
   const handleSubmit = useCallback(() => {
-    if (contributeTab === "review" && newReview.rating > 0 && newReview.text.trim()) {
+    if (
+      contributeTab === "review" &&
+      newReview.rating > 0 &&
+      newReview.text.trim()
+    ) {
       const reviewObj = {
-        id:       Date.now(),
-        name:     user?.fullName || user?.name || "Anonymous",
-        location: user?.city    || "India",
-        avatar:   null,
-        rating:   newReview.rating,
-        title:    newReview.title || "My Experience",
-        text:     newReview.text,
-        date:     new Date().toLocaleDateString("en-IN", { month: "long", year: "numeric" }),
+        id: Date.now(),
+        name: user?.fullName || user?.name || "Anonymous",
+        location: user?.city || "India",
+        avatar: null,
+        rating: newReview.rating,
+        title: newReview.title || "My Experience",
+        text: newReview.text,
+        date: new Date().toLocaleDateString("en-IN", {
+          month: "long",
+          year: "numeric",
+        }),
         tripType: newReview.tripType,
-        helpful:  0,
+        helpful: 0,
       };
       onReviewSubmit(reviewObj);
     } else if (contributeTab === "qa" && newQuestion.trim()) {
       onQuestionSubmit(newQuestion.trim());
     }
     setDone(true);
-  }, [contributeTab, newReview, newQuestion, user, onReviewSubmit, onQuestionSubmit]);
+  }, [
+    contributeTab,
+    newReview,
+    newQuestion,
+    user,
+    onReviewSubmit,
+    onQuestionSubmit,
+  ]);
 
-  // ── Scoped styles ──────────────────────────────────────────────────────────
+  //  Scoped styles
   const css = `
     .cs-section { background: linear-gradient(135deg, #fff8f8 0%, #f0f4ff 100%); padding: 1rem 0; border-top: 1px solid ${B.borderLight}; }
     .cs-card { background: transparent; border: 1px solid ${B.borderLight}; border-radius: 16px; padding: 1.5rem; cursor: pointer; transition: transform .2s, box-shadow .2s; }
@@ -153,11 +145,23 @@ const ContributeSection = React.forwardRef(function ContributeSection(
     .font-serif-cs { font-family: 'Cormorant Garamond', Georgia, serif; }
   `;
 
-  // ── Done screen ────────────────────────────────────────────────────────────
+  // Done screen
   const doneMessages = {
-    review: { emoji: "🎉", title: "Review Submitted!", body: "Your review has been added and will help other travellers decide." },
-    photo:  { emoji: "📷", title: "Photos Uploaded!",  body: "Your photos will appear after a quick review." },
-    qa:     { emoji: "💬", title: "Question Posted!",  body: "Your question has been posted. The community will answer soon!" },
+    review: {
+      emoji: "🎉",
+      title: "Review Submitted!",
+      body: "Your review has been added and will help other travellers decide.",
+    },
+    photo: {
+      emoji: "📷",
+      title: "Photos Uploaded!",
+      body: "Your photos will appear after a quick review.",
+    },
+    qa: {
+      emoji: "💬",
+      title: "Question Posted!",
+      body: "Your question has been posted. The community will answer soon!",
+    },
   };
   const dm = doneMessages[contributeTab];
 
@@ -168,11 +172,13 @@ const ContributeSection = React.forwardRef(function ContributeSection(
 
       <section className="cs-section" ref={sectionRef}>
         <div className="container" style={{ maxWidth: 1280 }}>
-
           {/* Heading row */}
           <div className="row align-items-center mb-4">
             <div className="col">
-              <h2 className="font-serif-cs fw-bold mb-1" style={{ fontSize: "2rem", color: B.charcoal }}>
+              <h2
+                className="font-serif-cs fw-bold mb-1"
+                style={{ fontSize: "2rem", color: B.charcoal }}
+              >
                 Share Your Experience
               </h2>
               <p style={{ color: B.meta, fontSize: ".9rem", marginBottom: 0 }}>
@@ -180,7 +186,10 @@ const ContributeSection = React.forwardRef(function ContributeSection(
               </p>
             </div>
             <div className="col-auto">
-              <button className="cs-btn-write" onClick={() => openModal("review")}>
+              <button
+                className="cs-btn-write"
+                onClick={() => openModal("review")}
+              >
                 <FaPencilAlt size={13} /> Write a Review
               </button>
             </div>
@@ -190,25 +199,25 @@ const ContributeSection = React.forwardRef(function ContributeSection(
           <div className="row g-3">
             {[
               {
-                icon:   <FaStar size={22} color={B.amber} />,
-                title:  "Write a Review",
-                desc:   "Share your experience to help others plan their trip",
-                tab:    "review",
-                bg:     "linear-gradient(135deg,#FFF8F0,#FFF3E0)",
+                icon: <FaStar size={22} color={B.amber} />,
+                title: "Write a Review",
+                desc: "Share your experience to help others plan their trip",
+                tab: "review",
+                bg: "linear-gradient(135deg,#FFF8F0,#FFF3E0)",
               },
               {
-                icon:   <FaCamera size={22} color={B.teal} />,
-                title:  "Add Photos",
-                desc:   "Upload your best shots from this destination",
-                tab:    "photo",
-                bg:     "linear-gradient(135deg,#F0FFFE,#E0F7F5)",
+                icon: <FaCamera size={22} color={B.teal} />,
+                title: "Add Photos",
+                desc: "Upload your best shots from this destination",
+                tab: "photo",
+                bg: "linear-gradient(135deg,#F0FFFE,#E0F7F5)",
               },
               {
-                icon:   <FaQuestionCircle size={22} color="#3D52A0" />,
-                title:  "Ask a Question",
-                desc:   "Get answers from travellers who've been there",
-                tab:    "qa",
-                bg:     "linear-gradient(135deg,#F0F4FF,#E8EDFF)",
+                icon: <FaQuestionCircle size={22} color="#3D52A0" />,
+                title: "Ask a Question",
+                desc: "Get answers from travellers who've been there",
+                tab: "qa",
+                bg: "linear-gradient(135deg,#F0F4FF,#E8EDFF)",
               },
             ].map((card) => (
               <div key={card.tab} className="col-md-4">
@@ -218,10 +227,15 @@ const ContributeSection = React.forwardRef(function ContributeSection(
                   onClick={() => openModal(card.tab)}
                 >
                   <div style={{ marginBottom: 10 }}>{card.icon}</div>
-                  <div className="fw-bold mb-1" style={{ fontSize: ".95rem", color: B.charcoal }}>
+                  <div
+                    className="fw-bold mb-1"
+                    style={{ fontSize: ".95rem", color: B.charcoal }}
+                  >
                     {card.title}
                   </div>
-                  <div style={{ fontSize: ".8rem", color: B.meta }}>{card.desc}</div>
+                  <div style={{ fontSize: ".8rem", color: B.meta }}>
+                    {card.desc}
+                  </div>
                 </div>
               </div>
             ))}
@@ -233,7 +247,9 @@ const ContributeSection = React.forwardRef(function ContributeSection(
       {modalOpen && (
         <div
           className="cs-modal-overlay"
-          onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) closeModal();
+          }}
         >
           <div className="cs-modal">
             {!done ? (
@@ -243,11 +259,20 @@ const ContributeSection = React.forwardRef(function ContributeSection(
                   <button className="cs-close-btn" onClick={closeModal}>
                     <FaTimes size={13} />
                   </button>
-                  <div className="font-serif-cs fw-bold" style={{ fontSize: "1.4rem", color: "#fff" }}>
+                  <div
+                    className="font-serif-cs fw-bold"
+                    style={{ fontSize: "1.4rem", color: "#fff" }}
+                  >
                     Share Your Experience
                   </div>
                   {packageTitle && (
-                    <div style={{ fontSize: ".8rem", color: "rgba(255,255,255,.55)", marginTop: 2 }}>
+                    <div
+                      style={{
+                        fontSize: ".8rem",
+                        color: "rgba(255,255,255,.55)",
+                        marginTop: 2,
+                      }}
+                    >
                       {packageTitle}
                     </div>
                   )}
@@ -256,11 +281,13 @@ const ContributeSection = React.forwardRef(function ContributeSection(
                 {/* Body */}
                 <div className="cs-modal-body">
                   {/* Tab switcher */}
-                  <div style={{ display: "flex", gap: 8, marginBottom: "1.5rem" }}>
+                  <div
+                    style={{ display: "flex", gap: 8, marginBottom: "1.5rem" }}
+                  >
                     {[
                       { key: "review", label: "⭐ Review" },
-                      { key: "photo",  label: "📷 Photo"  },
-                      { key: "qa",     label: "❓ Question" },
+                      { key: "photo", label: "📷 Photo" },
+                      { key: "qa", label: "❓ Question" },
                     ].map((t) => (
                       <button
                         key={t.key}
@@ -277,22 +304,47 @@ const ContributeSection = React.forwardRef(function ContributeSection(
                     <div>
                       {/* Star rating */}
                       <div style={{ marginBottom: "1.25rem" }}>
-                        <label style={{ display: "block", fontWeight: 700, fontSize: ".82rem", color: B.charcoal, marginBottom: 8 }}>
-                          Your Rating <span style={{ color: B.primary }}>*</span>
+                        <label
+                          style={{
+                            display: "block",
+                            fontWeight: 700,
+                            fontSize: ".82rem",
+                            color: B.charcoal,
+                            marginBottom: 8,
+                          }}
+                        >
+                          Your Rating{" "}
+                          <span style={{ color: B.primary }}>*</span>
                         </label>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 8,
+                          }}
+                        >
                           {[1, 2, 3, 4, 5].map((star) => (
                             <span
                               key={star}
                               className="cs-star"
-                              onClick={() => setNewReview((r) => ({ ...r, rating: star }))}
-                              onMouseEnter={() => setNewReview((r) => ({ ...r, hoverRating: star }))}
-                              onMouseLeave={() => setNewReview((r) => ({ ...r, hoverRating: 0 }))}
+                              onClick={() =>
+                                setNewReview((r) => ({ ...r, rating: star }))
+                              }
+                              onMouseEnter={() =>
+                                setNewReview((r) => ({
+                                  ...r,
+                                  hoverRating: star,
+                                }))
+                              }
+                              onMouseLeave={() =>
+                                setNewReview((r) => ({ ...r, hoverRating: 0 }))
+                              }
                             >
                               <FaStar
                                 size={28}
                                 color={
-                                  (newReview.hoverRating || newReview.rating) >= star
+                                  (newReview.hoverRating || newReview.rating) >=
+                                  star
                                     ? B.amber
                                     : B.borderLight
                                 }
@@ -300,8 +352,23 @@ const ContributeSection = React.forwardRef(function ContributeSection(
                             </span>
                           ))}
                           {newReview.rating > 0 && (
-                            <span style={{ fontSize: ".82rem", color: B.meta, marginLeft: 6 }}>
-                              {["", "Terrible", "Poor", "Average", "Very Good", "Excellent"][newReview.rating]}
+                            <span
+                              style={{
+                                fontSize: ".82rem",
+                                color: B.meta,
+                                marginLeft: 6,
+                              }}
+                            >
+                              {
+                                [
+                                  "",
+                                  "Terrible",
+                                  "Poor",
+                                  "Average",
+                                  "Very Good",
+                                  "Excellent",
+                                ][newReview.rating]
+                              }
                             </span>
                           )}
                         </div>
@@ -309,15 +376,33 @@ const ContributeSection = React.forwardRef(function ContributeSection(
 
                       {/* Trip type */}
                       <div style={{ marginBottom: "1rem" }}>
-                        <label style={{ display: "block", fontWeight: 700, fontSize: ".82rem", color: B.charcoal, marginBottom: 8 }}>
+                        <label
+                          style={{
+                            display: "block",
+                            fontWeight: 700,
+                            fontSize: ".82rem",
+                            color: B.charcoal,
+                            marginBottom: 8,
+                          }}
+                        >
                           Trip Type
                         </label>
-                        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                          {["Solo", "Couple", "Family", "Friends", "Business"].map((t) => (
+                        <div
+                          style={{ display: "flex", flexWrap: "wrap", gap: 8 }}
+                        >
+                          {[
+                            "Solo",
+                            "Couple",
+                            "Family",
+                            "Friends",
+                            "Business",
+                          ].map((t) => (
                             <button
                               key={t}
                               className={`cs-trip-pill ${newReview.tripType === t ? "selected" : ""}`}
-                              onClick={() => setNewReview((r) => ({ ...r, tripType: t }))}
+                              onClick={() =>
+                                setNewReview((r) => ({ ...r, tripType: t }))
+                              }
                             >
                               {t}
                             </button>
@@ -327,7 +412,15 @@ const ContributeSection = React.forwardRef(function ContributeSection(
 
                       {/* Title */}
                       <div style={{ marginBottom: "1rem" }}>
-                        <label style={{ display: "block", fontWeight: 700, fontSize: ".82rem", color: B.charcoal, marginBottom: 6 }}>
+                        <label
+                          style={{
+                            display: "block",
+                            fontWeight: 700,
+                            fontSize: ".82rem",
+                            color: B.charcoal,
+                            marginBottom: 6,
+                          }}
+                        >
                           Title
                         </label>
                         <input
@@ -335,21 +428,40 @@ const ContributeSection = React.forwardRef(function ContributeSection(
                           className="cs-input"
                           placeholder="Summarise your experience"
                           value={newReview.title}
-                          onChange={(e) => setNewReview((r) => ({ ...r, title: e.target.value }))}
+                          onChange={(e) =>
+                            setNewReview((r) => ({
+                              ...r,
+                              title: e.target.value,
+                            }))
+                          }
                         />
                       </div>
 
                       {/* Review body */}
                       <div>
-                        <label style={{ display: "block", fontWeight: 700, fontSize: ".82rem", color: B.charcoal, marginBottom: 6 }}>
-                          Your Review <span style={{ color: B.primary }}>*</span>
+                        <label
+                          style={{
+                            display: "block",
+                            fontWeight: 700,
+                            fontSize: ".82rem",
+                            color: B.charcoal,
+                            marginBottom: 6,
+                          }}
+                        >
+                          Your Review{" "}
+                          <span style={{ color: B.primary }}>*</span>
                         </label>
                         <textarea
                           className="cs-input"
                           rows={4}
                           placeholder="Tell others what made this trip special…"
                           value={newReview.text}
-                          onChange={(e) => setNewReview((r) => ({ ...r, text: e.target.value }))}
+                          onChange={(e) =>
+                            setNewReview((r) => ({
+                              ...r,
+                              text: e.target.value,
+                            }))
+                          }
                         />
                       </div>
                     </div>
@@ -358,10 +470,29 @@ const ContributeSection = React.forwardRef(function ContributeSection(
                   {/* ── PHOTO tab ── */}
                   {contributeTab === "photo" && (
                     <div className="cs-upload-zone">
-                      <FaCamera size={36} color={B.placeholder} style={{ marginBottom: 12 }} />
-                      <div className="fw-bold mb-1" style={{ color: B.charcoal }}>Upload your photos</div>
-                      <div style={{ fontSize: ".82rem", color: B.meta }}>JPG, PNG up to 10 MB each</div>
-                      <button className="cs-btn-primary" style={{ width: "auto", padding: ".55rem 1.5rem", fontSize: ".85rem", marginTop: "1rem" }}>
+                      <FaCamera
+                        size={36}
+                        color={B.placeholder}
+                        style={{ marginBottom: 12 }}
+                      />
+                      <div
+                        className="fw-bold mb-1"
+                        style={{ color: B.charcoal }}
+                      >
+                        Upload your photos
+                      </div>
+                      <div style={{ fontSize: ".82rem", color: B.meta }}>
+                        JPG, PNG up to 10 MB each
+                      </div>
+                      <button
+                        className="cs-btn-primary"
+                        style={{
+                          width: "auto",
+                          padding: ".55rem 1.5rem",
+                          fontSize: ".85rem",
+                          marginTop: "1rem",
+                        }}
+                      >
                         Choose Photos
                       </button>
                     </div>
@@ -371,8 +502,17 @@ const ContributeSection = React.forwardRef(function ContributeSection(
                   {contributeTab === "qa" && (
                     <div>
                       <div style={{ marginBottom: "1rem" }}>
-                        <label style={{ display: "block", fontWeight: 700, fontSize: ".82rem", color: B.charcoal, marginBottom: 6 }}>
-                          Your Question <span style={{ color: B.primary }}>*</span>
+                        <label
+                          style={{
+                            display: "block",
+                            fontWeight: 700,
+                            fontSize: ".82rem",
+                            color: B.charcoal,
+                            marginBottom: 6,
+                          }}
+                        >
+                          Your Question{" "}
+                          <span style={{ color: B.primary }}>*</span>
                         </label>
                         <textarea
                           className="cs-input"
@@ -382,8 +522,19 @@ const ContributeSection = React.forwardRef(function ContributeSection(
                           onChange={(e) => setNewQuestion(e.target.value)}
                         />
                       </div>
-                      <div style={{ padding: ".85rem 1rem", borderRadius: 10, background: DEFAULT_BRAND.bgCard, border: `1px solid ${B.borderLight}`, fontSize: ".78rem", color: B.meta }}>
-                        💡 Tip: Specific questions get answered faster. Include details like travel dates, group type, or specific concerns.
+                      <div
+                        style={{
+                          padding: ".85rem 1rem",
+                          borderRadius: 10,
+                          background: DEFAULT_BRAND.bgCard,
+                          border: `1px solid ${B.borderLight}`,
+                          fontSize: ".78rem",
+                          color: B.meta,
+                        }}
+                      >
+                        💡 Tip: Specific questions get answered faster. Include
+                        details like travel dates, group type, or specific
+                        concerns.
                       </div>
                     </div>
                   )}
@@ -395,22 +546,44 @@ const ContributeSection = React.forwardRef(function ContributeSection(
                     {contributeTab === "review"
                       ? "✉️ Submit Review"
                       : contributeTab === "photo"
-                      ? "📷 Upload Photos"
-                      : "❓ Submit Question"}
+                        ? "📷 Upload Photos"
+                        : "❓ Submit Question"}
                   </button>
-                  <p style={{ textAlign: "center", marginTop: 8, marginBottom: 0, fontSize: ".73rem", color: B.placeholder }}>
-                    Your contribution helps fellow travellers make better decisions
+                  <p
+                    style={{
+                      textAlign: "center",
+                      marginTop: 8,
+                      marginBottom: 0,
+                      fontSize: ".73rem",
+                      color: B.placeholder,
+                    }}
+                  >
+                    Your contribution helps fellow travellers make better
+                    decisions
                   </p>
                 </div>
               </>
             ) : (
               /* ── Success screen ── */
               <div style={{ textAlign: "center", padding: "3rem 2rem" }}>
-                <div style={{ fontSize: "3.5rem", marginBottom: "1rem" }}>{dm.emoji}</div>
-                <div className="font-serif-cs fw-bold mb-2" style={{ fontSize: "1.6rem", color: B.charcoal }}>
+                <div style={{ fontSize: "3.5rem", marginBottom: "1rem" }}>
+                  {dm.emoji}
+                </div>
+                <div
+                  className="font-serif-cs fw-bold mb-2"
+                  style={{ fontSize: "1.6rem", color: B.charcoal }}
+                >
                   {dm.title}
                 </div>
-                <p style={{ fontSize: ".86rem", color: B.meta, lineHeight: 1.7, maxWidth: 340, margin: "0 auto 1.5rem" }}>
+                <p
+                  style={{
+                    fontSize: ".86rem",
+                    color: B.meta,
+                    lineHeight: 1.7,
+                    maxWidth: 340,
+                    margin: "0 auto 1.5rem",
+                  }}
+                >
                   {dm.body}
                 </p>
                 <button

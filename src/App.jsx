@@ -3,30 +3,16 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
 
 import Services from "./Pages/Services.jsx";
-import Header from "./Components/Header/Header";
+import Header from "./Components/Header";
 import PageNotFound from "./Pages/PageNotFound";
-
-import Kerala from "./Pages/Explore-Packages/Kerala";
-import Rajasthan from "./Pages/Explore-Packages/Rajasthan";
-import Sikkim from "./Pages/Explore-Packages/Sikkim";
-import Kashmir from "./Pages/Explore-Packages/Kashmir";
-import Rishikesh from "./Pages/Explore-Packages/Rishikesh";
-import Andman from "./Pages/Explore-Packages/Andman";
-import Agra from "./Pages/Explore-Packages/Agra";
-import Udaipur from "./Pages/Explore-Packages/Udaipur";
-import Ladakh from "./Pages/Explore-Packages/Ladakh";
-import Ooty from "./Pages/Explore-Packages/Ooty";
 
 import BookingForm from "./Components/BookingForm/BookingForm.jsx";
 import MyBookings from "./Components/BookingForm/MyBookings.jsx";
 import UserProfilePopup from "./Components/Profile/Profile.jsx";
-import UploadImagesByTitle from "./Components/ImageUpload.jsx";
-
-import PackageDetail from "./Pages/Packages/PackageDetail.jsx";
 import BaseTourPage from "./Pages/Packages/BaseTourPage.jsx";
 import ItineraryPage from "./Pages/ItineraryPage.jsx";
 
-import Login from "./Pages/Login.jsx";
+// import Login from "./Pages/Login.jsx";
 import { PackageProvider } from "./Context/PackageContext.jsx";
 import Profile, {
   BookingsTab,
@@ -36,7 +22,7 @@ import Profile, {
   SettingsTab,
 } from "./Components/ProfileDropdown/Profile.jsx";
 import ProfilePopup from "./Components/Profile/Profile.jsx";
-import AdminInquiries from "./Pages/Admin/AdminInquiries.jsx";
+// import AdminInquiries from "./Pages/Admin/AdminInquiries.jsx";
 import { GiOak } from "react-icons/gi";
 import Goa from "./Pages/Domestic/Goa.jsx";
 import GoaStay from "./Pages/Domestic/Goa/Goastay.jsx";
@@ -50,15 +36,7 @@ import StayListPage from "./Pages/Hotel/Staylistpage.jsx";
 import HotelDetailsPage from "./Pages/Hotel/Hoteldetailspage.jsx";
 import BookingPage from "./Pages/Hotel/Booking.jsx";
 /* Lazy Pages */
-const Start = lazy(() => import("./Pages/Start"));
-const CustomTourP = lazy(() => import("./Pages/Packages/CustomTourP"));
-const AdventureTourP = lazy(() => import("./Pages/Packages/AdventureTourP"));
-const FamilyTourP = lazy(() => import("./Pages/Packages/FamilyTourP"));
-const GroupTourP = lazy(() => import("./Pages/Packages/GroupTourP"));
-const CityTourP = lazy(() => import("./Pages/Packages/CityTourP"));
-
-const Manali = lazy(() => import("./Pages/Explore-Packages/Manali"));
-// const Goa = lazy(() => import("./Pages/Explore-Packages/Goa"));
+const HomePage = lazy(() => import("./Pages/HomePage.jsx"));
 const Maharashtra = lazy(() => import("./Pages/Domestic/Maharashtra"));
 
 const App = () => {
@@ -70,19 +48,9 @@ const App = () => {
         <Suspense fallback={<div className="loading">Loading...</div>}>
           <Routes>
             {/* Landing */}
-            <Route path="/" element={<Start />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/services" element={<Services />} />
-            {/* <Route path="/login" element={<Login />} /> */}
-
-            {/* Tour Categories */}
-            {/* <Route path="/tourcard" element={<BaseTourPage />} /> */}
             <Route path="/tourcard/:type" element={<BaseTourPage />} />
-
-            <Route path="/adventure-tours" element={<AdventureTourP />} />
-            <Route path="/family-tours" element={<FamilyTourP />} />
-            <Route path="/group-tours" element={<GroupTourP />} />
-            <Route path="/city-tours" element={<CityTourP />} />
-            <Route path="/custom-tours" element={<CustomTourP />} />
 
             {/* Package Details */}
             <Route
@@ -96,27 +64,13 @@ const App = () => {
               element={<Navigate to="/services" replace />}
             />
 
-            {/* Explore Packages */}
-            {/* <Route path="/manali-Packages" element={<Manali />} />
-            <Route path="/goa-Packages" element={<Goa />} />
-            <Route path="/kerala-Packages" element={<Kerala />} />
-            <Route path="/rajasthan-Packages" element={<Rajasthan />} />
-            <Route path="/sikkim-Packages" element={<Sikkim />} />
-            <Route path="/kashmir-Packages" element={<Kashmir />} />
-            <Route path="/rishikesh-Packages" element={<Rishikesh />} />
-            <Route path="/andaman-Packages" element={<Andman />} />
-            <Route path="/agra-Packages" element={<Agra />} />
-            <Route path="/udaipur-Packages" element={<Udaipur />} />
-            <Route path="/ladakh-Packages" element={<Ladakh />} />
-            <Route path="/ooty-Packages" element={<Ooty />} /> */}
-
             {/* Booking */}
             <Route path="/booking/:packageId" element={<BookingForm />} />
             <Route path="/my-bookings" element={<MyBookings />} />
             <Route path="/my-profile" element={<UserProfilePopup />} />
 
             {/* Admin Upload */}
-            <Route path="/update" element={<UploadImagesByTitle />} />
+            {/* <Route path="/update" element={<UploadImagesByTitle />} /> */}
 
             {/* State Pages */}
             <Route path="/maharashtra" element={<Maharashtra />} />

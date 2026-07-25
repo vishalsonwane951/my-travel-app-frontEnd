@@ -1,9 +1,8 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Header from '../Components/Header/Header';
+import Header from '../Components/Header';
 import PackageContext from '../Context/PackageContext';
 import NewsletterSubscribe from '../Components/Newslettersubscribe';
-import header from '../Components/Header/Header'
 
 const useCountUp = (target, duration = 2000) => {
   const [count, setCount] = useState(0);

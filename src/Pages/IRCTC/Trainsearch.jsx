@@ -10,7 +10,7 @@ import {
 import api from '../../utils/api.js';
 import { AuthContext } from '../../Context/AuthContext.jsx';
 import HotelHeader from '../Hotel/component/Header.jsx';
-import Header from '../../Components/Header/Header.jsx';
+import Header from '../../Components/Header.jsx';
 import TrainBookingModal from './Trainbookingmodal.jsx';
 
 // ─── Design tokens reused from the Desi V Desi home page ──────

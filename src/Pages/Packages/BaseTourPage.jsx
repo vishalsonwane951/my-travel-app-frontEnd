@@ -1,30 +1,75 @@
 // pages/TourPackages/BaseTourPage.jsx
-import React, { useState, useEffect, useRef, useContext, useCallback, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useContext,
+  useCallback,
+  useMemo,
+} from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import TourPackageCard from "../../Components/TourPackageCard";
 import PackageContext from "../../Context/PackageContext";
-import { FaSearch, FaArrowUp, FaPhone, FaEnvelope, FaWhatsapp, FaFilter, FaTimes, FaSortAmountDown, FaThLarge, FaList, FaStar, FaMapMarkerAlt, FaArrowRight } from "react-icons/fa";
-// import Header from "../../Components/Header/Header";
-import api from '../../utils/api.js'
-import Header from "../../Components/Header/Header.jsx";
+import {
+  FaSearch,
+  FaArrowUp,
+  FaPhone,
+  FaEnvelope,
+  FaWhatsapp,
+  FaFilter,
+  FaTimes,
+  FaSortAmountDown,
+  FaThLarge,
+  FaList,
+  FaStar,
+  FaMapMarkerAlt,
+  FaArrowRight,
+} from "react-icons/fa";
+import api from "../../utils/api.js";
+import Header from "../../Components/Header.jsx";
 
 // ── Skeleton Card ─────────────────────────────────────────────────────────────
 const SkeletonCard = () => (
   <div className="col-xl-4 col-lg-4 col-md-6 mb-4">
     <div className="btb-skeleton-card">
       <div className="btb-skel btb-skel-img" />
-      <div style={{ padding: '1.25rem' }}>
+      <div style={{ padding: "1.25rem" }}>
         <div className="btb-skel btb-skel-chip" />
-        <div className="btb-skel btb-skel-line" style={{ width: '80%', marginTop: 8 }} />
-        <div className="btb-skel btb-skel-line" style={{ width: '60%', marginTop: 8 }} />
-        <div className="btb-skel btb-skel-line" style={{ width: '90%', marginTop: 8 }} />
-        <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
-          <div className="btb-skel btb-skel-line" style={{ width: '40%', height: 10 }} />
-          <div className="btb-skel btb-skel-line" style={{ width: '40%', height: 10 }} />
+        <div
+          className="btb-skel btb-skel-line"
+          style={{ width: "80%", marginTop: 8 }}
+        />
+        <div
+          className="btb-skel btb-skel-line"
+          style={{ width: "60%", marginTop: 8 }}
+        />
+        <div
+          className="btb-skel btb-skel-line"
+          style={{ width: "90%", marginTop: 8 }}
+        />
+        <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
+          <div
+            className="btb-skel btb-skel-line"
+            style={{ width: "40%", height: 10 }}
+          />
+          <div
+            className="btb-skel btb-skel-line"
+            style={{ width: "40%", height: 10 }}
+          />
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 20, alignItems: 'center' }}>
-          <div className="btb-skel btb-skel-line" style={{ width: '30%', height: 28 }} />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginTop: 20,
+            alignItems: "center",
+          }}
+        >
+          <div
+            className="btb-skel btb-skel-line"
+            style={{ width: "30%", height: 28 }}
+          />
           <div className="btb-skel btb-skel-btn" />
         </div>
       </div>
@@ -39,15 +84,57 @@ const useDestWeather = (destination) => {
     if (!destination) return;
     // Simulated — replace with Open-Meteo API call in production
     const weatherMap = {
-      goa: { temp: 31, desc: 'Sunny & Humid', icon: '☀️', humidity: 78, uv: 8, best: 'Nov–Feb' },
-      kerala: { temp: 28, desc: 'Partly Cloudy', icon: '⛅', humidity: 82, uv: 6, best: 'Sep–Mar' },
-      rajasthan: { temp: 38, desc: 'Hot & Dry', icon: '🌤️', humidity: 25, uv: 10, best: 'Oct–Mar' },
-      manali: { temp: 12, desc: 'Cool & Clear', icon: '🏔️', humidity: 60, uv: 4, best: 'May–Jun' },
-      shimla: { temp: 15, desc: 'Misty', icon: '🌫️', humidity: 72, uv: 3, best: 'Mar–Jun' },
-      default: { temp: 26, desc: 'Pleasant', icon: '🌤️', humidity: 65, uv: 5, best: 'Oct–Mar' },
+      goa: {
+        temp: 31,
+        desc: "Sunny & Humid",
+        icon: "☀️",
+        humidity: 78,
+        uv: 8,
+        best: "Nov–Feb",
+      },
+      kerala: {
+        temp: 28,
+        desc: "Partly Cloudy",
+        icon: "⛅",
+        humidity: 82,
+        uv: 6,
+        best: "Sep–Mar",
+      },
+      rajasthan: {
+        temp: 38,
+        desc: "Hot & Dry",
+        icon: "🌤️",
+        humidity: 25,
+        uv: 10,
+        best: "Oct–Mar",
+      },
+      manali: {
+        temp: 12,
+        desc: "Cool & Clear",
+        icon: "🏔️",
+        humidity: 60,
+        uv: 4,
+        best: "May–Jun",
+      },
+      shimla: {
+        temp: 15,
+        desc: "Misty",
+        icon: "🌫️",
+        humidity: 72,
+        uv: 3,
+        best: "Mar–Jun",
+      },
+      default: {
+        temp: 26,
+        desc: "Pleasant",
+        icon: "🌤️",
+        humidity: 65,
+        uv: 5,
+        best: "Oct–Mar",
+      },
     };
     setTimeout(() => {
-      const key = destination.toLowerCase().split('-')[0];
+      const key = destination.toLowerCase().split("-")[0];
       setData(weatherMap[key] || weatherMap.default);
     }, 800);
   }, [destination]);
@@ -57,13 +144,13 @@ const useDestWeather = (destination) => {
 // ── Dynamic pricing hook ──────────────────────────────────────────────────────
 const useDynamicPricing = () => {
   const [multiplier, setMultiplier] = useState(1);
-  const [trend, setTrend] = useState('stable'); // 'rising' | 'falling' | 'stable'
+  const [trend, setTrend] = useState("stable"); // 'rising' | 'falling' | 'stable'
   useEffect(() => {
     const interval = setInterval(() => {
       const change = (Math.random() - 0.48) * 0.05;
-      setMultiplier(prev => {
+      setMultiplier((prev) => {
         const next = Math.max(0.85, Math.min(1.25, prev + change));
-        setTrend(next > prev ? 'rising' : next < prev ? 'falling' : 'stable');
+        setTrend(next > prev ? "rising" : next < prev ? "falling" : "stable");
         return next;
       });
     }, 12000);
@@ -74,24 +161,69 @@ const useDynamicPricing = () => {
 
 // ── Tour type metadata ────────────────────────────────────────────────────────
 const TOUR_META = {
-  'custom-tour':     { title: 'Custom Tours',     icon: '🎨', grad: 'linear-gradient(135deg, #5BC0EB, #E8F4FD)', desc: 'Personalized journeys built around your dreams.' },
-  'adventure-tour':  { title: 'Adventure Tours',  icon: '🏔️', grad: 'linear-gradient(135deg, #5BC0EB, #E8F4FD)', desc: 'Thrilling experiences for the bold and brave.' },
-  'family-tour':     { title: 'Family Tours',     icon: '👨‍👩‍👧‍👦', grad: 'linear-gradient(135deg, #FFE66D, #FFB347)', desc: 'Joyful journeys for every generation.' },
-  'group-tour':      { title: 'Group Tours',      icon: '🚌', grad: 'linear-gradient(135deg, #A37BFF, #6B4EFF)', desc: 'Better together — explore as a community.' },
-  'city-tour':       { title: 'City Tours',       icon: '🌆', grad: 'linear-gradient(135deg, #FF9F1C, #FCCF31)', desc: 'Uncover the soul of iconic cities.' },
-  'honeymoon-tour':  { title: 'Honeymoon Tours',  icon: '💑', grad: 'linear-gradient(135deg, #FF6EB4, #FF9A9E)', desc: 'Romantic escapes crafted for two.' },
-  'weekend-getaway': { title: 'Weekend Getaways', icon: '🌅', grad: 'linear-gradient(135deg, #5BC0EB, #0353A4)', desc: 'Escape the grind for a perfect 2-3 days.' },
-  'luxury-tour':     { title: 'Luxury Tours',     icon: '💎', grad: 'linear-gradient(135deg, #C9A84C, #8B6914)', desc: 'Five-star experiences for discerning travelers.' },
-  'pilgrimage-tour': { title: 'Pilgrimage Tours', icon: '🕌', grad: 'linear-gradient(135deg, #7BAE7F, #4A7C59)', desc: 'Sacred journeys that nourish the soul.' },
+  "custom-tour": {
+    title: "Custom Tours",
+    icon: "🎨",
+    grad: "linear-gradient(135deg, #5BC0EB, #E8F4FD)",
+    desc: "Personalized journeys built around your dreams.",
+  },
+  "adventure-tour": {
+    title: "Adventure Tours",
+    icon: "🏔️",
+    grad: "linear-gradient(135deg, #5BC0EB, #E8F4FD)",
+    desc: "Thrilling experiences for the bold and brave.",
+  },
+  "family-tour": {
+    title: "Family Tours",
+    icon: "👨‍👩‍👧‍👦",
+    grad: "linear-gradient(135deg, #FFE66D, #FFB347)",
+    desc: "Joyful journeys for every generation.",
+  },
+  "group-tour": {
+    title: "Group Tours",
+    icon: "🚌",
+    grad: "linear-gradient(135deg, #A37BFF, #6B4EFF)",
+    desc: "Better together — explore as a community.",
+  },
+  "city-tour": {
+    title: "City Tours",
+    icon: "🌆",
+    grad: "linear-gradient(135deg, #FF9F1C, #FCCF31)",
+    desc: "Uncover the soul of iconic cities.",
+  },
+  "honeymoon-tour": {
+    title: "Honeymoon Tours",
+    icon: "💑",
+    grad: "linear-gradient(135deg, #FF6EB4, #FF9A9E)",
+    desc: "Romantic escapes crafted for two.",
+  },
+  "weekend-getaway": {
+    title: "Weekend Getaways",
+    icon: "🌅",
+    grad: "linear-gradient(135deg, #5BC0EB, #0353A4)",
+    desc: "Escape the grind for a perfect 2-3 days.",
+  },
+  "luxury-tour": {
+    title: "Luxury Tours",
+    icon: "💎",
+    grad: "linear-gradient(135deg, #C9A84C, #8B6914)",
+    desc: "Five-star experiences for discerning travelers.",
+  },
+  "pilgrimage-tour": {
+    title: "Pilgrimage Tours",
+    icon: "🕌",
+    grad: "linear-gradient(135deg, #7BAE7F, #4A7C59)",
+    desc: "Sacred journeys that nourish the soul.",
+  },
 };
 
 const SORT_OPTIONS = [
-  { value: 'default',   label: 'Recommended' },
-  { value: 'price-asc', label: 'Price: Low to High' },
-  { value: 'price-desc',label: 'Price: High to Low' },
-  { value: 'rating',    label: 'Highest Rated' },
-  { value: 'newest',    label: 'Newest First' },
-  { value: 'popular',   label: 'Most Popular' },
+  { value: "default", label: "Recommended" },
+  { value: "price-asc", label: "Price: Low to High" },
+  { value: "price-desc", label: "Price: High to Low" },
+  { value: "rating", label: "Highest Rated" },
+  { value: "newest", label: "Newest First" },
+  { value: "popular", label: "Most Popular" },
 ];
 
 const BaseTourPage = () => {
@@ -109,12 +241,12 @@ const BaseTourPage = () => {
   const [sortBy, setSortBy] = useState("default");
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'list'
+  const [viewMode, setViewMode] = useState("grid"); // 'grid' | 'list'
   const [activeDestination, setActiveDestination] = useState(null);
   const [resultsCount, setResultsCount] = useState(0);
 
   const packagesRef = useRef(null);
-  const meta = TOUR_META[packageType] || TOUR_META['custom-tour'];
+  const meta = TOUR_META[packageType] || TOUR_META["custom-tour"];
   const weather = useDestWeather(activeDestination);
   const { multiplier, trend } = useDynamicPricing();
 
@@ -122,17 +254,15 @@ const BaseTourPage = () => {
 
   // ── Fetch packages ──────────────────────────────────────────────────────────
   useEffect(() => {
-
-    console.log('packageType',packageType)
-    if (!packageType) return; null
+    console.log("packageType", packageType);
+    if (!packageType) return;
+    null;
     const fetch_ = async () => {
       try {
         setLoading(true);
-        const res = await api.get(
-          `/packages/${packageType}`
-        );
+        const res = await api.get(`/packages/${packageType}`);
         setPackages(res.data);
-        console.log('package Data:',res.data)
+        console.log("package Data:", res.data);
         // Set first destination for weather
         if (res.data?.[0]?.location) setActiveDestination(res.data[1].location);
       } catch {
@@ -149,33 +279,54 @@ const BaseTourPage = () => {
     let result = [...packages];
     if (searchTerm.trim()) {
       const q = searchTerm.toLowerCase();
-      result = result.filter(p =>
-        p.title?.toLowerCase().includes(q) ||
-        p.location?.toLowerCase().includes(q) ||
-        p.description?.toLowerCase().includes(q)
+      result = result.filter(
+        (p) =>
+          p.title?.toLowerCase().includes(q) ||
+          p.location?.toLowerCase().includes(q) ||
+          p.description?.toLowerCase().includes(q),
       );
     }
-    result = result.filter(p => {
-      const price = p.durations?.[0]?.discountedPrice || p.durations?.[0]?.price || p.price || 0;
+    result = result.filter((p) => {
+      const price =
+        p.durations?.[0]?.discountedPrice ||
+        p.durations?.[0]?.price ||
+        p.price ||
+        0;
       return price >= priceRange[0] && price <= priceRange[1];
     });
     if (selectedDuration !== "all") {
-      result = result.filter(p => p.duration?.includes(selectedDuration));
+      result = result.filter((p) => p.duration?.includes(selectedDuration));
     }
     if (selectedRating > 0) {
-      result = result.filter(p => (p.rating || 4.5) >= selectedRating);
+      result = result.filter((p) => (p.rating || 4.5) >= selectedRating);
     }
     // Sort
     switch (sortBy) {
-      case 'price-asc':  result.sort((a,b) => (a.price||0) - (b.price||0)); break;
-      case 'price-desc': result.sort((a,b) => (b.price||0) - (a.price||0)); break;
-      case 'rating':     result.sort((a,b) => (b.rating||0) - (a.rating||0)); break;
-      case 'popular':    result.sort((a,b) => (b.reviews||0) - (a.reviews||0)); break;
-      default: break;
+      case "price-asc":
+        result.sort((a, b) => (a.price || 0) - (b.price || 0));
+        break;
+      case "price-desc":
+        result.sort((a, b) => (b.price || 0) - (a.price || 0));
+        break;
+      case "rating":
+        result.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        break;
+      case "popular":
+        result.sort((a, b) => (b.reviews || 0) - (a.reviews || 0));
+        break;
+      default:
+        break;
     }
     setFilteredPackages(result);
     setResultsCount(result.length);
-  }, [packages, searchTerm, priceRange, selectedDuration, selectedRating, sortBy]);
+  }, [
+    packages,
+    searchTerm,
+    priceRange,
+    selectedDuration,
+    selectedRating,
+    sortBy,
+  ]);
 
   useEffect(() => {
     const h = () => setShowScrollTop(window.scrollY > 400);
@@ -191,15 +342,21 @@ const BaseTourPage = () => {
     setSortBy("default");
   }, []);
 
-  const hasActiveFilters = searchTerm || priceRange[1] < 100000 || priceRange[0] > 0 || selectedDuration !== "all" || selectedRating > 0;
+  const hasActiveFilters =
+    searchTerm ||
+    priceRange[1] < 100000 ||
+    priceRange[0] > 0 ||
+    selectedDuration !== "all" ||
+    selectedRating > 0;
 
-  const priceRangeText = priceRange[1] >= 100000
-    ? `Up to ₹1L+`
-    : `₹${(priceRange[0]/1000).toFixed(0)}k – ₹${(priceRange[1]/1000).toFixed(0)}k`;
+  const priceRangeText =
+    priceRange[1] >= 100000
+      ? `Up to ₹1L+`
+      : `₹${(priceRange[0] / 1000).toFixed(0)}k – ₹${(priceRange[1] / 1000).toFixed(0)}k`;
 
   return (
     <>
-    <Header/>
+      <Header />
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap');
         :root {
@@ -707,12 +864,14 @@ const BaseTourPage = () => {
         }
       `}</style>
 
-
       {/* ── HERO ───────────────────────────────────────────────────────────── */}
       <section className="btb-hero">
         <div
           className="btb-hero-bg"
-          style={{ background: `${meta.grad}, url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1600&q=80') center/cover no-repeat`, backgroundBlendMode: 'multiply' }}
+          style={{
+            background: `${meta.grad}, url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1600&q=80') center/cover no-repeat`,
+            backgroundBlendMode: "multiply",
+          }}
         />
         <div className="btb-hero-overlay" />
         <div className="btb-hero-content">
@@ -731,18 +890,32 @@ const BaseTourPage = () => {
             <div className="btb-price-trend">
               <span
                 className="btb-trend-dot"
-                style={{ background: trend === 'rising' ? '#FF6B6B' : trend === 'falling' ? '#4CAF50' : '#FFD700' }}
+                style={{
+                  background:
+                    trend === "rising"
+                      ? "#FF6B6B"
+                      : trend === "falling"
+                        ? "#4CAF50"
+                        : "#FFD700",
+                }}
               />
               <span>
-                {trend === 'rising' ? '📈 Prices rising' : trend === 'falling' ? '📉 Prices dropping' : '📊 Prices stable'} · {Math.round(multiplier * 100)}% of base
+                {trend === "rising"
+                  ? "📈 Prices rising"
+                  : trend === "falling"
+                    ? "📉 Prices dropping"
+                    : "📊 Prices stable"}{" "}
+                · {Math.round(multiplier * 100)}% of base
               </span>
             </div>
             {/* Weather */}
             {weather ? (
               <div className="btb-weather-card">
-                <div className="btb-weather-title">📍 {activeDestination || 'Destination'} Weather</div>
+                <div className="btb-weather-title">
+                  📍 {activeDestination || "Destination"} Weather
+                </div>
                 <div className="btb-weather-main">
-                  <span style={{ fontSize: '1.8rem' }}>{weather.icon}</span>
+                  <span style={{ fontSize: "1.8rem" }}>{weather.icon}</span>
                   <div>
                     <div className="btb-weather-temp">{weather.temp}°C</div>
                     <div className="btb-weather-desc">{weather.desc}</div>
@@ -752,12 +925,21 @@ const BaseTourPage = () => {
                   <span>💧 {weather.humidity}%</span>
                   <span>☀️ UV {weather.uv}</span>
                 </div>
-                <div className="btb-weather-best">🗓️ Best time: {weather.best}</div>
+                <div className="btb-weather-best">
+                  🗓️ Best time: {weather.best}
+                </div>
               </div>
             ) : (
               <div className="btb-weather-card" style={{ opacity: 0.7 }}>
                 <div className="btb-weather-title">Loading weather...</div>
-                <div style={{ height: 60, background: 'rgba(255,255,255,0.1)', borderRadius: 8, marginTop: 8 }} />
+                <div
+                  style={{
+                    height: 60,
+                    background: "rgba(255,255,255,0.1)",
+                    borderRadius: 8,
+                    marginTop: 8,
+                  }}
+                />
               </div>
             )}
           </div>
@@ -773,13 +955,15 @@ const BaseTourPage = () => {
               className="btb-search-input"
               placeholder={`Search ${meta.title.toLowerCase()}...`}
               value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <div className="btb-search-icon"><FaSearch size={12} /></div>
+            <div className="btb-search-icon">
+              <FaSearch size={12} />
+            </div>
           </div>
 
           <button
-            className={`btb-filter-btn ${hasActiveFilters ? 'active' : ''}`}
+            className={`btb-filter-btn ${hasActiveFilters ? "active" : ""}`}
             onClick={() => setSidebarOpen(true)}
           >
             <FaFilter size={11} />
@@ -790,20 +974,33 @@ const BaseTourPage = () => {
           <select
             className="btb-sort-select"
             value={sortBy}
-            onChange={e => setSortBy(e.target.value)}
+            onChange={(e) => setSortBy(e.target.value)}
           >
-            {SORT_OPTIONS.map(o => (
-              <option key={o.value} value={o.value}>{o.label}</option>
+            {SORT_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
             ))}
           </select>
 
           <div className="btb-view-toggles">
-            <button className={`btb-view-btn ${viewMode === 'grid' ? 'active' : ''}`} onClick={() => setViewMode('grid')}><FaThLarge /></button>
-            <button className={`btb-view-btn ${viewMode === 'list' ? 'active' : ''}`} onClick={() => setViewMode('list')}><FaList /></button>
+            <button
+              className={`btb-view-btn ${viewMode === "grid" ? "active" : ""}`}
+              onClick={() => setViewMode("grid")}
+            >
+              <FaThLarge />
+            </button>
+            <button
+              className={`btb-view-btn ${viewMode === "list" ? "active" : ""}`}
+              onClick={() => setViewMode("list")}
+            >
+              <FaList />
+            </button>
           </div>
 
           <div className="btb-results-count">
-            <strong>{resultsCount}</strong> {resultsCount === 1 ? 'package' : 'packages'} found
+            <strong>{resultsCount}</strong>{" "}
+            {resultsCount === 1 ? "package" : "packages"} found
           </div>
         </div>
       </div>
@@ -826,11 +1023,16 @@ const BaseTourPage = () => {
             <div className="btb-sidebar-label">Price Range</div>
             <div className="btb-price-display">{priceRangeText}</div>
             <input
-              type="range" className="btb-slider"
-              min={0} max={100000} step={1000}
+              type="range"
+              className="btb-slider"
+              min={0}
+              max={100000}
+              step={1000}
               value={priceRange[1]}
-              onChange={e => setPriceRange([priceRange[0], Number(e.target.value)])}
-              style={{ '--val': `${(priceRange[1] / 100000) * 100}%` }}
+              onChange={(e) =>
+                setPriceRange([priceRange[0], Number(e.target.value)])
+              }
+              style={{ "--val": `${(priceRange[1] / 100000) * 100}%` }}
             />
           </div>
 
@@ -838,13 +1040,13 @@ const BaseTourPage = () => {
           <div className="btb-sidebar-section">
             <div className="btb-sidebar-label">Duration</div>
             <div className="btb-chips">
-              {['all', '1-3', '4-7', '7-14', '14+'].map(d => (
+              {["all", "1-3", "4-7", "7-14", "14+"].map((d) => (
                 <button
                   key={d}
-                  className={`btb-chip ${selectedDuration === d ? 'active' : ''}`}
+                  className={`btb-chip ${selectedDuration === d ? "active" : ""}`}
                   onClick={() => setSelectedDuration(d)}
                 >
-                  {d === 'all' ? 'Any' : `${d} days`}
+                  {d === "all" ? "Any" : `${d} days`}
                 </button>
               ))}
             </div>
@@ -854,19 +1056,26 @@ const BaseTourPage = () => {
           <div className="btb-sidebar-section">
             <div className="btb-sidebar-label">Minimum Rating</div>
             <div className="btb-rating-opts">
-              {[0, 3, 4, 4.5, 5].map(r => (
+              {[0, 3, 4, 4.5, 5].map((r) => (
                 <button
                   key={r}
-                  className={`btb-rating-opt ${selectedRating === r ? 'active' : ''}`}
+                  className={`btb-rating-opt ${selectedRating === r ? "active" : ""}`}
                   onClick={() => setSelectedRating(r)}
                 >
-                  {r === 0 ? 'Any rating' : (
+                  {r === 0 ? (
+                    "Any rating"
+                  ) : (
                     <>
-                      <span className="btb-rating-stars">{'★'.repeat(Math.floor(r))}{r % 1 ? '½' : ''}</span>
+                      <span className="btb-rating-stars">
+                        {"★".repeat(Math.floor(r))}
+                        {r % 1 ? "½" : ""}
+                      </span>
                       <span>{r}+ stars</span>
                     </>
                   )}
-                  <div className={`btb-radio ${selectedRating === r ? 'active' : ''}`} />
+                  <div
+                    className={`btb-radio ${selectedRating === r ? "active" : ""}`}
+                  />
                 </button>
               ))}
             </div>
@@ -875,10 +1084,20 @@ const BaseTourPage = () => {
           {/* Dynamic Pricing note */}
           <div className="btb-sidebar-section">
             <div className="btb-sidebar-label">Live Pricing</div>
-            <div style={{ fontSize: '0.8rem', color: '#888', lineHeight: 1.6 }}>
-              Prices update in real-time based on demand.
-              Current rate: <strong style={{ color: trend === 'rising' ? '#FF6B6B' : trend === 'falling' ? '#4CAF50' : '#FFD700' }}>
-                {trend === 'rising' ? '↑' : trend === 'falling' ? '↓' : '→'} {Math.round(multiplier * 100)}% of base
+            <div style={{ fontSize: "0.8rem", color: "#888", lineHeight: 1.6 }}>
+              Prices update in real-time based on demand. Current rate:{" "}
+              <strong
+                style={{
+                  color:
+                    trend === "rising"
+                      ? "#FF6B6B"
+                      : trend === "falling"
+                        ? "#4CAF50"
+                        : "#FFD700",
+                }}
+              >
+                {trend === "rising" ? "↑" : trend === "falling" ? "↓" : "→"}{" "}
+                {Math.round(multiplier * 100)}% of base
               </strong>
             </div>
           </div>
@@ -888,10 +1107,12 @@ const BaseTourPage = () => {
         <main className="btb-main" ref={packagesRef}>
           {loading ? (
             <div className="row g-4">
-              {[1,2,3,4,5,6].map(i => <SkeletonCard key={i} />)}
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <SkeletonCard key={i} />
+              ))}
             </div>
           ) : filteredPackages.length > 0 ? (
-            viewMode === 'grid' ? (
+            viewMode === "grid" ? (
               <div className="row g-4">
                 {filteredPackages.map((pkg, i) => (
                   <TourPackageCard
@@ -907,39 +1128,121 @@ const BaseTourPage = () => {
                 {filteredPackages.map((pkg, i) => (
                   <div key={pkg._id || i} className="btb-list-card">
                     <img
-                      src={pkg?.images || pkg.images || 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&q=80'}
+                      src={
+                        pkg?.images ||
+                        pkg.images ||
+                        "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&q=80"
+                      }
                       alt={pkg.location}
                       className="btb-list-img"
-                      onError={e => e.target.src = 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&q=80'}
+                      onError={(e) =>
+                        (e.target.src =
+                          "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&q=80")
+                      }
                     />
                     <div className="btb-list-content">
-                      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 8 }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "flex-start",
+                          justifyContent: "space-between",
+                          marginBottom: 8,
+                        }}
+                      >
                         <div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-                            <FaMapMarkerAlt size={11} style={{ color: '#3D52A0' }} />
-                            <span style={{ fontSize: '0.82rem', color: '#888' }}>{pkg.location}</span>
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 6,
+                              marginBottom: 4,
+                            }}
+                          >
+                            <FaMapMarkerAlt
+                              size={11}
+                              style={{ color: "#3D52A0" }}
+                            />
+                            <span
+                              style={{ fontSize: "0.82rem", color: "#888" }}
+                            >
+                              {pkg.location}
+                            </span>
                           </div>
-                          <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.3rem', fontWeight: 700, color: '#1a1a2e' }}>{pkg.title}</h3>
+                          <h3
+                            style={{
+                              fontFamily: "'Cormorant Garamond', serif",
+                              fontSize: "1.3rem",
+                              fontWeight: 700,
+                              color: "#1a1a2e",
+                            }}
+                          >
+                            {pkg.title}
+                          </h3>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 4, background: '#FFD70015', padding: '4px 10px', borderRadius: 20 }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 4,
+                            background: "#FFD70015",
+                            padding: "4px 10px",
+                            borderRadius: 20,
+                          }}
+                        >
                           <FaStar size={11} color="#FFD700" />
-                          <span style={{ fontSize: '0.82rem', fontWeight: 700 }}>{pkg.rating || '4.8'}</span>
+                          <span
+                            style={{ fontSize: "0.82rem", fontWeight: 700 }}
+                          >
+                            {pkg.rating || "4.8"}
+                          </span>
                         </div>
                       </div>
-                      <p style={{ fontSize: '0.85rem', color: '#777', lineHeight: 1.6, marginBottom: 12, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{pkg.description}</p>
-                      <div style={{ display: 'flex', gap: 16, fontSize: '0.82rem', color: '#888', marginBottom: 12 }}>
-                        <span>⏱️ {pkg.duration || '7 Days'}</span>
-                        <span>👥 {pkg.groupSize || 'Max 15'}</span>
+                      <p
+                        style={{
+                          fontSize: "0.85rem",
+                          color: "#777",
+                          lineHeight: 1.6,
+                          marginBottom: 12,
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden",
+                        }}
+                      >
+                        {pkg.description}
+                      </p>
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: 16,
+                          fontSize: "0.82rem",
+                          color: "#888",
+                          marginBottom: 12,
+                        }}
+                      >
+                        <span>⏱️ {pkg.duration || "7 Days"}</span>
+                        <span>👥 {pkg.groupSize || "Max 15"}</span>
                         <span>({pkg.reviews || 128} reviews)</span>
                       </div>
                       <div className="btb-list-footer">
-                        <div className="btb-list-price">₹{pkg.price?.toLocaleString() || '4,999'}</div>
-                        <Link to={`/package/${packageType}/${pkg.location?.toLowerCase().replace(/ /g, "-")}`} style={{
-                          padding: '0.55rem 1.25rem',
-                          borderRadius: 50, color: 'white', background: meta.grad,
-                          textDecoration: 'none', fontSize: '0.85rem', fontWeight: 600,
-                          display: 'flex', alignItems: 'center', gap: 6,
-                        }}>
+                        <div className="btb-list-price">
+                          ₹{pkg.price?.toLocaleString() || "4,999"}
+                        </div>
+                        <Link
+                          to={`/package/${packageType}/${pkg.location?.toLowerCase().replace(/ /g, "-")}`}
+                          style={{
+                            padding: "0.55rem 1.25rem",
+                            borderRadius: 50,
+                            color: "white",
+                            background: meta.grad,
+                            textDecoration: "none",
+                            fontSize: "0.85rem",
+                            fontWeight: 600,
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 6,
+                          }}
+                        >
                           View Details <FaArrowRight size={10} />
                         </Link>
                       </div>
@@ -952,8 +1255,12 @@ const BaseTourPage = () => {
             <div className="btb-empty">
               <div className="btb-empty-icon">🔍</div>
               <div className="btb-empty-title">No packages found</div>
-              <div className="btb-empty-sub">Try adjusting your filters or search term.</div>
-              <button className="btb-empty-btn" onClick={resetFilters}>Clear All Filters</button>
+              <div className="btb-empty-sub">
+                Try adjusting your filters or search term.
+              </div>
+              <button className="btb-empty-btn" onClick={resetFilters}>
+                Clear All Filters
+              </button>
             </div>
           )}
         </main>
@@ -962,36 +1269,92 @@ const BaseTourPage = () => {
       {/* ── CONTACT STRIP ────────────────────────────────────────────────────── */}
       <section className="btb-contact" style={{ background: meta.grad }}>
         <h2 className="btb-contact-title">Need Help Planning?</h2>
-        <p className="btb-contact-sub">Our travel experts are available 24/7 to craft your perfect {meta.title.toLowerCase()}.</p>
+        <p className="btb-contact-sub">
+          Our travel experts are available 24/7 to craft your perfect{" "}
+          {meta.title.toLowerCase()}.
+        </p>
         <div className="btb-contact-row">
-          <a href="tel:+917888251550" className="btb-contact-item"><FaPhone size={14} /> +91 78882 51550</a>
-          <a href="https://wa.me/917888251550" target="_blank" rel="noreferrer" className="btb-contact-item"><FaWhatsapp size={14} /> WhatsApp Us</a>
-          <a href="mailto:tours.desivdesi@gmail.com" className="btb-contact-item"><FaEnvelope size={14} /> Email Us</a>
+          <a href="tel:+917888251550" className="btb-contact-item">
+            <FaPhone size={14} /> +91 78882 51550
+          </a>
+          <a
+            href="https://wa.me/917888251550"
+            target="_blank"
+            rel="noreferrer"
+            className="btb-contact-item"
+          >
+            <FaWhatsapp size={14} /> WhatsApp Us
+          </a>
+          <a
+            href="mailto:tours.desivdesi@gmail.com"
+            className="btb-contact-item"
+          >
+            <FaEnvelope size={14} /> Email Us
+          </a>
         </div>
       </section>
 
       {/* ── Mobile Sidebar Drawer ─────────────────────────────────────────────── */}
-      <div className={`btb-sidebar-overlay ${sidebarOpen ? 'open' : ''}`} onClick={() => setSidebarOpen(false)} />
-      <div className={`btb-sidebar-drawer ${sidebarOpen ? 'open' : ''}`}>
-        <div className="btb-sidebar-header" style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid #f0f0f8', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div
+        className={`btb-sidebar-overlay ${sidebarOpen ? "open" : ""}`}
+        onClick={() => setSidebarOpen(false)}
+      />
+      <div className={`btb-sidebar-drawer ${sidebarOpen ? "open" : ""}`}>
+        <div
+          className="btb-sidebar-header"
+          style={{
+            padding: "1.25rem 1.5rem",
+            borderBottom: "1px solid #f0f0f8",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <span className="btb-sidebar-title">Filters</span>
-          <div style={{ display: 'flex', gap: 10 }}>
-            {hasActiveFilters && <button className="btb-reset-btn" onClick={resetFilters}><FaTimes size={10} /> Reset</button>}
-            <button onClick={() => setSidebarOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem', color: '#999' }}>✕</button>
+          <div style={{ display: "flex", gap: 10 }}>
+            {hasActiveFilters && (
+              <button className="btb-reset-btn" onClick={resetFilters}>
+                <FaTimes size={10} /> Reset
+              </button>
+            )}
+            <button
+              onClick={() => setSidebarOpen(false)}
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                fontSize: "1.2rem",
+                color: "#999",
+              }}
+            >
+              ✕
+            </button>
           </div>
         </div>
         {/* Same sidebar content */}
         <div className="btb-sidebar-section">
           <div className="btb-sidebar-label">Price Range</div>
           <div className="btb-price-display">{priceRangeText}</div>
-          <input type="range" className="btb-slider" min={0} max={100000} step={1000} value={priceRange[1]} onChange={e => setPriceRange([0, Number(e.target.value)])} />
+          <input
+            type="range"
+            className="btb-slider"
+            min={0}
+            max={100000}
+            step={1000}
+            value={priceRange[1]}
+            onChange={(e) => setPriceRange([0, Number(e.target.value)])}
+          />
         </div>
         <div className="btb-sidebar-section">
           <div className="btb-sidebar-label">Duration</div>
           <div className="btb-chips">
-            {['all', '1-3', '4-7', '7-14', '14+'].map(d => (
-              <button key={d} className={`btb-chip ${selectedDuration === d ? 'active' : ''}`} onClick={() => setSelectedDuration(d)}>
-                {d === 'all' ? 'Any' : `${d} days`}
+            {["all", "1-3", "4-7", "7-14", "14+"].map((d) => (
+              <button
+                key={d}
+                className={`btb-chip ${selectedDuration === d ? "active" : ""}`}
+                onClick={() => setSelectedDuration(d)}
+              >
+                {d === "all" ? "Any" : `${d} days`}
               </button>
             ))}
           </div>
@@ -999,16 +1362,44 @@ const BaseTourPage = () => {
         <div className="btb-sidebar-section">
           <div className="btb-sidebar-label">Minimum Rating</div>
           <div className="btb-rating-opts">
-            {[0, 3, 4, 4.5, 5].map(r => (
-              <button key={r} className={`btb-rating-opt ${selectedRating === r ? 'active' : ''}`} onClick={() => setSelectedRating(r)}>
-                {r === 0 ? 'Any rating' : <><span className="btb-rating-stars">{'★'.repeat(Math.floor(r))}</span><span>{r}+ stars</span></>}
-                <div className={`btb-radio ${selectedRating === r ? 'active' : ''}`} />
+            {[0, 3, 4, 4.5, 5].map((r) => (
+              <button
+                key={r}
+                className={`btb-rating-opt ${selectedRating === r ? "active" : ""}`}
+                onClick={() => setSelectedRating(r)}
+              >
+                {r === 0 ? (
+                  "Any rating"
+                ) : (
+                  <>
+                    <span className="btb-rating-stars">
+                      {"★".repeat(Math.floor(r))}
+                    </span>
+                    <span>{r}+ stars</span>
+                  </>
+                )}
+                <div
+                  className={`btb-radio ${selectedRating === r ? "active" : ""}`}
+                />
               </button>
             ))}
           </div>
         </div>
-        <div style={{ padding: '1.25rem 1.5rem' }}>
-          <button onClick={() => setSidebarOpen(false)} style={{ width: '100%', padding: '0.85rem', borderRadius: 50, border: 'none', background: meta.grad, color: 'white', fontWeight: 700, cursor: 'pointer', fontSize: '0.95rem' }}>
+        <div style={{ padding: "1.25rem 1.5rem" }}>
+          <button
+            onClick={() => setSidebarOpen(false)}
+            style={{
+              width: "100%",
+              padding: "0.85rem",
+              borderRadius: 50,
+              border: "none",
+              background: meta.grad,
+              color: "white",
+              fontWeight: 700,
+              cursor: "pointer",
+              fontSize: "0.95rem",
+            }}
+          >
             Show {resultsCount} Results
           </button>
         </div>
@@ -1016,7 +1407,11 @@ const BaseTourPage = () => {
 
       {/* Scroll to top */}
       {showScrollTop && (
-        <button className="btb-scroll-top" style={{ background: meta.grad }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+        <button
+          className="btb-scroll-top"
+          style={{ background: meta.grad }}
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        >
           <FaArrowUp />
         </button>
       )}

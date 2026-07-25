@@ -226,8 +226,17 @@ const NAV_ITEMS = [
     path: "#",
     disabled: true,
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M2 12l20-7-7 20-3-8-8-3 8 8" strokeLinejoin="round" strokeLinecap="round" />
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <path
+          d="M2 12l20-7-7 20-3-8-8-3 8 8"
+          strokeLinejoin="round"
+          strokeLinecap="round"
+        />
       </svg>
     ),
   },
@@ -236,7 +245,12 @@ const NAV_ITEMS = [
     label: "Hotels",
     path: "/hotel",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
         <path d="M3 21V8l9-5 9 5v13" strokeLinejoin="round" />
         <path d="M8 21v-7h8v7" strokeLinejoin="round" />
       </svg>
@@ -248,7 +262,12 @@ const NAV_ITEMS = [
     path: "/Trains",
     disabled: false,
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
         <rect x="5" y="3" width="14" height="14" rx="3" />
         <circle cx="8.5" cy="14" r="0.5" fill="currentColor" />
         <circle cx="15.5" cy="14" r="0.5" fill="currentColor" />
@@ -262,7 +281,12 @@ const NAV_ITEMS = [
     path: "#",
     disabled: true,
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
         <rect x="3" y="5" width="18" height="12" rx="2.5" />
         <path d="M3 12h18" />
         <circle cx="7.5" cy="19" r="1.4" fill="currentColor" stroke="none" />
@@ -276,7 +300,12 @@ const NAV_ITEMS = [
     path: "#",
     disabled: false,
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
         <rect x="3" y="3" width="7" height="7" rx="1.5" />
         <rect x="14" y="3" width="7" height="7" rx="1.5" />
         <rect x="3" y="14" width="7" height="7" rx="1.5" />
@@ -309,7 +338,13 @@ const SUPPORT_ICON = (
 );
 
 const CHEVRON_ICON = (
-  <svg className="sf-nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+  <svg
+    className="sf-nav-chevron"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+  >
     <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
@@ -332,7 +367,11 @@ export default function HotelHeader() {
       <HeaderStyles />
       <header className="sf-header">
         <div className="sf-header-inner">
-          <button type="button" className="sf-logo" onClick={() => navigate("/")}>
+          <button
+            type="button"
+            className="sf-logo"
+            onClick={() => navigate("/")}
+          >
             <span className="sf-logo-badge">
               Desi<span className="sf-logo-v">V</span>Desi
             </span>
@@ -340,7 +379,8 @@ export default function HotelHeader() {
 
           <nav className="sf-nav">
             {NAV_ITEMS.map((item) => {
-              const isActive = item.path !== "#" && location.pathname === item.path;
+              const isActive =
+                item.path !== "#" && location.pathname === item.path;
               return (
                 <button
                   key={item.key}
@@ -351,7 +391,9 @@ export default function HotelHeader() {
                   onClick={() =>
                     !item.disabled && item.path !== "#" && navigate(item.path)
                   }
-                  title={item.disabled ? `${item.label} — coming soon` : item.label}
+                  title={
+                    item.disabled ? `${item.label} — coming soon` : item.label
+                  }
                 >
                   <span className="sf-nav-icon">{item.icon}</span>
                   <span className="sf-nav-label">{item.label}</span>
