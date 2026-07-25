@@ -35,6 +35,7 @@ export const getOffers = async () => {
 /* ------------------------------------------------------------------
    PROVIDER CONFIG — Xeni's Wholesale Rate Hotel Booking (RapidAPI)
 ------------------------------------------------------------------- */
+console.log('RAPIDAPI_KEY',import.meta.env.VITE_RAPIDAPI_KEY);
 
 // TODO: confirm exact value from the RapidAPI playground's code snippet /
 // x-rapidapi-host header. Placeholder follows this API's slug naming
@@ -42,7 +43,6 @@ export const getOffers = async () => {
 const RAPIDAPI_HOST = "xenis-wholesale-rate-hotel-booking.p.rapidapi.com";
 const RAPIDAPI_KEY = import.meta.env.VITE_RAPIDAPI_KEY;
 const BASE_URL = `https://${RAPIDAPI_HOST}`;
-
 const AUTOCOMPLETE_PATH = "/api/hotels/api/v2/autocomplete"; // <-- REPLACE WITH CONFIRMED PATH
 
 const SEARCH_HOTELS_PATH = "/api/hotels/api/v2/properties";
