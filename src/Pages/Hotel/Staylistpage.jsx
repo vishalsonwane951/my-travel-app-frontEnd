@@ -20,10 +20,29 @@ function extractList(res) {
 }
 
 const POPULAR_FILTERS = [
-  { key: "freeCancellation", label: "Free Cancellation", test: (i) => i.amenities?.some((a) => a.key === "freeCancellation" || a.key === "cancellation") },
-  { key: "coupleFriendly", label: "Couple Friendly", test: (i) => i.ribbon === "Couple Friendly" },
-  { key: "exceptional", label: "Rated Exceptional (9+)", test: (i) => (i.rating?.score ?? 0) >= 9 },
-  { key: "freeBreakfast", label: "Free Breakfast", test: (i) => i.amenities?.some((a) => a.key === "breakfast") },
+  {
+    key: "freeCancellation",
+    label: "Free Cancellation",
+    test: (i) =>
+      i.amenities?.some(
+        (a) => a.key === "freeCancellation" || a.key === "cancellation",
+      ),
+  },
+  {
+    key: "coupleFriendly",
+    label: "Couple Friendly",
+    test: (i) => i.ribbon === "Couple Friendly",
+  },
+  {
+    key: "exceptional",
+    label: "Rated Exceptional (9+)",
+    test: (i) => (i.rating?.score ?? 0) >= 9,
+  },
+  {
+    key: "freeBreakfast",
+    label: "Free Breakfast",
+    test: (i) => i.amenities?.some((a) => a.key === "breakfast"),
+  },
 ];
 
 const RATING_TIERS = [
@@ -48,22 +67,40 @@ const SORT_OPTIONS = [
   { key: "rating", label: "Guest Rating" },
 ];
 
-const OFFER_BANNERS = [
-  { id: "kotak", title: "Flat 12% Off", text: "with Kotak Retail Credit Cards + Interest Free EMI", icon: "💳" },
-  { id: "hdfc", title: "Flat 12% Off", text: "with HDFC Bank Credit Cards + Interest Free EMI", icon: "🏦" },
-  { id: "hdfc700", title: "Flat ₹700 Off", text: "with HDFC Bank Credit Cards + Interest Free EMI", icon: "🏦" },
-];
+// const OFFER_BANNERS = [
+//   { id: "kotak", title: "Flat 12% Off", text: "with Kotak Retail Credit Cards + Interest Free EMI", icon: "💳" },
+//   { id: "hdfc", title: "Flat 12% Off", text: "with HDFC Bank Credit Cards + Interest Free EMI", icon: "🏦" },
+//   { id: "hdfc700", title: "Flat ₹700 Off", text: "with HDFC Bank Credit Cards + Interest Free EMI", icon: "🏦" },
+// ];
 
-const PROMO_BANNER = { title: "Flat 80% Off", subtitle: "on Hotel bookings", note: "Valid once per user" };
+const PROMO_BANNER = {
+  title: "Flat 80% Off",
+  subtitle: "on Hotel bookings",
+  note: "Valid once per user",
+};
 
 export default function StayListPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
+  // NOTE: kept as "regionId" locally since that's the URL param name
+  // SearchPage.jsx sets on redirect — only the KEY passed into
+  // searchStays() below changed (regionId -> placeId) to match what
+  // stayService.js's migrated searchStays() actually expects. Without
+  // that rename, place_id came through empty and Xeni rejected every
+  // request with a 400 ("Either place_id or latitude/longitude must be
+  // provided").
   const regionId = searchParams.get("regionId") || "";
   const checkIn = searchParams.get("checkIn") || "";
   const checkOut = searchParams.get("checkOut") || "";
   const label = searchParams.get("label") || "";
+
+  // Guests were being collected on SearchPage.jsx and put in the URL,
+  // but never read here — so every search silently ran with
+  // searchStays()'s defaults (2 adults, 0 children) regardless of what
+  // the user picked. Reading them through now.
+  const adults = Number(searchParams.get("adults")) || undefined;
+  const children = Number(searchParams.get("children")) || undefined;
 
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -94,7 +131,15 @@ export default function StayListPage() {
     setNotice(null);
     setList([]);
 
-    searchStays({ regionId, checkIn, checkOut })
+    searchStays({
+      placeId: regionId, // <-- FIX: was `regionId`, which searchStays() doesn't
+      // accept as a param name, so place_id was silently
+      // dropped from the request body.
+      checkIn,
+      checkOut,
+      ...(adults != null ? { adults } : {}),
+      ...(children != null ? { children } : {}),
+    })
       .then((res) => {
         if (cancelled) return;
 
@@ -108,10 +153,7 @@ export default function StayListPage() {
         setNotice(
           results.length === 0
             ? { type: "empty", text: "No stays found for this search." }
-            : {
-                type: "live",
-                text: `Loaded ${results.length} live result${results.length > 1 ? "s" : ""}.`,
-              },
+            : "",
         );
       })
       .catch((err) => {
@@ -129,16 +171,20 @@ export default function StayListPage() {
     return () => {
       cancelled = true;
     };
-  }, [regionId, checkIn, checkOut]);
+  }, [regionId, checkIn, checkOut, adults, children]);
 
   const handleSelect = useCallback(
     (item) => {
       const hotelId = item.id;
       if (!hotelId) return;
-      const params = new URLSearchParams({ checkIn, checkOut });
+      // FIX: placeId was missing here entirely — HotelDetailsPage.jsx
+      // requires it (Xeni's Check Availability needs place_id AND
+      // property_id together), and its effect silently no-ops without
+      // it. `regionId` is this page's local name for that same value.
+      const params = new URLSearchParams({ checkIn, checkOut, placeId: regionId });
       navigate(`/stays/hotel/${hotelId}?${params.toString()}`);
     },
-    [checkIn, checkOut, navigate],
+    [checkIn, checkOut, regionId, navigate],
   );
 
   const formatRange = (a, b) => {
@@ -178,7 +224,9 @@ export default function StayListPage() {
   const ratingCounts = useMemo(() => {
     const counts = {};
     RATING_TIERS.forEach((t) => {
-      counts[t.key] = list.filter((i) => (i.rating?.score ?? 0) >= t.min).length;
+      counts[t.key] = list.filter(
+        (i) => (i.rating?.score ?? 0) >= t.min,
+      ).length;
     });
     return counts;
   }, [list]);
@@ -194,7 +242,9 @@ export default function StayListPage() {
   const facilityCounts = useMemo(() => {
     const counts = {};
     FACILITY_FILTERS.forEach((f) => {
-      counts[f.key] = list.filter((i) => i.amenities?.some((a) => a.key === f.key)).length;
+      counts[f.key] = list.filter((i) =>
+        i.amenities?.some((a) => a.key === f.key),
+      ).length;
     });
     return counts;
   }, [list]);
@@ -206,18 +256,23 @@ export default function StayListPage() {
       const q = searchWithin.trim().toLowerCase();
       out = out.filter(
         (i) =>
-          i.name?.toLowerCase().includes(q) || i.location?.toLowerCase().includes(q),
+          i.name?.toLowerCase().includes(q) ||
+          i.location?.toLowerCase().includes(q),
       );
     }
 
     if (popularSelected.size) {
       out = out.filter((i) =>
-        POPULAR_FILTERS.filter((f) => popularSelected.has(f.key)).every((f) => f.test(i)),
+        POPULAR_FILTERS.filter((f) => popularSelected.has(f.key)).every((f) =>
+          f.test(i),
+        ),
       );
     }
 
     if (priceRange) {
-      out = out.filter((i) => i.price >= priceRange[0] && i.price <= priceRange[1]);
+      out = out.filter(
+        (i) => i.price >= priceRange[0] && i.price <= priceRange[1],
+      );
     }
 
     if (ratingTier) {
@@ -231,7 +286,9 @@ export default function StayListPage() {
 
     if (facilitySelected.size) {
       out = out.filter((i) =>
-        [...facilitySelected].every((key) => i.amenities?.some((a) => a.key === key)),
+        [...facilitySelected].every((key) =>
+          i.amenities?.some((a) => a.key === key),
+        ),
       );
     }
 
@@ -245,7 +302,17 @@ export default function StayListPage() {
     }
 
     return out;
-  }, [list, searchWithin, popularSelected, priceRange, ratingTier, starFilters, facilitySelected, bestPriceOnly, sortBy]);
+  }, [
+    list,
+    searchWithin,
+    popularSelected,
+    priceRange,
+    ratingTier,
+    starFilters,
+    facilitySelected,
+    bestPriceOnly,
+    sortBy,
+  ]);
 
   const togglePopular = (key) => {
     setPopularSelected((prev) => {
@@ -276,12 +343,17 @@ export default function StayListPage() {
     : null;
 
   const activeFilterCount =
-    popularSelected.size + starFilters.size + facilitySelected.size + (ratingTier ? 1 : 0) + (priceRange ? 1 : 0);
+    popularSelected.size +
+    starFilters.size +
+    facilitySelected.size +
+    (ratingTier ? 1 : 0) +
+    (priceRange ? 1 : 0);
 
   return (
     <>
+    <HotelHeader />
       <div className="app app-stays">
-        <HotelHeader />
+        
         <StayStyles />
 
         <div className="stays-layout">
@@ -293,7 +365,12 @@ export default function StayListPage() {
                 <span className="map-pin">📍</span>
               </div>
               {mapsUrl && (
-                <a className="explore-map-link" href={mapsUrl} target="_blank" rel="noreferrer">
+                <a
+                  className="explore-map-link"
+                  href={mapsUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   Explore on Map
                 </a>
               )}
@@ -302,7 +379,12 @@ export default function StayListPage() {
             <div className="filters-card">
               <h2 className="filters-title">
                 Filters
-                {activeFilterCount > 0 && <span className="filter-count"> · {activeFilterCount} active</span>}
+                {activeFilterCount > 0 && (
+                  <span className="filter-count">
+                    {" "}
+                    · {activeFilterCount} active
+                  </span>
+                )}
               </h2>
 
               <label className="toggle-row" htmlFor="best-price-toggle">
@@ -329,7 +411,9 @@ export default function StayListPage() {
                 </span>
               </label>
 
-              <h3 className="filters-subtitle">Search within {label || "area"}</h3>
+              <h3 className="filters-subtitle">
+                Search within {label || "area"}
+              </h3>
               <label className="visually-hidden" htmlFor="search-within-input">
                 Search within {label || "area"}
               </label>
@@ -355,7 +439,9 @@ export default function StayListPage() {
                         />{" "}
                         {f.label}
                       </span>
-                      <span className="filter-count">{popularCounts[f.key] ?? 0}</span>
+                      <span className="filter-count">
+                        {popularCounts[f.key] ?? 0}
+                      </span>
                     </label>
                   ))}
                 </div>
@@ -371,13 +457,20 @@ export default function StayListPage() {
                     max={priceBounds[1]}
                     value={effectivePriceRange[1]}
                     onChange={(e) =>
-                      setPriceRange([effectivePriceRange[0], Number(e.target.value)])
+                      setPriceRange([
+                        effectivePriceRange[0],
+                        Number(e.target.value),
+                      ])
                     }
                   />
                 )}
                 <div className="price-range-labels">
-                  <span>₹{effectivePriceRange[0]?.toLocaleString("en-IN") ?? 0}</span>
-                  <span>₹{effectivePriceRange[1]?.toLocaleString("en-IN") ?? 0}</span>
+                  <span>
+                    ₹{effectivePriceRange[0]?.toLocaleString("en-IN") ?? 0}
+                  </span>
+                  <span>
+                    ₹{effectivePriceRange[1]?.toLocaleString("en-IN") ?? 0}
+                  </span>
                 </div>
               </div>
 
@@ -391,11 +484,15 @@ export default function StayListPage() {
                           type="radio"
                           name="ratingTier"
                           checked={ratingTier === t.key}
-                          onChange={() => setRatingTier(ratingTier === t.key ? null : t.key)}
+                          onChange={() =>
+                            setRatingTier(ratingTier === t.key ? null : t.key)
+                          }
                         />{" "}
                         {t.label}
                       </span>
-                      <span className="filter-count">{ratingCounts[t.key] ?? 0}</span>
+                      <span className="filter-count">
+                        {ratingCounts[t.key] ?? 0}
+                      </span>
                     </label>
                   ))}
                 </div>
@@ -414,7 +511,9 @@ export default function StayListPage() {
                         />{" "}
                         {f.label}
                       </span>
-                      <span className="filter-count">{facilityCounts[f.key] ?? 0}</span>
+                      <span className="filter-count">
+                        {facilityCounts[f.key] ?? 0}
+                      </span>
                     </label>
                   ))}
                 </div>
@@ -422,7 +521,11 @@ export default function StayListPage() {
 
               <fieldset className="filters-fieldset">
                 <legend className="filters-subtitle">Star Rating</legend>
-                <div className="pill-group" role="group" aria-label="Star rating">
+                <div
+                  className="pill-group"
+                  role="group"
+                  aria-label="Star rating"
+                >
                   {[5, 4, 3, 2, 1].map((n) => (
                     <button
                       type="button"
@@ -445,11 +548,17 @@ export default function StayListPage() {
               <div className="stays-main-header">
                 <div>
                   <h1 className="page-title">{`Hotels In ${label}`}</h1>
-                  <p className="selected-note">{formatRange(checkIn, checkOut)}</p>
+                  <p className="selected-note">
+                    {formatRange(checkIn, checkOut)}
+                  </p>
                 </div>
                 <label className="sort-control" htmlFor="sort-select">
                   Sort by:{" "}
-                  <select id="sort-select" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+                  <select
+                    id="sort-select"
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                  >
                     {SORT_OPTIONS.map((o) => (
                       <option key={o.key} value={o.key}>
                         {o.label}
@@ -459,8 +568,8 @@ export default function StayListPage() {
                 </label>
               </div>
             )}
-
-            <div className="offer-banner-strip" aria-label="Current payment offers">
+            {/* Offer */}
+            {/* <div className="offer-banner-strip" aria-label="Current payment offers">
               {OFFER_BANNERS.map((b) => (
                 <div className="offer-banner" key={b.id}>
                   <span className="offer-banner-icon" aria-hidden="true">{b.icon}</span>
@@ -470,32 +579,56 @@ export default function StayListPage() {
                   </div>
                 </div>
               ))}
-            </div>
+            </div> */}
 
             <div aria-live="polite">
-              {notice && <div className={`notice ${notice.type}`} role={notice.type === "error" ? "alert" : "status"}>{notice.text}</div>}
+              {notice && (
+                <div
+                  className={`notice ${notice.type}`}
+                  role={notice.type === "error" ? "alert" : "status"}
+                >
+                  {notice.text}
+                </div>
+              )}
             </div>
 
             {loading ? (
-              <div className="stay-list" aria-busy="true" aria-label="Loading stays">
+              <div
+                className="stay-list"
+                aria-busy="true"
+                aria-label="Loading stays"
+              >
                 {Array.from({ length: 6 }).map((_, i) => (
                   <div className="stay-row stay-row-skeleton" key={i}>
                     <div className="stay-row-photo">
                       <div
                         className="tag-skeleton-block"
-                        style={{ position: "absolute", inset: 0, borderRadius: 0 }}
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          borderRadius: 0,
+                        }}
                       />
                     </div>
                     <div className="stay-row-body">
                       <div className="stay-row-main">
-                        <div className="tag-skeleton-line" style={{ width: "40%" }} />
+                        <div
+                          className="tag-skeleton-line"
+                          style={{ width: "40%" }}
+                        />
                         <div
                           className="tag-skeleton-line"
                           style={{ width: "70%", height: 18, marginTop: 4 }}
                         />
-                        <div className="tag-skeleton-line" style={{ width: "50%" }} />
+                        <div
+                          className="tag-skeleton-line"
+                          style={{ width: "50%" }}
+                        />
                       </div>
-                      <div className="tag-skeleton-line" style={{ width: "80px", marginTop: 10 }} />
+                      <div
+                        className="tag-skeleton-line"
+                        style={{ width: "80px", marginTop: 10 }}
+                      />
                     </div>
                   </div>
                 ))}
@@ -522,7 +655,9 @@ export default function StayListPage() {
                   </Fragment>
                 ))}
                 {!loading && filteredList.length === 0 && list.length > 0 && (
-                  <div className="notice empty" role="status">No stays match the selected filters.</div>
+                  <div className="notice empty" role="status">
+                    No stays match the selected filters.
+                  </div>
                 )}
               </div>
             )}

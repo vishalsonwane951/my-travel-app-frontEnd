@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect, useContext } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import BookingForm from "../../Components/BookingForm/BookingForm";
-import Login from "../Login";
+// import Login from "../Login";
 import { AuthContext } from "../../Context/AuthContext";
 import api from "../../utils/api";
 import {
@@ -20,9 +20,10 @@ import {
   FaShare,
   FaTimes,
   FaArrowRight,
-  FaCheckCircle
+  FaCheckCircle,
 } from "react-icons/fa";
 import { useParams } from "react-router-dom";
+import LoginRegister from "../LoginRegister";
 // import { MdLocationOn, MdSecurity } from "react-icons/md";
 // import { GiIndiaGate, GiSpices, GiTempleDoor } from "react-icons/gi";
 
@@ -38,11 +39,13 @@ function Agra() {
     pricing: {
       currency: "₹",
       original: "",
-      discounted: ""
-    }
+      discounted: "",
+    },
   });
-const { location } = useParams(); 
+  const { location } = useParams();
   const { user } = useContext(AuthContext);
+  const [showAuth, setShowAuth] = useState(false);
+
   const [showBooking, setShowBooking] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -53,14 +56,38 @@ const { location } = useParams();
   const [showAlert, setShowAlert] = useState(false);
   const [activeImage, setActiveImage] = useState(0);
   const [showShareModal, setShowShareModal] = useState(false);
-  const [error,setError] =useState()
+  const [error, setError] = useState();
 
   // Package Categories
   const packageCategories = [
-    { id: 1, name: "3D/2N", axiosEndpoint: "/axios/packages/3d2n", price: 7499, tag: "Quick Escape" },
-    { id: 2, name: "4D/3N", axiosEndpoint: "/axios/packages/4d3n", price: 9999, tag: "Popular Choice" },
-    { id: 3, name: "5D/4N", axiosEndpoint: "/axios/packages/5d4n", price: 11999, tag: "Best Value" },
-    { id: 4, name: "7D/6N", axiosEndpoint: "/axios/packages/7d6n", price: 17999, tag: "Ultimate Experience" }
+    {
+      id: 1,
+      name: "3D/2N",
+      axiosEndpoint: "/axios/packages/3d2n",
+      price: 7499,
+      tag: "Quick Escape",
+    },
+    {
+      id: 2,
+      name: "4D/3N",
+      axiosEndpoint: "/axios/packages/4d3n",
+      price: 9999,
+      tag: "Popular Choice",
+    },
+    {
+      id: 3,
+      name: "5D/4N",
+      axiosEndpoint: "/axios/packages/5d4n",
+      price: 11999,
+      tag: "Best Value",
+    },
+    {
+      id: 4,
+      name: "7D/6N",
+      axiosEndpoint: "/axios/packages/7d6n",
+      price: 17999,
+      tag: "Ultimate Experience",
+    },
   ];
 
   const [activeCategory, setActiveCategory] = useState(2); // Default to 4D/3N as most popular
@@ -84,7 +111,6 @@ const { location } = useParams();
 
     fetchPackages();
   }, []);
-
 
   const findPackageByCategory = (packages, category) => {
     if (!Array.isArray(packages)) return null;
@@ -110,7 +136,10 @@ const { location } = useParams();
 
   useEffect(() => {
     if (allPackagesData.length > 0) {
-      const currentPackageData = findPackageByCategory(allPackagesData, activeCategory);
+      const currentPackageData = findPackageByCategory(
+        allPackagesData,
+        activeCategory,
+      );
       if (currentPackageData) {
         setPackageData(currentPackageData);
       } else {
@@ -121,7 +150,7 @@ const { location } = useParams();
           itinerary: [],
           gallery: [],
           testimonials: [],
-          pricingObj: { currency: "₹", original: "", discounted: "" }
+          pricingObj: { currency: "₹", original: "", discounted: "" },
         });
       }
     }
@@ -138,11 +167,11 @@ const { location } = useParams();
 
   const handleAlertClose = () => {
     setShowAlert(false);
-    setShowLogin(true);
+    setShowAuth(true);
   };
 
   const handleLoginSuccess = (loggedInUser) => {
-    setShowLogin(false);
+    setShowAuth(false);
     if (pendingBooking) {
       setShowBooking(true);
       setPendingBooking(false);
@@ -154,14 +183,15 @@ const { location } = useParams();
   };
 
   const comparePackages = () => {
-    const dataForComparison = allPackagesData.map(pkg => ({
+    const dataForComparison = allPackagesData.map((pkg) => ({
       name: pkg.duration || pkg.name || "Unknown Package",
       pricing: pkg.pricingObj || null,
       price: pkg.price || null,
-      rating: pkg.testimonials && pkg.testimonials.length > 0
-        ? pkg.testimonials[0].rating
-        : null,
-      highlights: pkg.highlights || []
+      rating:
+        pkg.testimonials && pkg.testimonials.length > 0
+          ? pkg.testimonials[0].rating
+          : null,
+      highlights: pkg.highlights || [],
     }));
 
     setComparedPackages(dataForComparison);
@@ -173,7 +203,8 @@ const { location } = useParams();
   const getPricing = (pkg) => {
     if (!pkg) return { currency: "₹", original: "", discounted: "" };
     if (pkg.pricingObj) return pkg.pricingObj;
-    if (Array.isArray(pkg.pricing) && pkg.pricing.length > 0) return pkg.pricing[0];
+    if (Array.isArray(pkg.pricing) && pkg.pricing.length > 0)
+      return pkg.pricing[0];
     if (pkg.pricing && typeof pkg.pricing === "object") return pkg.pricing;
     return { currency: "₹", original: "", discounted: "" };
   };
@@ -193,7 +224,7 @@ const { location } = useParams();
       alignItems: "center",
       justifyContent: "center",
       zIndex: 1000,
-      backdropFilter: "blur(5px)"
+      backdropFilter: "blur(5px)",
     },
     alertBox: {
       backgroundColor: "#fff",
@@ -202,7 +233,7 @@ const { location } = useParams();
       width: "400px",
       textAlign: "center",
       boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
-      animation: "slideUp 0.3s ease"
+      animation: "slideUp 0.3s ease",
     },
     alertButton: {
       marginTop: "20px",
@@ -214,8 +245,8 @@ const { location } = useParams();
       cursor: "pointer",
       fontSize: "16px",
       fontWeight: "600",
-      transition: "all 0.3s ease"
-    }
+      transition: "all 0.3s ease",
+    },
   };
 
   return (
@@ -233,12 +264,14 @@ const { location } = useParams();
                   </span>
                 </div>
                 <h1 className="hero-title">
-                  Discover the Eternal<br />
+                  Discover the Eternal
+                  <br />
                   <span className="highlight">Magic of Agra</span>
                 </h1>
                 <p className="hero-subtitle">
-                  Experience the timeless beauty of the Taj Mahal, explore majestic forts,
-                  and immerse yourself in the rich Mughal heritage
+                  Experience the timeless beauty of the Taj Mahal, explore
+                  majestic forts, and immerse yourself in the rich Mughal
+                  heritage
                 </p>
 
                 <div className="hero-stats">
@@ -257,10 +290,16 @@ const { location } = useParams();
                 </div>
 
                 <div className="hero-actions">
-                  <button className="btn btn-primary btn-lg" onClick={handleBookNow}>
+                  <button
+                    className="btn btn-primary btn-lg"
+                    onClick={handleBookNow}
+                  >
                     Book Your Escape <FaArrowRight className="ms-2" />
                   </button>
-                  <button className="btn btn-outline-light btn-lg ms-3" onClick={() => setShowShareModal(true)}>
+                  <button
+                    className="btn btn-outline-light btn-lg ms-3"
+                    onClick={() => setShowShareModal(true)}
+                  >
                     <FaShare className="me-2" /> Share
                   </button>
                 </div>
@@ -274,29 +313,43 @@ const { location } = useParams();
                   </div>
                   <div className="price-body">
                     <div className="package-name">
-                      {packageCategories.find(p => p.id === activeCategory)?.name} Premium Package
+                      {
+                        packageCategories.find((p) => p.id === activeCategory)
+                          ?.name
+                      }{" "}
+                      Premium Package
                     </div>
                     <div className="price-tag">
                       <span className="currency">{pricing.currency}</span>
-                      <span className="amount">{pricing.discounted || "7,499"}</span>
+                      <span className="amount">
+                        {pricing.discounted || "7,499"}
+                      </span>
                       <span className="duration">/person</span>
                     </div>
                     <div className="price-original">
-                      <span className="original-price">₹{pricing.original || "8,500"}</span>
+                      <span className="original-price">
+                        ₹{pricing.original || "8,500"}
+                      </span>
                       <span className="discount-badge">Save 20%</span>
                     </div>
                     <div className="price-features">
                       <div className="feature">
-                        <FaCheckCircle className="text-success me-2" /> Free Cancellation
+                        <FaCheckCircle className="text-success me-2" /> Free
+                        Cancellation
                       </div>
                       <div className="feature">
-                        <FaCheckCircle className="text-success me-2" /> Breakfast Included
+                        <FaCheckCircle className="text-success me-2" />{" "}
+                        Breakfast Included
                       </div>
                       <div className="feature">
-                        <FaCheckCircle className="text-success me-2" /> Guided Tours
+                        <FaCheckCircle className="text-success me-2" /> Guided
+                        Tours
                       </div>
                     </div>
-                    <button className="btn btn-book w-100 mt-3" onClick={handleBookNow}>
+                    <button
+                      className="btn btn-book w-100 mt-3"
+                      onClick={handleBookNow}
+                    >
                       Book Now
                     </button>
                   </div>
@@ -348,14 +401,16 @@ const { location } = useParams();
         <div className="container">
           <div className="section-header text-center">
             <h2 className="section-title">Choose Your Perfect Duration</h2>
-            <p className="section-subtitle">Select from our carefully crafted packages</p>
+            <p className="section-subtitle">
+              Select from our carefully crafted packages
+            </p>
           </div>
 
           <div className="duration-cards">
             {packageCategories.map((category) => (
               <div
                 key={category.id}
-                className={`duration-card ${activeCategory === category.id ? 'active' : ''}`}
+                className={`duration-card ${activeCategory === category.id ? "active" : ""}`}
                 onClick={() => handleCategoryChange(category.id)}
               >
                 <div className="card-badge">{category.tag}</div>
@@ -378,7 +433,9 @@ const { location } = useParams();
         <div className="container">
           <div className="section-header text-center">
             <h2 className="section-title">Experience the Best of Agra</h2>
-            <p className="section-subtitle">What makes your journey unforgettable</p>
+            <p className="section-subtitle">
+              What makes your journey unforgettable
+            </p>
           </div>
 
           {loading ? (
@@ -410,7 +467,9 @@ const { location } = useParams();
         <div className="container">
           <div className="section-header text-center">
             <h2 className="section-title">Your Journey, Day by Day</h2>
-            <p className="section-subtitle">Every moment crafted for perfection</p>
+            <p className="section-subtitle">
+              Every moment crafted for perfection
+            </p>
           </div>
 
           <div className="row">
@@ -453,14 +512,32 @@ const { location } = useParams();
                 <div className="info-card">
                   <h4>Package Includes</h4>
                   <ul className="includes-list">
-                    <li><FaCheckCircle className="text-success me-2" /> Accommodation</li>
-                    <li><FaCheckCircle className="text-success me-2" /> Daily Breakfast</li>
-                    <li><FaCheckCircle className="text-success me-2" /> Guided Tours</li>
-                    <li><FaCheckCircle className="text-success me-2" /> Transportation</li>
-                    <li><FaCheckCircle className="text-success me-2" /> Monument Entries</li>
+                    <li>
+                      <FaCheckCircle className="text-success me-2" />{" "}
+                      Accommodation
+                    </li>
+                    <li>
+                      <FaCheckCircle className="text-success me-2" /> Daily
+                      Breakfast
+                    </li>
+                    <li>
+                      <FaCheckCircle className="text-success me-2" /> Guided
+                      Tours
+                    </li>
+                    <li>
+                      <FaCheckCircle className="text-success me-2" />{" "}
+                      Transportation
+                    </li>
+                    <li>
+                      <FaCheckCircle className="text-success me-2" /> Monument
+                      Entries
+                    </li>
                   </ul>
 
-                  <button className="btn btn-outline-primary w-100 mt-3" onClick={comparePackages}>
+                  <button
+                    className="btn btn-outline-primary w-100 mt-3"
+                    onClick={comparePackages}
+                  >
                     Compare Packages
                   </button>
                 </div>
@@ -488,12 +565,15 @@ const { location } = useParams();
             <div className="gallery-grid">
               {packageData.gallery?.map((item, index) => (
                 <div
-                  className={`gallery-item ${index === 0 ? 'grid-span-2' : ''}`}
+                  className={`gallery-item ${index === 0 ? "grid-span-2" : ""}`}
                   key={index}
                   onClick={() => setActiveImage(index)}
                 >
                   <img
-                    src={item.img || `https://via.placeholder.com/800x600?text=Agra+${index + 1}`}
+                    src={
+                      item.img ||
+                      `https://via.placeholder.com/800x600?text=Agra+${index + 1}`
+                    }
                     alt={item.caption || `Gallery image ${index + 1}`}
                     loading="lazy"
                   />
@@ -528,12 +608,18 @@ const { location } = useParams();
                 <div className="testimonial-card" key={index}>
                   <div className="testimonial-content">
                     <div className="quote-mark">"</div>
-                    <p className="quote">{testimonial.quote || "Great experience!"}</p>
+                    <p className="quote">
+                      {testimonial.quote || "Great experience!"}
+                    </p>
                     <div className="rating">
                       {[...Array(5)].map((_, i) => (
                         <FaStar
                           key={i}
-                          className={i < (testimonial.rating || 0) ? 'star-filled' : 'star-empty'}
+                          className={
+                            i < (testimonial.rating || 0)
+                              ? "star-filled"
+                              : "star-empty"
+                          }
                         />
                       ))}
                     </div>
@@ -558,16 +644,22 @@ const { location } = useParams();
       <section className="cta-section">
         <div className="container">
           <div className="cta-content">
-            <h2 className="cta-title">Ready to Experience the Magic of Agra?</h2>
+            <h2 className="cta-title">
+              Ready to Experience the Magic of Agra?
+            </h2>
             <p className="cta-text">
-              Join hundreds of happy travelers who've discovered the timeless beauty of this majestic city.
-              Limited slots available for the upcoming season.
+              Join hundreds of happy travelers who've discovered the timeless
+              beauty of this majestic city. Limited slots available for the
+              upcoming season.
             </p>
             <div className="cta-buttons">
               <button className="btn btn-cta-primary" onClick={handleBookNow}>
                 Book Your Adventure Now
               </button>
-              <button className="btn btn-cta-secondary" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+              <button
+                className="btn btn-cta-secondary"
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              >
                 Explore Packages
               </button>
             </div>
@@ -581,7 +673,9 @@ const { location } = useParams();
           <div style={styles.alertBox}>
             <FaHeart className="text-danger mb-3" size={40} />
             <h4 className="mb-3">Login Required</h4>
-            <p className="text-muted mb-4">Please login first to book this amazing package!</p>
+            <p className="text-muted mb-4">
+              Please login first to book this amazing package!
+            </p>
             <button onClick={handleAlertClose} style={styles.alertButton}>
               Login Now
             </button>
@@ -589,18 +683,15 @@ const { location } = useParams();
         </div>
       )}
 
-      {showLogin && (
-        <Login
-          onClose={() => setShowLogin(false)}
+      {showAuth && (
+        <LoginRegister
+          onClose={() => setShowAuth(false)}
           onLoginSuccess={handleLoginSuccess}
         />
       )}
 
       {showBooking && (
-        <BookingForm
-          user={user}
-          onClose={() => setShowBooking(false)}
-        />
+        <BookingForm user={user} onClose={() => setShowBooking(false)} />
       )}
 
       {/* Comparison Modal */}
@@ -623,9 +714,7 @@ const { location } = useParams();
                     <tr>
                       <th>Features</th>
                       {comparedPackages.map((pkg, index) => (
-                        <th key={index}>
-                          {pkg.name || "Unknown Package"}
-                        </th>
+                        <th key={index}>{pkg.name || "Unknown Package"}</th>
                       ))}
                     </tr>
                   </thead>
@@ -637,7 +726,7 @@ const { location } = useParams();
                         <td key={`${index}-price`}>
                           <span className="price-highlight">
                             {pkg.pricing
-                              ? `${pkg.pricing.currency || '₹'}${pkg.pricing.discounted || pkg.price || ''}`
+                              ? `${pkg.pricing.currency || "₹"}${pkg.pricing.discounted || pkg.price || ""}`
                               : pkg.price
                                 ? `₹${pkg.price}`
                                 : "-"}
@@ -655,27 +744,36 @@ const { location } = useParams();
                             <span className="rating-badge">
                               {pkg.rating} <FaStar className="ms-1" />
                             </span>
-                          ) : "-"}
+                          ) : (
+                            "-"
+                          )}
                         </td>
                       ))}
                     </tr>
 
                     {/* Highlights - Fixed the array creation issue */}
-                    {
-                      comparedPackages.length > 0 &&
-                        [...Array(Math.max(0, ...comparedPackages.map(pkg => pkg.highlights?.length || 0)))].map((_, index) => (
-                          <tr key={`highlight-${index}`}>
-                            <td>{index === 0 ? "Highlights" : ""}</td>
-                            {comparedPackages.map((pkg, pkgIndex) => (
-                              <td key={`${pkgIndex}-highlight-${index}`}>
-                                {pkg.highlights?.[index]
-                                  ? pkg.highlights[index].text
-                                  : "-"}
-                              </td>
-                            ))}
-                          </tr>
-                        ))
-                    }
+                    {comparedPackages.length > 0 &&
+                      [
+                        ...Array(
+                          Math.max(
+                            0,
+                            ...comparedPackages.map(
+                              (pkg) => pkg.highlights?.length || 0,
+                            ),
+                          ),
+                        ),
+                      ].map((_, index) => (
+                        <tr key={`highlight-${index}`}>
+                          <td>{index === 0 ? "Highlights" : ""}</td>
+                          {comparedPackages.map((pkg, pkgIndex) => (
+                            <td key={`${pkgIndex}-highlight-${index}`}>
+                              {pkg.highlights?.[index]
+                                ? pkg.highlights[index].text
+                                : "-"}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>
@@ -692,7 +790,7 @@ const { location } = useParams();
       {/* Styles */}
       <style jsx>{`
         .agra-package {
-          font-family: 'Poppins', sans-serif;
+          font-family: "Poppins", sans-serif;
           overflow-x: hidden;
         }
 
@@ -700,8 +798,9 @@ const { location } = useParams();
         .hero-section {
           position: relative;
           min-height: 90vh;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%),
-                      url('https://images.unsplash.com/photo-1564507592333-c60657eea523?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+          background:
+            linear-gradient(135deg, #667eea 0%, #764ba2 100%),
+            url("https://images.unsplash.com/photo-1564507592333-c60657eea523?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80");
           background-size: cover;
           background-position: center;
           background-blend-mode: overlay;
@@ -742,13 +841,13 @@ const { location } = useParams();
         }
 
         .hero-title .highlight {
-          color: #FFD700;
+          color: #ffd700;
           position: relative;
           display: inline-block;
         }
 
         .hero-title .highlight::after {
-          content: '';
+          content: "";
           position: absolute;
           bottom: 10px;
           left: 0;
@@ -803,7 +902,7 @@ const { location } = useParams();
         }
 
         .offer-tag {
-          background: #FFD700;
+          background: #ffd700;
           color: #333;
           padding: 5px 15px;
           border-radius: 20px;
@@ -839,7 +938,7 @@ const { location } = useParams();
 
         .currency {
           font-size: 1.5rem;
-          color: #8B5A2B;
+          color: #8b5a2b;
           font-weight: 600;
         }
 
@@ -924,7 +1023,7 @@ const { location } = useParams();
 
         .info-icon {
           font-size: 2rem;
-          color: #8B5A2B;
+          color: #8b5a2b;
         }
 
         .info-label {
@@ -977,7 +1076,7 @@ const { location } = useParams();
           top: -10px;
           left: 50%;
           transform: translateX(-50%);
-          background: #FFD700;
+          background: #ffd700;
           color: #333;
           padding: 5px 15px;
           border-radius: 20px;
@@ -1080,7 +1179,7 @@ const { location } = useParams();
         }
 
         .timeline::before {
-          content: '';
+          content: "";
           position: absolute;
           left: 30px;
           top: 0;
@@ -1135,7 +1234,7 @@ const { location } = useParams();
 
         .activity-time {
           font-weight: 600;
-          color: #8B5A2B;
+          color: #8b5a2b;
           min-width: 100px;
         }
 
@@ -1279,7 +1378,7 @@ const { location } = useParams();
         }
 
         .star-filled {
-          color: #FFD700;
+          color: #ffd700;
         }
 
         .star-empty {
@@ -1483,7 +1582,7 @@ const { location } = useParams();
         .rating-badge {
           display: inline-flex;
           align-items: center;
-          background: #FFD700;
+          background: #ffd700;
           color: #333;
           padding: 5px 10px;
           border-radius: 15px;

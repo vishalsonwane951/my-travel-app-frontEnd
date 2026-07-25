@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef, useContext } from "react";
+import { createPortal } from "react-dom";
 import { AuthContext } from "../Context/AuthContext";
 import api from "../utils/api";
 
@@ -25,17 +26,23 @@ const LoginRegister = ({ onClose }) => {
   const [focusedField, setFocusedField] = useState(null);
   const [loginMethod, setLoginMethod] = useState("password"); // 'password' or 'otp'
 
+  // Lock body scroll while modal is open
+  useEffect(() => {
+    const original = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = original;
+    };
+  }, []);
+
   // Handle mode switch with animation
   const toggleMode = useCallback(() => {
-    // Set animation direction
     setAnimationDirection(isLogin ? 'to-register' : 'to-login');
     setIsAnimating(true);
-    
-    // Wait for animation to complete before switching content
+
     setTimeout(() => {
       setIsLogin(!isLogin);
-      
-      // Reset form data when switching
+
       setFormData({
         email: "",
         password: "",
@@ -50,8 +57,7 @@ const LoginRegister = ({ onClose }) => {
       setOtpSent(false);
       setLoginMethod("password");
       setCountdown(0);
-      
-      // End animation after content switch
+
       setTimeout(() => {
         setIsAnimating(false);
         setAnimationDirection(null);
@@ -79,17 +85,17 @@ const LoginRegister = ({ onClose }) => {
     const newErrors = {};
     if (!formData.email.trim()) newErrors.email = "Email is required";
     else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Invalid email format";
-    
+
     if (loginMethod === "password" && !formData.password.trim()) {
       newErrors.password = "Password is required";
     }
-    
+
     if (loginMethod === "otp" && otpSent && !formData.otp.trim()) {
       newErrors.otp = "OTP is required";
     } else if (loginMethod === "otp" && otpSent && formData.otp.length !== 6) {
       newErrors.otp = "OTP must be 6 digits";
     }
-    
+
     return newErrors;
   }, [formData, loginMethod, otpSent]);
 
@@ -227,10 +233,9 @@ const LoginRegister = ({ onClose }) => {
   const isMobile = windowWidth < 768;
   const isTablet = windowWidth >= 768 && windowWidth < 1024;
 
-  // Animation styles based on direction
   const getLeftPanelAnimation = () => {
     if (!isAnimating) return {};
-    
+
     if (animationDirection === 'to-register') {
       return {
         transform: isMobile ? 'translateY(-100%)' : 'translateX(-100%)',
@@ -247,7 +252,7 @@ const LoginRegister = ({ onClose }) => {
 
   const getRightPanelAnimation = () => {
     if (!isAnimating) return {};
-    
+
     if (animationDirection === 'to-register') {
       return {
         transform: isMobile ? 'translateY(100%)' : 'translateX(100%)',
@@ -274,7 +279,7 @@ const LoginRegister = ({ onClose }) => {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      zIndex: 2000,
+      zIndex: 9999,
       padding: isMobile ? "10px" : "20px",
       animation: "fadeIn 0.4s ease",
     },
@@ -291,7 +296,6 @@ const LoginRegister = ({ onClose }) => {
       position: "relative",
       background: "#ffffff",
     },
-    // Left Panel - with split animation
     leftPanel: {
       flex: isMobile ? "none" : 1.2,
       height: isMobile ? (isLogin ? "200px" : "250px") : "100%",
@@ -299,7 +303,7 @@ const LoginRegister = ({ onClose }) => {
       position: "relative",
       overflow: "hidden",
       transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
-      background: isLogin 
+      background: isLogin
         ? "linear-gradient(145deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%)"
         : "linear-gradient(145deg, #0093E9 0%, #80D0C7 100%)",
       display: "flex",
@@ -348,7 +352,6 @@ const LoginRegister = ({ onClose }) => {
       letterSpacing: "0.5px",
       width: isMobile ? "100%" : "auto",
     },
-    // Right Panel - with split animation
     rightPanel: {
       flex: 1,
       backgroundColor: "#ffffff",
@@ -385,7 +388,6 @@ const LoginRegister = ({ onClose }) => {
       color: "#64748b",
       zIndex: 10,
     },
-    // Decorative Elements
     decorativeCircle1: {
       position: "absolute",
       top: "-100px",
@@ -424,7 +426,6 @@ const LoginRegister = ({ onClose }) => {
       opacity: 0.6,
       display: isMobile ? "none" : "block",
     },
-    // Form Styles
     formTitle: {
       fontSize: isMobile ? "1.8rem" : "2.2rem",
       fontWeight: "700",
@@ -600,23 +601,23 @@ const LoginRegister = ({ onClose }) => {
     },
   };
 
-  return (
+  return createPortal(
     <div style={styles.overlay}>
       <div style={styles.container}>
-        {/* Left Panel - Animates out/in based on mode */}
+        {/* Left Panel */}
         <div style={styles.leftPanel}>
           <div style={styles.decorativeCircle1}></div>
           <div style={styles.decorativeCircle2}></div>
           <div style={styles.floatingIcon1}>✈️</div>
           <div style={styles.floatingIcon2}>🌍</div>
-          
+
           <div style={styles.leftContent}>
             <h1 style={styles.welcomeTitle}>
               {isLogin ? "Welcome Back!" : "Join Us!"}
             </h1>
             <p style={styles.welcomeText}>
-              {isLogin 
-                ? "Sign in to continue your journey with us" 
+              {isLogin
+                ? "Sign in to continue your journey with us"
                 : "Create an account and start exploring amazing destinations"}
             </p>
             <button
@@ -637,10 +638,10 @@ const LoginRegister = ({ onClose }) => {
           </div>
         </div>
 
-        {/* Right Panel - Animates opposite to left panel */}
+        {/* Right Panel */}
         <div style={styles.rightPanel}>
-          <button 
-            style={styles.closeButton} 
+          <button
+            style={styles.closeButton}
             onClick={onClose}
             onMouseEnter={(e) => {
               e.target.style.background = "#e2e8f0";
@@ -659,8 +660,8 @@ const LoginRegister = ({ onClose }) => {
               {isLogin ? "Sign In" : "Create Account"}
             </h2>
             <p style={styles.formSubtitle}>
-              {isLogin 
-                ? "Please enter your credentials" 
+              {isLogin
+                ? "Please enter your credentials"
                 : "Fill in the details to get started"}
             </p>
 
@@ -673,7 +674,6 @@ const LoginRegister = ({ onClose }) => {
 
             {isLogin ? (
               <form style={styles.form} onSubmit={handleLogin}>
-                {/* Email Field */}
                 <div style={styles.inputGroup}>
                   <label style={styles.label}>Email</label>
                   <div style={styles.inputWrapper}>
@@ -694,7 +694,6 @@ const LoginRegister = ({ onClose }) => {
                   {errors.email && <span style={styles.fieldError}>{errors.email}</span>}
                 </div>
 
-                {/* OTP Login Section */}
                 {loginMethod === "otp" && otpSent ? (
                   <>
                     <div style={styles.inputGroup}>
@@ -730,7 +729,6 @@ const LoginRegister = ({ onClose }) => {
                   </>
                 ) : loginMethod === "password" ? (
                   <>
-                    {/* Password Field */}
                     <div style={styles.inputGroup}>
                       <label style={styles.label}>Password</label>
                       <div style={styles.inputWrapper}>
@@ -758,7 +756,6 @@ const LoginRegister = ({ onClose }) => {
                       {errors.password && <span style={styles.fieldError}>{errors.password}</span>}
                     </div>
 
-                    {/* OTP Option */}
                     <div style={styles.otpContainer}>
                       <button
                         type="button"
@@ -778,7 +775,6 @@ const LoginRegister = ({ onClose }) => {
                   </>
                 ) : null}
 
-                {/* Submit Button */}
                 <button
                   type="submit"
                   style={styles.submitButton}
@@ -800,9 +796,7 @@ const LoginRegister = ({ onClose }) => {
                 </button>
               </form>
             ) : (
-              /* Register Form */
               <form style={styles.form} onSubmit={handleRegister}>
-                {/* Name Field */}
                 <div style={styles.inputGroup}>
                   <label style={styles.label}>Full Name</label>
                   <input
@@ -821,7 +815,6 @@ const LoginRegister = ({ onClose }) => {
                   {errors.name && <span style={styles.fieldError}>{errors.name}</span>}
                 </div>
 
-                {/* Email Field */}
                 <div style={styles.inputGroup}>
                   <label style={styles.label}>Email</label>
                   <input
@@ -840,7 +833,6 @@ const LoginRegister = ({ onClose }) => {
                   {errors.email && <span style={styles.fieldError}>{errors.email}</span>}
                 </div>
 
-                {/* Password Field */}
                 <div style={styles.inputGroup}>
                   <label style={styles.label}>Password</label>
                   <div style={styles.inputWrapper}>
@@ -868,7 +860,6 @@ const LoginRegister = ({ onClose }) => {
                   {errors.password && <span style={styles.fieldError}>{errors.password}</span>}
                 </div>
 
-                {/* Mobile & City Row */}
                 <div style={styles.row}>
                   <div style={styles.halfInputGroup}>
                     <label style={styles.label}>Mobile</label>
@@ -908,7 +899,6 @@ const LoginRegister = ({ onClose }) => {
                   </div>
                 </div>
 
-                {/* Submit Button */}
                 <button
                   type="submit"
                   style={styles.submitButton}
@@ -947,7 +937,6 @@ const LoginRegister = ({ onClose }) => {
         </div>
       </div>
 
-      {/* Animation Keyframes */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
 
@@ -999,47 +988,23 @@ const LoginRegister = ({ onClose }) => {
         }
 
         @keyframes splitLeft {
-          0% {
-            transform: translateX(0);
-            opacity: 1;
-          }
-          100% {
-            transform: translateX(-100%);
-            opacity: 0;
-          }
+          0% { transform: translateX(0); opacity: 1; }
+          100% { transform: translateX(-100%); opacity: 0; }
         }
 
         @keyframes splitRight {
-          0% {
-            transform: translateX(0);
-            opacity: 1;
-          }
-          100% {
-            transform: translateX(100%);
-            opacity: 0;
-          }
+          0% { transform: translateX(0); opacity: 1; }
+          100% { transform: translateX(100%); opacity: 0; }
         }
 
         @keyframes splitUp {
-          0% {
-            transform: translateY(0);
-            opacity: 1;
-          }
-          100% {
-            transform: translateY(-100%);
-            opacity: 0;
-          }
+          0% { transform: translateY(0); opacity: 1; }
+          100% { transform: translateY(-100%); opacity: 0; }
         }
 
         @keyframes splitDown {
-          0% {
-            transform: translateY(0);
-            opacity: 1;
-          }
-          100% {
-            transform: translateY(100%);
-            opacity: 0;
-          }
+          0% { transform: translateY(0); opacity: 1; }
+          100% { transform: translateY(100%); opacity: 0; }
         }
 
         * {
@@ -1068,7 +1033,8 @@ const LoginRegister = ({ onClose }) => {
           }
         }
       `}</style>
-    </div>
+    </div>,
+    document.body
   );
 };
 

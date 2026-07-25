@@ -1,19 +1,51 @@
 // Pages/ItineraryPage.jsx
 // Route: /package/:type/:location
 
-import React, { useState, useEffect, useRef, useCallback, useContext } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useContext,
+} from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import {
-  FaMapMarkerAlt, FaClock, FaUsers, FaStar, FaArrowLeft,
-  FaCheck, FaTimes,
-  FaPhone, FaWhatsapp, FaShieldAlt, FaShare,
-  FaHeart, FaRegHeart, FaBolt, FaBalanceScale,
-  FaUser, FaEnvelope, FaMobileAlt, FaPrint, FaLock,
-  FaCity, FaStickyNote, FaCalendarAlt,
-  FaExpand, FaChevronLeft, FaChevronRight,
-  FaBed, FaUtensils, FaThumbsUp, FaEllipsisH,
-  FaSearch, FaFilter, FaQuestionCircle, FaPencilAlt,
-  FaCamera, FaRegStar,
+  FaMapMarkerAlt,
+  FaClock,
+  FaUsers,
+  FaStar,
+  FaArrowLeft,
+  FaCheck,
+  FaTimes,
+  FaPhone,
+  FaWhatsapp,
+  FaShieldAlt,
+  FaShare,
+  FaHeart,
+  FaRegHeart,
+  FaBolt,
+  FaBalanceScale,
+  FaUser,
+  FaEnvelope,
+  FaMobileAlt,
+  FaPrint,
+  FaLock,
+  FaCity,
+  FaStickyNote,
+  FaCalendarAlt,
+  FaExpand,
+  FaChevronLeft,
+  FaChevronRight,
+  FaBed,
+  FaUtensils,
+  FaThumbsUp,
+  FaEllipsisH,
+  FaSearch,
+  FaFilter,
+  FaQuestionCircle,
+  FaPencilAlt,
+  FaCamera,
+  FaRegStar,
 } from "react-icons/fa";
 import { AuthContext } from "../Context/AuthContext";
 import TripPlannerModal from "../Pages/AITrip Planner/TripPlannerModal.jsx";
@@ -22,6 +54,8 @@ import LocationMap from "../Components/Locationmap.jsx";
 import ReviewsAndQA from "../Components/ReviewPage.jsx";
 import ContributeSection from "../Components/Contributesection.jsx";
 import ReviewProvider from "../Context/Reviewcontext.jsx";
+import LoginRegister from "./LoginRegister.jsx";
+import Header from "../Components/Header/Header.jsx";
 
 // Bootstrap CDN injector
 (function injectBootstrap() {
@@ -29,15 +63,19 @@ import ReviewProvider from "../Context/Reviewcontext.jsx";
   const link = document.createElement("link");
   link.id = "bs5-css";
   link.rel = "stylesheet";
-  link.href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css";
-  link.integrity = "sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH";
+  link.href =
+    "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css";
+  link.integrity =
+    "sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH";
   link.crossOrigin = "anonymous";
   document.head.appendChild(link);
   if (document.getElementById("bs5-js")) return;
   const script = document.createElement("script");
   script.id = "bs5-js";
-  script.src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js";
-  script.integrity = "sha384-YvpcrYf0tY3lHB60NNkmXc4s9bIOgUxi8T/jzmAb45HFn/6f5m9VFvkF6C1B0e7";
+  script.src =
+    "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js";
+  script.integrity =
+    "sha384-YvpcrYf0tY3lHB60NNkmXc4s9bIOgUxi8T/jzmAb45HFn/6f5m9VFvkF6C1B0e7";
   script.crossOrigin = "anonymous";
   document.body.appendChild(script);
 })();
@@ -69,34 +107,58 @@ const getCloudinaryUrl = (url, width = 900) => {
 export function extractLatLng(url) {
   if (!url) return null;
   const atMatch = url.match(/@(-?\d+\.?\d*),(-?\d+\.?\d*)/);
-  if (atMatch) return { lat: parseFloat(atMatch[1]), lng: parseFloat(atMatch[2]) };
+  if (atMatch)
+    return { lat: parseFloat(atMatch[1]), lng: parseFloat(atMatch[2]) };
   const llMatch = url.match(/[?&](?:ll|center)=(-?\d+\.?\d*),(-?\d+\.?\d*)/);
-  if (llMatch) return { lat: parseFloat(llMatch[1]), lng: parseFloat(llMatch[2]) };
+  if (llMatch)
+    return { lat: parseFloat(llMatch[1]), lng: parseFloat(llMatch[2]) };
   return null;
 }
 
-const prettyLocationName = (loc = "") => loc.replace(/([a-z])([A-Z])/g, "$1 $2");
+const prettyLocationName = (loc = "") =>
+  loc.replace(/([a-z])([A-Z])/g, "$1 $2");
 const slugifyLocation = (loc = "") =>
   prettyLocationName(loc).trim().toLowerCase().replace(/\s+/g, "-");
 
 const WMO_CODES = {
-  0: { e: "☀️", l: "Clear sky" }, 1: { e: "🌤️", l: "Mostly clear" }, 2: { e: "⛅", l: "Partly cloudy" },
-  3: { e: "☁️", l: "Overcast" }, 45: { e: "🌫️", l: "Foggy" }, 48: { e: "🌫️", l: "Icy fog" },
-  51: { e: "🌦️", l: "Drizzle" }, 61: { e: "🌧️", l: "Light rain" }, 63: { e: "🌧️", l: "Moderate rain" },
-  65: { e: "🌧️", l: "Heavy rain" }, 71: { e: "🌨️", l: "Light snow" }, 73: { e: "🌨️", l: "Snow" },
-  75: { e: "❄️", l: "Heavy snow" }, 80: { e: "🌦️", l: "Rain showers" }, 95: { e: "⛈️", l: "Thunderstorm" },
+  0: { e: "☀️", l: "Clear sky" },
+  1: { e: "🌤️", l: "Mostly clear" },
+  2: { e: "⛅", l: "Partly cloudy" },
+  3: { e: "☁️", l: "Overcast" },
+  45: { e: "🌫️", l: "Foggy" },
+  48: { e: "🌫️", l: "Icy fog" },
+  51: { e: "🌦️", l: "Drizzle" },
+  61: { e: "🌧️", l: "Light rain" },
+  63: { e: "🌧️", l: "Moderate rain" },
+  65: { e: "🌧️", l: "Heavy rain" },
+  71: { e: "🌨️", l: "Light snow" },
+  73: { e: "🌨️", l: "Snow" },
+  75: { e: "❄️", l: "Heavy snow" },
+  80: { e: "🌦️", l: "Rain showers" },
+  95: { e: "⛈️", l: "Thunderstorm" },
   99: { e: "⛈️", l: "Thunderstorm" },
 };
 const wmoInfo = (code) => WMO_CODES[code] ?? { e: "🌡️", l: "Variable" };
 
 const BEST_TIMES = {
-  manali: "Mar – Jun, Sep – Oct", goa: "Nov – Feb", kerala: "Sep – Mar",
-  rajasthan: "Oct – Mar", andaman: "Oct – May", shimla: "Mar – Jun, Sep – Nov",
-  leh: "Jun – Sep", jaipur: "Oct – Mar", ooty: "Apr – Jun, Sep – Nov",
-  coorg: "Oct – May", munnar: "Sep – May", varanasi: "Oct – Mar",
-  agra: "Oct – Mar", delhi: "Oct – Mar", mumbai: "Nov – Feb",
+  manali: "Mar – Jun, Sep – Oct",
+  goa: "Nov – Feb",
+  kerala: "Sep – Mar",
+  rajasthan: "Oct – Mar",
+  andaman: "Oct – May",
+  shimla: "Mar – Jun, Sep – Nov",
+  leh: "Jun – Sep",
+  jaipur: "Oct – Mar",
+  ooty: "Apr – Jun, Sep – Nov",
+  coorg: "Oct – May",
+  munnar: "Sep – May",
+  varanasi: "Oct – Mar",
+  agra: "Oct – Mar",
+  delhi: "Oct – Mar",
+  mumbai: "Nov – Feb",
 };
-const getBestTime = (loc) => BEST_TIMES[(loc || "").toLowerCase()] ?? "Oct – Mar";
+const getBestTime = (loc) =>
+  BEST_TIMES[(loc || "").toLowerCase()] ?? "Oct – Mar";
 
 function useDestinationWeather(lat, lng, locationName) {
   const [weather, setWeather] = useState(null);
@@ -109,16 +171,24 @@ function useDestinationWeather(lat, lng, locationName) {
         const res = await fetch(url);
         const json = await res.json();
         const c = json.current;
-        if (!cancelled) setWeather({
-          temp: c.temperature_2m, humidity: c.relative_humidity_2m,
-          uv: c.uv_index ?? '-', wind: c.wind_speed_10m,
-          icon: wmoInfo(c.weather_code).e, desc: wmoInfo(c.weather_code).l,
-          best: getBestTime(locationName),
-        });
-      } catch { /* non-fatal */ }
+        if (!cancelled)
+          setWeather({
+            temp: c.temperature_2m,
+            humidity: c.relative_humidity_2m,
+            uv: c.uv_index ?? "-",
+            wind: c.wind_speed_10m,
+            icon: wmoInfo(c.weather_code).e,
+            desc: wmoInfo(c.weather_code).l,
+            best: getBestTime(locationName),
+          });
+      } catch {
+        /* non-fatal */
+      }
     };
     load();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [lat, lng, locationName]);
   return weather;
 }
@@ -128,11 +198,21 @@ function parseDurationString(str = "") {
   const dnMatch = str.match(/(\d+)\s*[Dd]\s*[/\s]\s*(\d+)\s*[Nn]/);
   const dMatch = str.match(/^(\d+)\s*[Dd]/);
   const nMatch = str.match(/^(\d+)\s*[Nn]/);
-  let nights = null, days = null;
-  if (ndMatch) { nights = parseInt(ndMatch[1]); days = parseInt(ndMatch[2]); }
-  else if (dnMatch) { days = parseInt(dnMatch[1]); nights = parseInt(dnMatch[2]); }
-  else if (dMatch) { days = parseInt(dMatch[1]); nights = days - 1; }
-  else if (nMatch) { nights = parseInt(nMatch[1]); days = nights + 1; }
+  let nights = null,
+    days = null;
+  if (ndMatch) {
+    nights = parseInt(ndMatch[1]);
+    days = parseInt(ndMatch[2]);
+  } else if (dnMatch) {
+    days = parseInt(dnMatch[1]);
+    nights = parseInt(dnMatch[2]);
+  } else if (dMatch) {
+    days = parseInt(dMatch[1]);
+    nights = days - 1;
+  } else if (nMatch) {
+    nights = parseInt(nMatch[1]);
+    days = nights + 1;
+  }
   return { nights, days };
 }
 
@@ -145,8 +225,10 @@ function normalisePackage(raw) {
   if (!raw) return null;
   let gallery = [];
   if (Array.isArray(raw.gallery) && raw.gallery.length) gallery = raw.gallery;
-  else if (typeof raw.images === "string" && raw.images) gallery = [{ img: raw.images, caption: "" }];
-  else if (Array.isArray(raw.images) && raw.images.length) gallery = raw.images.map((img) => ({ img, caption: "" }));
+  else if (typeof raw.images === "string" && raw.images)
+    gallery = [{ img: raw.images, caption: "" }];
+  else if (Array.isArray(raw.images) && raw.images.length)
+    gallery = raw.images.map((img) => ({ img, caption: "" }));
 
   let durations = [];
   if (Array.isArray(raw.durations) && raw.durations.length) {
@@ -154,36 +236,86 @@ function normalisePackage(raw) {
     if (typeof first === "string") {
       durations = raw.durations.map((d) => {
         const { nights, days } = parseDurationString(d);
-        return { label: d, nights, days, price: raw.price || 0, discountedPrice: raw.strikePrice ? raw.price : null, originalPrice: raw.strikePrice || null };
+        return {
+          label: d,
+          nights,
+          days,
+          price: raw.price || 0,
+          discountedPrice: raw.strikePrice ? raw.price : null,
+          originalPrice: raw.strikePrice || null,
+        };
       });
     } else if (typeof first === "object") {
-      durations = raw.durations.map((d) => ({ label: d.label || d.duration || "", nights: d.nights ?? null, days: d.days ?? null, price: d.price || raw.price || 0, discountedPrice: d.discountedPrice || null, originalPrice: d.originalPrice || null }));
+      durations = raw.durations.map((d) => ({
+        label: d.label || d.duration || "",
+        nights: d.nights ?? null,
+        days: d.days ?? null,
+        price: d.price || raw.price || 0,
+        discountedPrice: d.discountedPrice || null,
+        originalPrice: d.originalPrice || null,
+      }));
     }
   } else {
-    const rawLabel = (typeof raw.durations === "string" && raw.durations) || raw.duration || "";
+    const rawLabel =
+      (typeof raw.durations === "string" && raw.durations) ||
+      raw.duration ||
+      "";
     const { nights, days } = parseDurationString(rawLabel);
-    durations = [{ label: rawLabel || (days ? `${days} Day${days > 1 ? "s" : ""}` : ""), nights, days, price: raw.price || 0, discountedPrice: raw.strikePrice ? raw.price : null, originalPrice: raw.strikePrice || null }];
+    durations = [
+      {
+        label: rawLabel || (days ? `${days} Day${days > 1 ? "s" : ""}` : ""),
+        nights,
+        days,
+        price: raw.price || 0,
+        discountedPrice: raw.strikePrice ? raw.price : null,
+        originalPrice: raw.strikePrice || null,
+      },
+    ];
   }
 
   let groupSize = [];
   if (Array.isArray(raw.groupSize)) groupSize = raw.groupSize;
-  else if (typeof raw.groupSize === "string" && raw.groupSize) groupSize = [raw.groupSize];
+  else if (typeof raw.groupSize === "string" && raw.groupSize)
+    groupSize = [raw.groupSize];
 
   const inclusions = raw.inclusions || raw.inclExcl?.inclusions || [];
   const exclusions = raw.exclusions || raw.inclExcl?.exclusions || [];
   const itinerary = (raw.itinerary || []).map((day) => ({
     ...day,
     title: cleanItineraryTitle(day.title),
-    meals: Array.isArray(day.meals) ? day.meals : typeof day.meals === "string" && day.meals ? day.meals.split(/[,;]/).map(m => m.trim()).filter(Boolean) : [],
-    activities: Array.isArray(day.activities) ? day.activities : typeof day.activities === "string" && day.activities ? day.activities.split(/[,;]/).map(a => a.trim()).filter(Boolean) : [],
+    meals: Array.isArray(day.meals)
+      ? day.meals
+      : typeof day.meals === "string" && day.meals
+        ? day.meals
+            .split(/[,;]/)
+            .map((m) => m.trim())
+            .filter(Boolean)
+        : [],
+    activities: Array.isArray(day.activities)
+      ? day.activities
+      : typeof day.activities === "string" && day.activities
+        ? day.activities
+            .split(/[,;]/)
+            .map((a) => a.trim())
+            .filter(Boolean)
+        : [],
   }));
 
-  return { ...raw, gallery, durations, groupSize, inclusions, exclusions, itinerary };
+  return {
+    ...raw,
+    gallery,
+    durations,
+    groupSize,
+    inclusions,
+    exclusions,
+    itinerary,
+  };
 }
 
 function resolveCoords(pkg) {
   if (!pkg) return null;
-  if (pkg.latitude != null && pkg.longitude != null) return { lat: pkg.latitude, lng: pkg.longitude };
+  if (pkg.latitude != null && pkg.longitude != null)
+    return { lat: pkg.latitude, lng: pkg.longitude };
   if (pkg.lat && pkg.long) return { lat: pkg.lat, lng: pkg.long };
   return extractLatLng(pkg.locationurl);
 }
@@ -191,10 +323,40 @@ function resolveCoords(pkg) {
 const buildFallbackDays = (locationTitle, numDays = 1) =>
   Array.from({ length: numDays }, (_, i) => ({
     day: i + 1,
-    title: i === 0 ? `Arrival in ${locationTitle}` : i === numDays - 1 ? `Departure from ${locationTitle}` : `Explore ${locationTitle} — Day ${i + 1}`,
-    description: i === 0 ? `Welcome to ${locationTitle}! Transfer from airport/station to hotel. Check in, freshen up, and enjoy a welcome dinner.` : i === numDays - 1 ? `Enjoy breakfast at the hotel. Check out and transfer to airport/station for your return journey.` : `Full day of guided sightseeing, local cuisine, and cultural experiences across the best of ${locationTitle}.`,
-    activities: i === 0 ? ["Airport / station pickup", "Hotel check-in", "Orientation walk", "Welcome dinner"] : i === numDays - 1 ? ["Breakfast at hotel", "Check-out", "Transfer to departure point"] : ["Sightseeing tour", "Local street food", "Cultural experience", "Leisure time"],
-    meals: i === 0 ? ["Dinner"] : i === numDays - 1 ? ["Breakfast"] : ["Breakfast", "Lunch", "Dinner"],
+    title:
+      i === 0
+        ? `Arrival in ${locationTitle}`
+        : i === numDays - 1
+          ? `Departure from ${locationTitle}`
+          : `Explore ${locationTitle} — Day ${i + 1}`,
+    description:
+      i === 0
+        ? `Welcome to ${locationTitle}! Transfer from airport/station to hotel. Check in, freshen up, and enjoy a welcome dinner.`
+        : i === numDays - 1
+          ? `Enjoy breakfast at the hotel. Check out and transfer to airport/station for your return journey.`
+          : `Full day of guided sightseeing, local cuisine, and cultural experiences across the best of ${locationTitle}.`,
+    activities:
+      i === 0
+        ? [
+            "Airport / station pickup",
+            "Hotel check-in",
+            "Orientation walk",
+            "Welcome dinner",
+          ]
+        : i === numDays - 1
+          ? ["Breakfast at hotel", "Check-out", "Transfer to departure point"]
+          : [
+              "Sightseeing tour",
+              "Local street food",
+              "Cultural experience",
+              "Leisure time",
+            ],
+    meals:
+      i === 0
+        ? ["Dinner"]
+        : i === numDays - 1
+          ? ["Breakfast"]
+          : ["Breakfast", "Lunch", "Dinner"],
     accommodation: i < numDays - 1 ? "Hotel (as per selected plan)" : null,
   }));
 
@@ -207,7 +369,9 @@ function useLivePrice(base) {
     const id = setInterval(() => {
       setPrice((p) => {
         const delta = (Math.random() - 0.48) * base * 0.03;
-        const next = Math.round(Math.max(base * 0.88, Math.min(base * 1.18, p + delta)));
+        const next = Math.round(
+          Math.max(base * 0.88, Math.min(base * 1.18, p + delta)),
+        );
         setTrend(next > p ? "rising" : next < p ? "falling" : "stable");
         return next;
       });
@@ -218,7 +382,17 @@ function useLivePrice(base) {
 }
 
 const Skel = ({ h = 16, w = "100%", r = 8, mb = 8 }) => (
-  <div style={{ height: h, width: w, borderRadius: r, marginBottom: mb, background: "linear-gradient(90deg,#f0f0f0 25%,#e8e8e8 50%,#f0f0f0 75%)", backgroundSize: "400px 100%", animation: "itp-shimmer 1.4s infinite" }} />
+  <div
+    style={{
+      height: h,
+      width: w,
+      borderRadius: r,
+      marginBottom: mb,
+      background: "linear-gradient(90deg,#f0f0f0 25%,#e8e8e8 50%,#f0f0f0 75%)",
+      backgroundSize: "400px 100%",
+      animation: "itp-shimmer 1.4s infinite",
+    }}
+  />
 );
 
 function ScrollReveal({ children, delay = 0 }) {
@@ -227,12 +401,27 @@ function ScrollReveal({ children, delay = 0 }) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const obs = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } }, { threshold: 0.1 });
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.1 },
+    );
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
   return (
-    <div ref={ref} style={{ opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(30px)", transition: `opacity 0.55s ease ${delay}ms, transform 0.55s cubic-bezier(.4,0,.2,1) ${delay}ms` }}>
+    <div
+      ref={ref}
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(30px)",
+        transition: `opacity 0.55s ease ${delay}ms, transform 0.55s cubic-bezier(.4,0,.2,1) ${delay}ms`,
+      }}
+    >
       {children}
     </div>
   );
@@ -240,24 +429,172 @@ function ScrollReveal({ children, delay = 0 }) {
 
 function Lightbox({ images, startIndex, onClose }) {
   const [current, setCurrent] = useState(startIndex);
-  const prev = () => setCurrent(i => (i - 1 + images.length) % images.length);
-  const next = () => setCurrent(i => (i + 1) % images.length);
+  const prev = () => setCurrent((i) => (i - 1 + images.length) % images.length);
+  const next = () => setCurrent((i) => (i + 1) % images.length);
   useEffect(() => {
-    const handleKey = (e) => { if (e.key === "ArrowLeft") prev(); else if (e.key === "ArrowRight") next(); else if (e.key === "Escape") onClose(); };
+    const handleKey = (e) => {
+      if (e.key === "ArrowLeft") prev();
+      else if (e.key === "ArrowRight") next();
+      else if (e.key === "Escape") onClose();
+    };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, []);
-  const navBtnStyle = (side) => ({ position: "absolute", [side]: 20, top: "50%", transform: "translateY(-50%)", width: 50, height: 50, borderRadius: "50%", border: "none", background: "rgba(255,255,255,0.13)", color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, zIndex: 10, transition: "all .2s" });
+  const navBtnStyle = (side) => ({
+    position: "absolute",
+    [side]: 20,
+    top: "50%",
+    transform: "translateY(-50%)",
+    width: 50,
+    height: 50,
+    borderRadius: "50%",
+    border: "none",
+    background: "rgba(255,255,255,0.13)",
+    color: "#fff",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: 20,
+    zIndex: 10,
+    transition: "all .2s",
+  });
   return (
-    <div onClick={(e) => { if (e.target === e.currentTarget) onClose(); }} style={{ position: "fixed", inset: 0, zIndex: 2000, background: "rgba(0,0,0,0.93)", backdropFilter: "blur(10px)", display: "flex", alignItems: "center", justifyContent: "center", animation: "itp-modal-in .22s ease both" }}>
-      <button onClick={onClose} style={{ position: "absolute", top: 18, right: 18, width: 42, height: 42, borderRadius: "50%", border: "none", background: "rgba(255,255,255,0.13)", color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 17, zIndex: 10 }}>✕</button>
-      <div style={{ position: "absolute", top: 22, left: "50%", transform: "translateX(-50%)", color: "rgba(255,255,255,0.72)", fontSize: ".82rem", fontWeight: 600, background: "rgba(255,255,255,0.1)", padding: "4px 18px", borderRadius: 50 }}>{current + 1} / {images.length}</div>
-      {images.length > 1 && <button onClick={prev} style={navBtnStyle("left")} onMouseOver={e => { e.currentTarget.style.background = "rgba(255,255,255,0.24)"; e.currentTarget.style.transform = "translateY(-50%) scale(1.1)"; }} onMouseOut={e => { e.currentTarget.style.background = "rgba(255,255,255,0.13)"; e.currentTarget.style.transform = "translateY(-50%) scale(1)"; }}><FaChevronLeft /></button>}
-      <img key={current} src={getCloudinaryUrl(images[current], 1400)} alt={`Gallery ${current + 1}`} style={{ maxWidth: "86vw", maxHeight: "80vh", objectFit: "contain", borderRadius: 14, boxShadow: "0 32px 80px rgba(0,0,0,.55)", animation: "itp-modal-in .28s ease both" }} />
-      {images.length > 1 && <button onClick={next} style={navBtnStyle("right")} onMouseOver={e => { e.currentTarget.style.background = "rgba(255,255,255,0.24)"; e.currentTarget.style.transform = "translateY(-50%) scale(1.1)"; }} onMouseOut={e => { e.currentTarget.style.background = "rgba(255,255,255,0.13)"; e.currentTarget.style.transform = "translateY(-50%) scale(1)"; }}><FaChevronRight /></button>}
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 2000,
+        background: "rgba(0,0,0,0.93)",
+        backdropFilter: "blur(10px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        animation: "itp-modal-in .22s ease both",
+      }}
+    >
+      <button
+        onClick={onClose}
+        style={{
+          position: "absolute",
+          top: 18,
+          right: 18,
+          width: 42,
+          height: 42,
+          borderRadius: "50%",
+          border: "none",
+          background: "rgba(255,255,255,0.13)",
+          color: "#fff",
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: 17,
+          zIndex: 10,
+        }}
+      >
+        ✕
+      </button>
+      <div
+        style={{
+          position: "absolute",
+          top: 22,
+          left: "50%",
+          transform: "translateX(-50%)",
+          color: "rgba(255,255,255,0.72)",
+          fontSize: ".82rem",
+          fontWeight: 600,
+          background: "rgba(255,255,255,0.1)",
+          padding: "4px 18px",
+          borderRadius: 50,
+        }}
+      >
+        {current + 1} / {images.length}
+      </div>
       {images.length > 1 && (
-        <div style={{ position: "absolute", bottom: 18, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 7, padding: "10px 14px", background: "rgba(0,0,0,0.5)", borderRadius: 50, maxWidth: "90vw", overflowX: "auto" }}>
-          {images.map((img, i) => <img key={i} src={getCloudinaryUrl(img, 160)} alt="" onClick={() => setCurrent(i)} style={{ width: 50, height: 36, objectFit: "cover", borderRadius: 7, cursor: "pointer", opacity: i === current ? 1 : 0.42, border: i === current ? "2px solid #fff" : "2px solid transparent", transition: "all .2s", flexShrink: 0 }} />)}
+        <button
+          onClick={prev}
+          style={navBtnStyle("left")}
+          onMouseOver={(e) => {
+            e.currentTarget.style.background = "rgba(255,255,255,0.24)";
+            e.currentTarget.style.transform = "translateY(-50%) scale(1.1)";
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.background = "rgba(255,255,255,0.13)";
+            e.currentTarget.style.transform = "translateY(-50%) scale(1)";
+          }}
+        >
+          <FaChevronLeft />
+        </button>
+      )}
+      <img
+        key={current}
+        src={getCloudinaryUrl(images[current], 1400)}
+        alt={`Gallery ${current + 1}`}
+        style={{
+          maxWidth: "86vw",
+          maxHeight: "80vh",
+          objectFit: "contain",
+          borderRadius: 14,
+          boxShadow: "0 32px 80px rgba(0,0,0,.55)",
+          animation: "itp-modal-in .28s ease both",
+        }}
+      />
+      {images.length > 1 && (
+        <button
+          onClick={next}
+          style={navBtnStyle("right")}
+          onMouseOver={(e) => {
+            e.currentTarget.style.background = "rgba(255,255,255,0.24)";
+            e.currentTarget.style.transform = "translateY(-50%) scale(1.1)";
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.background = "rgba(255,255,255,0.13)";
+            e.currentTarget.style.transform = "translateY(-50%) scale(1)";
+          }}
+        >
+          <FaChevronRight />
+        </button>
+      )}
+      {images.length > 1 && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: 18,
+            left: "50%",
+            transform: "translateX(-50%)",
+            display: "flex",
+            gap: 7,
+            padding: "10px 14px",
+            background: "rgba(0,0,0,0.5)",
+            borderRadius: 50,
+            maxWidth: "90vw",
+            overflowX: "auto",
+          }}
+        >
+          {images.map((img, i) => (
+            <img
+              key={i}
+              src={getCloudinaryUrl(img, 160)}
+              alt=""
+              onClick={() => setCurrent(i)}
+              style={{
+                width: 50,
+                height: 36,
+                objectFit: "cover",
+                borderRadius: 7,
+                cursor: "pointer",
+                opacity: i === current ? 1 : 0.42,
+                border:
+                  i === current ? "2px solid #fff" : "2px solid transparent",
+                transition: "all .2s",
+                flexShrink: 0,
+              }}
+            />
+          ))}
         </div>
       )}
     </div>
@@ -267,8 +604,12 @@ function Lightbox({ images, startIndex, onClose }) {
 function StarRating({ rating = 0, size = 14, color = BRAND.amber }) {
   return (
     <div style={{ display: "flex", gap: 2 }}>
-      {[1, 2, 3, 4, 5].map(i => (
-        <FaStar key={i} size={size} color={i <= Math.round(rating) ? color : "#E5E7EB"} />
+      {[1, 2, 3, 4, 5].map((i) => (
+        <FaStar
+          key={i}
+          size={size}
+          color={i <= Math.round(rating) ? color : "#E5E7EB"}
+        />
       ))}
     </div>
   );
@@ -277,32 +618,196 @@ function StarRating({ rating = 0, size = 14, color = BRAND.amber }) {
 function RatingBar({ label, count, total, color = BRAND.success }) {
   const pct = total > 0 ? (count / total) * 100 : 0;
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-      <span style={{ fontSize: ".78rem", color: BRAND.bodyText, width: 70, flexShrink: 0 }}>{label}</span>
-      <div style={{ flex: 1, height: 8, borderRadius: 50, background: BRAND.borderLight, overflow: "hidden" }}>
-        <div style={{ width: `${pct}%`, height: "100%", background: color, borderRadius: 50, transition: "width .6s ease" }} />
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        marginBottom: 8,
+      }}
+    >
+      <span
+        style={{
+          fontSize: ".78rem",
+          color: BRAND.bodyText,
+          width: 70,
+          flexShrink: 0,
+        }}
+      >
+        {label}
+      </span>
+      <div
+        style={{
+          flex: 1,
+          height: 8,
+          borderRadius: 50,
+          background: BRAND.borderLight,
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            width: `${pct}%`,
+            height: "100%",
+            background: color,
+            borderRadius: 50,
+            transition: "width .6s ease",
+          }}
+        />
       </div>
-      <span style={{ fontSize: ".75rem", color: BRAND.meta, width: 28, textAlign: "right", flexShrink: 0 }}>{count}</span>
+      <span
+        style={{
+          fontSize: ".75rem",
+          color: BRAND.meta,
+          width: 28,
+          textAlign: "right",
+          flexShrink: 0,
+        }}
+      >
+        {count}
+      </span>
     </div>
   );
 }
 
 const SAMPLE_REVIEWS = [
-  { id: 1, name: "Priya S.", location: "Mumbai, India", avatar: null, rating: 5, title: "Absolutely unforgettable experience!", text: "The trip was meticulously planned. Every hotel, every transfer, every meal — perfectly organized. Our guide was knowledgeable and friendly. Will definitely book again!", date: "June 2026", tripType: "Family", helpful: 12 },
-  { id: 2, name: "Rahul M.", location: "Bangalore, India", avatar: null, rating: 5, title: "Best value for money", text: "Compared to other packages, this one gave us so much more for the price. The itinerary was packed yet relaxed. Highly recommend for couples!", date: "May 2026", tripType: "Couple", helpful: 8 },
-  { id: 3, name: "Anika T.", location: "Delhi, India", avatar: null, rating: 4, title: "Great trip with minor hiccups", text: "Overall a wonderful experience. The hotels were lovely and the food was amazing. There were a couple of small delays in transfers but the team handled them well.", date: "April 2026", tripType: "Friends", helpful: 5 },
-  { id: 4, name: "Suresh K.", location: "Pune, India", avatar: null, rating: 5, title: "Highly professional team", text: "From booking to the last day, everything was smooth. The team is very responsive and accommodating. The destinations chosen were breathtaking.", date: "March 2026", tripType: "Family", helpful: 14 },
-  { id: 5, name: "Neha R.", location: "Hyderabad, India", avatar: null, rating: 4, title: "Loved every moment", text: "A truly special trip. The activities were fun and engaging. The accommodation was comfortable and well-located. Would love to do another tour!", date: "March 2026", tripType: "Solo", helpful: 3 },
-  { id: 6, name: "Vikram B.", location: "Chennai, India", avatar: null, rating: 5, title: "Seamless and wonderful", text: "I was initially skeptical about package tours but this completely changed my mind. Everything was taken care of so I could just enjoy the trip without any stress.", date: "February 2026", tripType: "Couple", helpful: 9 },
-  { id: 7, name: "Kavya L.", location: "Kolkata, India", avatar: null, rating: 3, title: "Good but could be better", text: "The trip was enjoyable but some of the sightseeing timings felt rushed. The hotels were excellent though and the food arrangements were great.", date: "January 2026", tripType: "Family", helpful: 2 },
-  { id: 8, name: "Arjun P.", location: "Ahmedabad, India", avatar: null, rating: 5, title: "Exceeded all expectations", text: "I've done many tours but this one stands apart. The attention to detail is remarkable. Our customised itinerary had everything we wanted and more.", date: "December 2025", tripType: "Business", helpful: 7 },
+  {
+    id: 1,
+    name: "Priya S.",
+    location: "Mumbai, India",
+    avatar: null,
+    rating: 5,
+    title: "Absolutely unforgettable experience!",
+    text: "The trip was meticulously planned. Every hotel, every transfer, every meal — perfectly organized. Our guide was knowledgeable and friendly. Will definitely book again!",
+    date: "June 2026",
+    tripType: "Family",
+    helpful: 12,
+  },
+  {
+    id: 2,
+    name: "Rahul M.",
+    location: "Bangalore, India",
+    avatar: null,
+    rating: 5,
+    title: "Best value for money",
+    text: "Compared to other packages, this one gave us so much more for the price. The itinerary was packed yet relaxed. Highly recommend for couples!",
+    date: "May 2026",
+    tripType: "Couple",
+    helpful: 8,
+  },
+  {
+    id: 3,
+    name: "Anika T.",
+    location: "Delhi, India",
+    avatar: null,
+    rating: 4,
+    title: "Great trip with minor hiccups",
+    text: "Overall a wonderful experience. The hotels were lovely and the food was amazing. There were a couple of small delays in transfers but the team handled them well.",
+    date: "April 2026",
+    tripType: "Friends",
+    helpful: 5,
+  },
+  {
+    id: 4,
+    name: "Suresh K.",
+    location: "Pune, India",
+    avatar: null,
+    rating: 5,
+    title: "Highly professional team",
+    text: "From booking to the last day, everything was smooth. The team is very responsive and accommodating. The destinations chosen were breathtaking.",
+    date: "March 2026",
+    tripType: "Family",
+    helpful: 14,
+  },
+  {
+    id: 5,
+    name: "Neha R.",
+    location: "Hyderabad, India",
+    avatar: null,
+    rating: 4,
+    title: "Loved every moment",
+    text: "A truly special trip. The activities were fun and engaging. The accommodation was comfortable and well-located. Would love to do another tour!",
+    date: "March 2026",
+    tripType: "Solo",
+    helpful: 3,
+  },
+  {
+    id: 6,
+    name: "Vikram B.",
+    location: "Chennai, India",
+    avatar: null,
+    rating: 5,
+    title: "Seamless and wonderful",
+    text: "I was initially skeptical about package tours but this completely changed my mind. Everything was taken care of so I could just enjoy the trip without any stress.",
+    date: "February 2026",
+    tripType: "Couple",
+    helpful: 9,
+  },
+  {
+    id: 7,
+    name: "Kavya L.",
+    location: "Kolkata, India",
+    avatar: null,
+    rating: 3,
+    title: "Good but could be better",
+    text: "The trip was enjoyable but some of the sightseeing timings felt rushed. The hotels were excellent though and the food arrangements were great.",
+    date: "January 2026",
+    tripType: "Family",
+    helpful: 2,
+  },
+  {
+    id: 8,
+    name: "Arjun P.",
+    location: "Ahmedabad, India",
+    avatar: null,
+    rating: 5,
+    title: "Exceeded all expectations",
+    text: "I've done many tours but this one stands apart. The attention to detail is remarkable. Our customised itinerary had everything we wanted and more.",
+    date: "December 2025",
+    tripType: "Business",
+    helpful: 7,
+  },
 ];
 
 const SAMPLE_QA = [
-  { id: 1, author: "Rohit K.", contributions: 12, question: "Is the tour suitable for senior citizens? What are the physical requirements?", date: "May 2026", answer: "Yes, this tour is senior-friendly. Most activities are leisurely with comfortable transport. Please inform us of any mobility needs and we'll customise accordingly." },
-  { id: 2, author: "Meena S.", contributions: 5, question: "Can we extend the tour by a day or two and visit nearby attractions?", date: "April 2026", answer: null },
-  { id: 3, author: "Deepak J.", contributions: 28, question: "Are vegetarian and Jain food options available throughout the trip?", date: "March 2026", answer: "Absolutely! We accommodate all dietary requirements including vegetarian, Jain, and vegan. Please mention your preference at the time of booking." },
-  { id: 4, author: "Sunita R.", contributions: 3, question: "What is the cancellation policy if we need to cancel last minute?", date: "February 2026", answer: null },
+  {
+    id: 1,
+    author: "Rohit K.",
+    contributions: 12,
+    question:
+      "Is the tour suitable for senior citizens? What are the physical requirements?",
+    date: "May 2026",
+    answer:
+      "Yes, this tour is senior-friendly. Most activities are leisurely with comfortable transport. Please inform us of any mobility needs and we'll customise accordingly.",
+  },
+  {
+    id: 2,
+    author: "Meena S.",
+    contributions: 5,
+    question:
+      "Can we extend the tour by a day or two and visit nearby attractions?",
+    date: "April 2026",
+    answer: null,
+  },
+  {
+    id: 3,
+    author: "Deepak J.",
+    contributions: 28,
+    question:
+      "Are vegetarian and Jain food options available throughout the trip?",
+    date: "March 2026",
+    answer:
+      "Absolutely! We accommodate all dietary requirements including vegetarian, Jain, and vegan. Please mention your preference at the time of booking.",
+  },
+  {
+    id: 4,
+    author: "Sunita R.",
+    contributions: 3,
+    question:
+      "What is the cancellation policy if we need to cancel last minute?",
+    date: "February 2026",
+    answer: null,
+  },
 ];
 
 const REVIEWS_PER_PAGE = 3;
@@ -312,13 +817,21 @@ const QA_PER_PAGE = 3;
 export default function ItineraryPage() {
   const { type, location } = useParams();
 
-  console.log(type,location)
+  console.log(type, location);
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
 
-  const locationTitle = location ? location.split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ") : "";
-  const typeTitle = type ? type.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()) : "Tour Package";
+  const locationTitle = location
+    ? location
+        .split("-")
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(" ")
+    : "";
+  const typeTitle = type
+    ? type.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())
+    : "Tour Package";
 
+  const [showAuth, setShowAuth] = useState(false);
   const [pkg, setPkg] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -339,22 +852,31 @@ export default function ItineraryPage() {
   const [enquiryLoading, setEnquiryLoading] = useState(false);
   const [enquiryDone, setEnquiryDone] = useState(false);
   const [enquiryError, setEnquiryError] = useState(null);
-  const [enquiryForm, setEnquiryForm] = useState({ fullName: "", email: "", mobile: "", destination: locationTitle, city: "", travelDate: "", adults: 2, travelers: 2, notes: "" });
+  const [enquiryForm, setEnquiryForm] = useState({
+    fullName: "",
+    email: "",
+    mobile: "",
+    destination: locationTitle,
+    city: "",
+    travelDate: "",
+    adults: 2,
+    travelers: 2,
+    notes: "",
+  });
   const [travelers, setTravelers] = useState(2);
   const [travelDate, setTravelDate] = useState("");
 
   // ── Section refs ──
   const bookingRef = useRef(null);
-  const overviewRef = useRef(null);   // kept for Overview click-scroll, NOT tracked by scroll spy
+  const overviewRef = useRef(null); // kept for Overview click-scroll, NOT tracked by scroll spy
   const highlightsRef = useRef(null);
   const itineraryRef = useRef(null);
   const inclusionsRef = useRef(null);
   const reviewsRef = useRef(null);
   const contributeRef = useRef(null);
-  const galleryRef = useRef(null);   // NEW — Gallery section
-  const morePlacesRef = useRef(null);   // NEW — More Places section
+  const galleryRef = useRef(null); // NEW — Gallery section
+  const morePlacesRef = useRef(null); // NEW — More Places section
   const contributeCompRef = useRef(null);
-
 
   const [activeNavSection, setActiveNavSection] = useState("overview");
 
@@ -369,7 +891,13 @@ export default function ItineraryPage() {
   // Contribute state
   const [contributeOpen, setContributeOpen] = useState(false);
   const [contributeTab, setContributeTab] = useState("review");
-  const [newReview, setNewReview] = useState({ rating: 0, hoverRating: 0, title: "", text: "", tripType: "Family" });
+  const [newReview, setNewReview] = useState({
+    rating: 0,
+    hoverRating: 0,
+    title: "",
+    text: "",
+    tripType: "Family",
+  });
   const [newQuestion, setNewQuestion] = useState("");
   const [contributeDone, setContributeDone] = useState(false);
 
@@ -377,13 +905,18 @@ export default function ItineraryPage() {
   const [morePlacesLoading, setMorePlacesLoading] = useState(true);
 
   const coords = resolveCoords(pkg);
-  const weather = useDestinationWeather(coords?.lat, coords?.lng, locationTitle);
+  const weather = useDestinationWeather(
+    coords?.lat,
+    coords?.lng,
+    locationTitle,
+  );
 
   // Scroll to section helper
   const scrollToSection = useCallback((ref) => {
     if (!ref?.current) return;
     const yOffset = -120;
-    const y = ref.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
+    const y =
+      ref.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
     window.scrollTo({ top: y, behavior: "smooth" });
   }, []);
 
@@ -391,23 +924,68 @@ export default function ItineraryPage() {
   // overview: ref is null → never auto-highlighted by scroll spy; click scrolls to overviewRef
   // gallery / moreplaces: have their own refs → both scroll-tracked AND clickable
   const NAV_ITEMS = [
-    { key: "overview", label: "Overview", ref: null, scrollTarget: overviewRef },
-    { key: "highlights", label: "Highlights", ref: highlightsRef, scrollTarget: highlightsRef },
-    { key: "itinerary", label: "Itinerary", ref: itineraryRef, scrollTarget: itineraryRef },
-    { key: "inclusions", label: "Inclusions", ref: inclusionsRef, scrollTarget: inclusionsRef },
-    { key: "gallery", label: "Gallery", ref: galleryRef, scrollTarget: galleryRef },
-    { key: "reviews", label: "Reviews", ref: reviewsRef, scrollTarget: reviewsRef },
-    { key: "moreplaces", label: "More Places", ref: morePlacesRef, scrollTarget: morePlacesRef },
-    { key: "contribute", label: "Contribute", ref: contributeRef, scrollTarget: contributeRef },
+    {
+      key: "overview",
+      label: "Overview",
+      ref: null,
+      scrollTarget: overviewRef,
+    },
+    {
+      key: "highlights",
+      label: "Highlights",
+      ref: highlightsRef,
+      scrollTarget: highlightsRef,
+    },
+    {
+      key: "itinerary",
+      label: "Itinerary",
+      ref: itineraryRef,
+      scrollTarget: itineraryRef,
+    },
+    {
+      key: "inclusions",
+      label: "Inclusions",
+      ref: inclusionsRef,
+      scrollTarget: inclusionsRef,
+    },
+    {
+      key: "gallery",
+      label: "Gallery",
+      ref: galleryRef,
+      scrollTarget: galleryRef,
+    },
+    {
+      key: "reviews",
+      label: "Reviews",
+      ref: reviewsRef,
+      scrollTarget: reviewsRef,
+    },
+    {
+      key: "moreplaces",
+      label: "More Places",
+      ref: morePlacesRef,
+      scrollTarget: morePlacesRef,
+    },
+    {
+      key: "contribute",
+      label: "Contribute",
+      ref: contributeRef,
+      scrollTarget: contributeRef,
+    },
   ];
 
   // Scroll spy — only tracks items where ref !== null (overview is excluded)
   useEffect(() => {
     const handleScroll = () => {
-      const offsets = NAV_ITEMS
-        .filter(item => item.ref !== null)
-        .map(item => ({ key: item.key, top: item.ref?.current?.getBoundingClientRect().top ?? Infinity }));
-      const active = offsets.filter(o => o.top <= 120).sort((a, b) => b.top - a.top)[0];
+      const offsets = NAV_ITEMS.filter((item) => item.ref !== null).map(
+        (item) => ({
+          key: item.key,
+          top: item.ref?.current?.getBoundingClientRect().top ?? Infinity,
+        }),
+      );
+      const active = offsets
+        .filter((o) => o.top <= 120)
+        .sort((a, b) => b.top - a.top)[0];
       if (active) setActiveNavSection(active.key);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -417,7 +995,15 @@ export default function ItineraryPage() {
   useEffect(() => {
     const id = setInterval(() => {
       setCountdown(({ h, m, s }) => {
-        s--; if (s < 0) { s = 59; m--; } if (m < 0) { m = 59; h--; }
+        s--;
+        if (s < 0) {
+          s = 59;
+          m--;
+        }
+        if (m < 0) {
+          m = 59;
+          h--;
+        }
         if (h < 0) return { h: 11, m: 59, s: 59 };
         return { h, m, s };
       });
@@ -428,11 +1014,23 @@ export default function ItineraryPage() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
+        const token =
+          localStorage.getItem("authToken") ||
+          sessionStorage.getItem("authToken");
         if (!token) return;
-        const res = await api.get("/auth/profile", { headers: { Authorization: `Bearer ${token}` } });
-        setEnquiryForm((f) => ({ ...f, fullName: res.data.fullName || res.data.name || "", email: res.data.email || "", mobile: res.data.mobile || res.data.phone || "", city: res.data.city || res.data.address?.city || "" }));
-      } catch { /* not logged in */ }
+        const res = await api.get("/auth/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setEnquiryForm((f) => ({
+          ...f,
+          fullName: res.data.fullName || res.data.name || "",
+          email: res.data.email || "",
+          mobile: res.data.mobile || res.data.phone || "",
+          city: res.data.city || res.data.address?.city || "",
+        }));
+      } catch {
+        /* not logged in */
+      }
     };
     fetchUser();
   }, []);
@@ -440,20 +1038,31 @@ export default function ItineraryPage() {
   useEffect(() => {
     if (!type || !location) return;
     const load = async () => {
-      setLoading(true); setError(null);
+      setLoading(true);
+      setError(null);
       try {
-        const res = await api.get(`/packages/${encodeURIComponent(type)}/${encodeURIComponent(location)}`);
+        const res = await api.get(
+          `/packages/${encodeURIComponent(type)}/${encodeURIComponent(location)}`,
+        );
         const raw = Array.isArray(res.data) ? res.data[0] : res.data;
         setPkg(normalisePackage(raw));
       } catch {
         try {
           const res = await api.get(`/packages/${type}`);
           const list = Array.isArray(res.data) ? res.data : [];
-          const match = list.find((p) => (p.location || "").toLowerCase().replace(/\s+/g, "-") === location.toLowerCase());
+          const match = list.find(
+            (p) =>
+              (p.location || "").toLowerCase().replace(/\s+/g, "-") ===
+              location.toLowerCase(),
+          );
           if (match) setPkg(normalisePackage(match));
           else setError("This package could not be found.");
-        } catch { setError("Unable to load package. Please check your connection."); }
-      } finally { setTimeout(() => setLoading(false), 300); }
+        } catch {
+          setError("Unable to load package. Please check your connection.");
+        }
+      } finally {
+        setTimeout(() => setLoading(false), 300);
+      }
     };
     load();
   }, [type, location]);
@@ -465,7 +1074,9 @@ export default function ItineraryPage() {
       setMorePlacesLoading(true);
       try {
         const res = await api.get(`/packages/${type}`);
-        const list = (Array.isArray(res.data) ? res.data : []).map(normalisePackage);
+        const list = (Array.isArray(res.data) ? res.data : []).map(
+          normalisePackage,
+        );
         const activeSlug = location.toLowerCase();
         const seen = new Set();
         const others = [];
@@ -476,98 +1087,257 @@ export default function ItineraryPage() {
           seen.add(slug);
           others.push(p);
         }
-        if (!cancelled) { setMorePlaces(others); setCompareAllPkgs((prev) => (prev.length ? prev : list)); }
-      } catch { if (!cancelled) setMorePlaces([]); }
-      finally { if (!cancelled) setMorePlacesLoading(false); }
+        if (!cancelled) {
+          setMorePlaces(others);
+          setCompareAllPkgs((prev) => (prev.length ? prev : list));
+        }
+      } catch {
+        if (!cancelled) setMorePlaces([]);
+      } finally {
+        if (!cancelled) setMorePlacesLoading(false);
+      }
     };
     loadMorePlaces();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [type, location]);
 
   const openCompare = useCallback(async () => {
-    setCompareOpen(true); setCompareScope("duration");
-    if (compareAllPkgs.length > 0) { if (pkg?._id && !compareSelected.length) setCompareSelected([pkg._id]); return; }
+    setCompareOpen(true);
+    setCompareScope("duration");
+    if (compareAllPkgs.length > 0) {
+      if (pkg?._id && !compareSelected.length) setCompareSelected([pkg._id]);
+      return;
+    }
     setCompareLoading(true);
     try {
       const res = await api.get(`/packages/${type}`);
-      const list = (Array.isArray(res.data) ? res.data : []).map(normalisePackage);
+      const list = (Array.isArray(res.data) ? res.data : []).map(
+        normalisePackage,
+      );
       setCompareAllPkgs(list);
       if (pkg?._id) setCompareSelected([pkg._id]);
-    } catch { /* ignore */ }
-    finally { setCompareLoading(false); }
+    } catch {
+      /* ignore */
+    } finally {
+      setCompareLoading(false);
+    }
   }, [type, compareAllPkgs.length, compareSelected.length, pkg]);
 
   const durationOptions = pkg?.durations || [];
-  const _safeIdx = Math.min(selectedDurationIdx, Math.max(0, durationOptions.length - 1));
+  const _safeIdx = Math.min(
+    selectedDurationIdx,
+    Math.max(0, durationOptions.length - 1),
+  );
   const selDur = durationOptions[_safeIdx] || {};
   const basePrice = selDur?.discountedPrice ?? selDur?.price ?? pkg?.price ?? 0;
   const { price: livePrice, trend } = useLivePrice(basePrice);
   const totalPrice = livePrice * travelers;
 
-  const fullItinerary = pkg?.itinerary?.length ? pkg.itinerary : buildFallbackDays(locationTitle, selDur?.days || 1);
-  const itinerary = fullItinerary.slice(0, selDur?.days || fullItinerary.length);
+  const fullItinerary = pkg?.itinerary?.length
+    ? pkg.itinerary
+    : buildFallbackDays(locationTitle, selDur?.days || 1);
+  const itinerary = fullItinerary.slice(
+    0,
+    selDur?.days || fullItinerary.length,
+  );
   const inclusions = pkg?.inclusions || [];
   const exclusions = pkg?.exclusions || [];
 
   const groupSizeArr = pkg?.groupSize || [];
-  const groupSizeDisplay = groupSizeArr.length > 1 ? `${groupSizeArr[0]} – ${groupSizeArr[groupSizeArr.length - 1]} pax` : groupSizeArr[0] || "";
+  const groupSizeDisplay =
+    groupSizeArr.length > 1
+      ? `${groupSizeArr[0]} – ${groupSizeArr[groupSizeArr.length - 1]} pax`
+      : groupSizeArr[0] || "";
 
   const images = pkg?.gallery?.length
-    ? pkg.gallery.map((item) => typeof item === "string" ? { src: getCloudinaryUrl(item), caption: "" } : { src: getCloudinaryUrl(item.img || ""), caption: item.caption || "" }).filter((item) => item.src)
+    ? pkg.gallery
+        .map((item) =>
+          typeof item === "string"
+            ? { src: getCloudinaryUrl(item), caption: "" }
+            : {
+                src: getCloudinaryUrl(item.img || ""),
+                caption: item.caption || "",
+              },
+        )
+        .filter((item) => item.src)
     : [];
   const imageSrcs = images.map((img) => img.src);
 
-  const openLightbox = useCallback((idx) => { setLightboxIndex(idx); setLightboxOpen(true); document.body.style.overflow = "hidden"; }, []);
-  const closeLightbox = useCallback(() => { setLightboxOpen(false); document.body.style.overflow = ""; }, []);
+  const openLightbox = useCallback((idx) => {
+    setLightboxIndex(idx);
+    setLightboxOpen(true);
+    document.body.style.overflow = "hidden";
+  }, []);
+  const closeLightbox = useCallback(() => {
+    setLightboxOpen(false);
+    document.body.style.overflow = "";
+  }, []);
 
   const openEnquiry = useCallback(() => {
-    if (!user) { navigate(`/login?redirect=${encodeURIComponent(window.location.pathname)}`); return; }
-    setEnquiryForm((f) => ({ ...f, travelDate, adults: travelers, travelers, destination: locationTitle }));
-    setEnquiryDone(false); setEnquiryError(null); setEnquiryOpen(true);
+    // if (!user) { navigate(`/login?redirect=${encodeURIComponent(window.location.pathname)}`); return; }
+    if (!user) {
+      setShowAuth(true);
+    }
+    setEnquiryForm((f) => ({
+      ...f,
+      travelDate,
+      adults: travelers,
+      travelers,
+      destination: locationTitle,
+    }));
+    setEnquiryDone(false);
+    setEnquiryError(null);
+    if (user) {
+      setEnquiryOpen(true);
+    }
   }, [user, navigate, travelDate, travelers, locationTitle]);
 
-  const handleEnquirySubmit = useCallback(async (e) => {
-    e.preventDefault(); setEnquiryLoading(true); setEnquiryError(null);
-    const payload = {
-      customer: { userId: user?._id || user?.id, fullName: enquiryForm.fullName, email: enquiryForm.email, mobile: enquiryForm.mobile, destination: enquiryForm.destination, adults: enquiryForm.adults, city: enquiryForm.city },
-      package: { packageId: pkg?._id, title: pkg?.title || `${locationTitle} ${typeTitle}`, type, location, locationTitle, typeTitle, rating: pkg?.rating, reviews: pkg?.reviews, groupSize: pkg?.groupSize, groupSizeDisplay },
-      duration: { label: selDur?.label, nights: selDur?.nights, days: selDur?.days },
-      itinerary: itinerary.map((day) => ({ day: day.day, title: day.title, description: day.description, activities: day.activities || [], meals: day.meals || [], accommodation: day.accommodation || null })),
-      inclusions, exclusions,
-      pricing: { pricePerPerson: livePrice, adults: enquiryForm.adults, travelers: enquiryForm.adults, totalPrice: livePrice * enquiryForm.adults, currency: "INR", durationType: selDur?.label },
-      travelDate: enquiryForm.travelDate, notes: enquiryForm.notes,
-      enquiryDate: new Date().toISOString(), source: "ItineraryPage", pageUrl: window.location.href,
-    };
-    try {
-      const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
-      await api.post("/bookings/package-inquiry", payload, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
-      setEnquiryDone(true);
-    } catch (err) {
-      setEnquiryError(err?.response?.data?.message || "Failed to submit enquiry. Please try again or call us directly.");
-    } finally { setEnquiryLoading(false); }
-  }, [enquiryForm, pkg, type, location, locationTitle, typeTitle, selDur, itinerary, inclusions, exclusions, livePrice, user, groupSizeDisplay]);
+  const handleEnquirySubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
+      setEnquiryLoading(true);
+      setEnquiryError(null);
+      const payload = {
+        customer: {
+          userId: user?._id || user?.id,
+          fullName: enquiryForm.fullName,
+          email: enquiryForm.email,
+          mobile: enquiryForm.mobile,
+          destination: enquiryForm.destination,
+          adults: enquiryForm.adults,
+          city: enquiryForm.city,
+        },
+        package: {
+          packageId: pkg?._id,
+          title: pkg?.title || `${locationTitle} ${typeTitle}`,
+          type,
+          location,
+          locationTitle,
+          typeTitle,
+          rating: pkg?.rating,
+          reviews: pkg?.reviews,
+          groupSize: pkg?.groupSize,
+          groupSizeDisplay,
+        },
+        duration: {
+          label: selDur?.label,
+          nights: selDur?.nights,
+          days: selDur?.days,
+        },
+        itinerary: itinerary.map((day) => ({
+          day: day.day,
+          title: day.title,
+          description: day.description,
+          activities: day.activities || [],
+          meals: day.meals || [],
+          accommodation: day.accommodation || null,
+        })),
+        inclusions,
+        exclusions,
+        pricing: {
+          pricePerPerson: livePrice,
+          adults: enquiryForm.adults,
+          travelers: enquiryForm.adults,
+          totalPrice: livePrice * enquiryForm.adults,
+          currency: "INR",
+          durationType: selDur?.label,
+        },
+        travelDate: enquiryForm.travelDate,
+        notes: enquiryForm.notes,
+        enquiryDate: new Date().toISOString(),
+        source: "ItineraryPage",
+        pageUrl: window.location.href,
+      };
+      try {
+        const token =
+          localStorage.getItem("authToken") ||
+          sessionStorage.getItem("authToken");
+        await api.post("/bookings/package-inquiry", payload, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
+        setEnquiryDone(true);
+      } catch (err) {
+        setEnquiryError(
+          err?.response?.data?.message ||
+            "Failed to submit enquiry. Please try again or call us directly.",
+        );
+      } finally {
+        setEnquiryLoading(false);
+      }
+    },
+    [
+      enquiryForm,
+      pkg,
+      type,
+      location,
+      locationTitle,
+      typeTitle,
+      selDur,
+      itinerary,
+      inclusions,
+      exclusions,
+      livePrice,
+      user,
+      groupSizeDisplay,
+    ],
+  );
 
-  const filteredReviews = reviews.filter(r =>
-    reviewSearch === "" || r.title.toLowerCase().includes(reviewSearch.toLowerCase()) || r.text.toLowerCase().includes(reviewSearch.toLowerCase())
+  const filteredReviews = reviews.filter(
+    (r) =>
+      reviewSearch === "" ||
+      r.title.toLowerCase().includes(reviewSearch.toLowerCase()) ||
+      r.text.toLowerCase().includes(reviewSearch.toLowerCase()),
   );
   const totalReviewPages = Math.ceil(filteredReviews.length / REVIEWS_PER_PAGE);
-  const pagedReviews = filteredReviews.slice((reviewPage - 1) * REVIEWS_PER_PAGE, reviewPage * REVIEWS_PER_PAGE);
+  const pagedReviews = filteredReviews.slice(
+    (reviewPage - 1) * REVIEWS_PER_PAGE,
+    reviewPage * REVIEWS_PER_PAGE,
+  );
   const totalQaPages = Math.ceil(SAMPLE_QA.length / QA_PER_PAGE);
-  const pagedQa = SAMPLE_QA.slice((qaPage - 1) * QA_PER_PAGE, qaPage * QA_PER_PAGE);
+  const pagedQa = SAMPLE_QA.slice(
+    (qaPage - 1) * QA_PER_PAGE,
+    qaPage * QA_PER_PAGE,
+  );
 
-  const avgRating = reviews.length ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1) : "0.0";
-  const ratingCounts = { 5: reviews.filter(r => r.rating === 5).length, 4: reviews.filter(r => r.rating === 4).length, 3: reviews.filter(r => r.rating === 3).length, 2: reviews.filter(r => r.rating === 2).length, 1: reviews.filter(r => r.rating === 1).length };
+  const avgRating = reviews.length
+    ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)
+    : "0.0";
+  const ratingCounts = {
+    5: reviews.filter((r) => r.rating === 5).length,
+    4: reviews.filter((r) => r.rating === 4).length,
+    3: reviews.filter((r) => r.rating === 3).length,
+    2: reviews.filter((r) => r.rating === 2).length,
+    1: reviews.filter((r) => r.rating === 1).length,
+  };
 
   const handleHelpful = (id) => {
     if (helpfulClicked[id]) return;
-    setHelpfulClicked(prev => ({ ...prev, [id]: true }));
-    setReviews(prev => prev.map(r => r.id === id ? { ...r, helpful: r.helpful + 1 } : r));
+    setHelpfulClicked((prev) => ({ ...prev, [id]: true }));
+    setReviews((prev) =>
+      prev.map((r) => (r.id === id ? { ...r, helpful: r.helpful + 1 } : r)),
+    );
   };
 
   const handleContributeSubmit = () => {
     if (contributeTab === "review" && newReview.rating > 0 && newReview.text) {
-      const newR = { id: Date.now(), name: user?.fullName || user?.name || "Anonymous", location: user?.city || "India", avatar: null, rating: newReview.rating, title: newReview.title || "My Experience", text: newReview.text, date: new Date().toLocaleDateString("en-IN", { month: "long", year: "numeric" }), tripType: newReview.tripType, helpful: 0 };
-      setReviews(prev => [newR, ...prev]);
+      const newR = {
+        id: Date.now(),
+        name: user?.fullName || user?.name || "Anonymous",
+        location: user?.city || "India",
+        avatar: null,
+        rating: newReview.rating,
+        title: newReview.title || "My Experience",
+        text: newReview.text,
+        date: new Date().toLocaleDateString("en-IN", {
+          month: "long",
+          year: "numeric",
+        }),
+        tripType: newReview.tripType,
+        helpful: 0,
+      };
+      setReviews((prev) => [newR, ...prev]);
       setContributeDone(true);
     } else if (contributeTab === "qa" && newQuestion.trim()) {
       setContributeDone(true);
@@ -732,96 +1502,307 @@ export default function ItineraryPage() {
     }
   `;
 
-  if (loading) return (
-    <><style>{globalStyles}</style>
-      <div className="container py-4" style={{ maxWidth: 1200 }}>
-        <Skel h={420} r={20} mb={24} />
-        <div className="row g-4">
-          <div className="col-lg-8"><Skel h={32} w="55%" mb={12} /><Skel h={18} mb={8} /><Skel h={18} w="80%" mb={32} /><Skel h={220} r={16} /></div>
-          <div className="col-lg-4"><Skel h={400} r={20} /></div>
+  if (loading)
+    return (
+      <>
+        <style>{globalStyles}</style>
+        <div className="container py-4" style={{ maxWidth: 1200 }}>
+          <Skel h={420} r={20} mb={24} />
+          <div className="row g-4">
+            <div className="col-lg-8">
+              <Skel h={32} w="55%" mb={12} />
+              <Skel h={18} mb={8} />
+              <Skel h={18} w="80%" mb={32} />
+              <Skel h={220} r={16} />
+            </div>
+            <div className="col-lg-4">
+              <Skel h={400} r={20} />
+            </div>
+          </div>
         </div>
-      </div>
-    </>
-  );
+      </>
+    );
 
-  if (error) return (
-    <><style>{globalStyles}</style>
-      <div className="d-flex flex-column align-items-center justify-content-center text-center py-5" style={{ minHeight: "60vh" }}>
-        <div style={{ fontSize: "3.5rem", marginBottom: "1rem" }}>😕</div>
-        <h2 className="font-serif fw-bold navy mb-2" style={{ fontSize: "2rem" }}>Package Not Found</h2>
-        <p style={{ color: BRAND.meta, marginBottom: "1.5rem", maxWidth: 420 }}>{error}</p>
-        <button onClick={() => navigate(`/tourcard/${type}`)} className="itp-btn-primary" style={{ width: "auto", padding: ".75rem 2rem" }}>← Back to {typeTitle}</button>
-      </div>
-    </>
-  );
+  if (error)
+    return (
+      <>
+        <style>{globalStyles}</style>
+        <div
+          className="d-flex flex-column align-items-center justify-content-center text-center py-5"
+          style={{ minHeight: "60vh" }}
+        >
+          <div style={{ fontSize: "3.5rem", marginBottom: "1rem" }}>😕</div>
+          <h2
+            className="font-serif fw-bold navy mb-2"
+            style={{ fontSize: "2rem" }}
+          >
+            Package Not Found
+          </h2>
+          <p
+            style={{ color: BRAND.meta, marginBottom: "1.5rem", maxWidth: 420 }}
+          >
+            {error}
+          </p>
+          <button
+            onClick={() => navigate(`/tourcard/${type}`)}
+            className="itp-btn-primary"
+            style={{ width: "auto", padding: ".75rem 2rem" }}
+          >
+            ← Back to {typeTitle}
+          </button>
+        </div>
+      </>
+    );
 
   return (
     <>
+    <Header/>
       <style>{globalStyles}</style>
 
       {/* ── HERO ── */}
       <section className="itp-hero">
-        <img src={images[activeImg]?.src || "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1200&q=80"} alt={locationTitle} className="itp-hero-img" onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1200&q=80"; }} />
+        <img
+          src={
+            images[activeImg]?.src ||
+            "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1200&q=80"
+          }
+          alt={locationTitle}
+          className="itp-hero-img"
+          onError={(e) => {
+            e.target.src =
+              "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1200&q=80";
+          }}
+        />
         <div className="itp-hero-grad" />
-        <div className="position-absolute d-flex gap-2" style={{ top: "1.4rem", right: "1.5rem", zIndex: 10 }}>
+        <div
+          className="position-absolute d-flex gap-2"
+          style={{ top: "1.4rem", right: "1.5rem", zIndex: 10 }}
+        >
           {[
-            { icon: <FaArrowLeft size={14} />, title: "Back", onClick: () => navigate(`/tourcard/${type}`) },
-            { icon: isFav ? <FaHeart size={14} style={{ color: BRAND.primary }} /> : <FaRegHeart size={14} />, title: "Wishlist", onClick: () => setIsFav(v => !v) },
-            { icon: <FaBalanceScale size={14} />, title: "Compare", onClick: openCompare },
-            { icon: <FaShare size={14} />, title: "Share", onClick: () => navigator.share?.({ title: `${locationTitle} ${typeTitle}`, url: window.location.href }) },
+            {
+              icon: <FaArrowLeft size={14} />,
+              title: "Back",
+              onClick: () => navigate(`/tourcard/${type}`),
+            },
+            {
+              icon: isFav ? (
+                <FaHeart size={14} style={{ color: BRAND.primary }} />
+              ) : (
+                <FaRegHeart size={14} />
+              ),
+              title: "Wishlist",
+              onClick: () => setIsFav((v) => !v),
+            },
+            {
+              icon: <FaBalanceScale size={14} />,
+              title: "Compare",
+              onClick: openCompare,
+            },
+            {
+              icon: <FaShare size={14} />,
+              title: "Share",
+              onClick: () =>
+                navigator.share?.({
+                  title: `${locationTitle} ${typeTitle}`,
+                  url: window.location.href,
+                }),
+            },
           ].map((btn, i) => (
-            <button key={i} title={btn.title} onClick={btn.onClick} className="d-flex align-items-center justify-content-center border-0 text-white" style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(255,255,255,.14)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,.2)", cursor: "pointer", transition: "all .2s" }} onMouseOver={e => e.currentTarget.style.background = "rgba(255,255,255,.28)"} onMouseOut={e => e.currentTarget.style.background = "rgba(255,255,255,.14)"}>{btn.icon}</button>
+            <button
+              key={i}
+              title={btn.title}
+              onClick={btn.onClick}
+              className="d-flex align-items-center justify-content-center border-0 text-white"
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: "50%",
+                background: "rgba(255,255,255,.14)",
+                backdropFilter: "blur(8px)",
+                border: "1px solid rgba(255,255,255,.2)",
+                cursor: "pointer",
+                transition: "all .2s",
+              }}
+              onMouseOver={(e) =>
+                (e.currentTarget.style.background = "rgba(255,255,255,.28)")
+              }
+              onMouseOut={(e) =>
+                (e.currentTarget.style.background = "rgba(255,255,255,.14)")
+              }
+            >
+              {btn.icon}
+            </button>
           ))}
         </div>
         {images.length > 1 && (
-          <div className="position-absolute d-flex gap-2" style={{ bottom: "1.4rem", right: "1.5rem", zIndex: 10 }}>
-            {images.slice(0, 4).map((img, i) => <img key={i} src={getCloudinaryUrl(img.src, 120)} alt="" className={`itp-thumb ${i === activeImg ? "active" : ""}`} onClick={() => setActiveImg(i)} onError={e => { e.target.style.display = "none"; }} />)}
+          <div
+            className="position-absolute d-flex gap-2"
+            style={{ bottom: "1.4rem", right: "1.5rem", zIndex: 10 }}
+          >
+            {images.slice(0, 4).map((img, i) => (
+              <img
+                key={i}
+                src={getCloudinaryUrl(img.src, 120)}
+                alt=""
+                className={`itp-thumb ${i === activeImg ? "active" : ""}`}
+                onClick={() => setActiveImg(i)}
+                onError={(e) => {
+                  e.target.style.display = "none";
+                }}
+              />
+            ))}
           </div>
         )}
         <div className="itp-hero-content">
           <div className="itp-hero-left">
-            <nav className="itp-breadcrumb d-flex align-items-center gap-1 flex-wrap mb-2" style={{ fontSize: ".77rem", color: "rgba(255,255,255,.6)" }}>
-              <Link to="/">Home</Link><span style={{ opacity: .4 }}>›</span>
-              <Link to="/services">Tours</Link><span style={{ opacity: .4 }}>›</span>
-              <Link to={`/tourcard/${type}`}>{typeTitle}</Link><span style={{ opacity: .4 }}>›</span>
+            <nav
+              className="itp-breadcrumb d-flex align-items-center gap-1 flex-wrap mb-2"
+              style={{ fontSize: ".77rem", color: "rgba(255,255,255,.6)" }}
+            >
+              <Link to="/">Home</Link>
+              <span style={{ opacity: 0.4 }}>›</span>
+              <Link to="/services">Tours</Link>
+              <span style={{ opacity: 0.4 }}>›</span>
+              <Link to={`/tourcard/${type}`}>{typeTitle}</Link>
+              <span style={{ opacity: 0.4 }}>›</span>
               <span className="text-white">{locationTitle}</span>
             </nav>
-            <div className="d-inline-flex align-items-center gap-2 mb-2 px-3 py-1 rounded-pill" style={{ background: "rgba(255,255,255,.12)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,.2)", color: "#fff", fontSize: ".75rem", fontWeight: 600, letterSpacing: ".08em", textTransform: "uppercase" }}>
-              <span>✈️</span><span>{typeTitle}</span>
+            <div
+              className="d-inline-flex align-items-center gap-2 mb-2 px-3 py-1 rounded-pill"
+              style={{
+                background: "rgba(255,255,255,.12)",
+                backdropFilter: "blur(8px)",
+                border: "1px solid rgba(255,255,255,.2)",
+                color: "#fff",
+                fontSize: ".75rem",
+                fontWeight: 600,
+                letterSpacing: ".08em",
+                textTransform: "uppercase",
+              }}
+            >
+              <span>✈️</span>
+              <span>{typeTitle}</span>
             </div>
-            <h1 className="itp-hero-title">{pkg?.title || `${locationTitle} ${typeTitle}`}</h1>
+            <h1 className="itp-hero-title">
+              {pkg?.title || `${locationTitle} ${typeTitle}`}
+            </h1>
             <div className="d-flex flex-wrap gap-3">
               {[
-                pkg?.location && { icon: <FaMapMarkerAlt size={11} />, text: pkg.location },
-                selDur?.label && { icon: <FaClock size={11} />, text: selDur.label },
-                groupSizeDisplay && { icon: <FaUsers size={11} />, text: groupSizeDisplay },
-                pkg?.rating && { icon: <FaStar size={11} style={{ color: BRAND.amber }} />, text: `${pkg.rating}${pkg?.reviews ? ` (${pkg.reviews} reviews)` : ""}` },
-              ].filter(Boolean).map((item, i) => (
-                <div key={i} className="d-flex align-items-center gap-1" style={{ color: "rgba(255,255,255,.85)", fontSize: ".87rem" }}>{item.icon} {item.text}</div>
-              ))}
+                pkg?.location && {
+                  icon: <FaMapMarkerAlt size={11} />,
+                  text: pkg.location,
+                },
+                selDur?.label && {
+                  icon: <FaClock size={11} />,
+                  text: selDur.label,
+                },
+                groupSizeDisplay && {
+                  icon: <FaUsers size={11} />,
+                  text: groupSizeDisplay,
+                },
+                pkg?.rating && {
+                  icon: <FaStar size={11} style={{ color: BRAND.amber }} />,
+                  text: `${pkg.rating}${pkg?.reviews ? ` (${pkg.reviews} reviews)` : ""}`,
+                },
+              ]
+                .filter(Boolean)
+                .map((item, i) => (
+                  <div
+                    key={i}
+                    className="d-flex align-items-center gap-1"
+                    style={{
+                      color: "rgba(255,255,255,.85)",
+                      fontSize: ".87rem",
+                    }}
+                  >
+                    {item.icon} {item.text}
+                  </div>
+                ))}
             </div>
           </div>
-          <div className="d-none d-md-block" style={{ minWidth: 200, flexShrink: 0, marginBottom: 30 }}>
-            <div className="rounded-4 p-3" style={{ background: "rgba(10,10,30,.52)", backdropFilter: "blur(10px)", border: "1px solid rgba(255,255,255,.18)", color: "#fff", minWidth: 200 }}>
+          <div
+            className="d-none d-md-block"
+            style={{ minWidth: 200, flexShrink: 0, marginBottom: 30 }}
+          >
+            <div
+              className="rounded-4 p-3"
+              style={{
+                background: "rgba(10,10,30,.52)",
+                backdropFilter: "blur(10px)",
+                border: "1px solid rgba(255,255,255,.18)",
+                color: "#fff",
+                minWidth: 200,
+              }}
+            >
               {weather ? (
                 <>
-                  <div style={{ fontSize: "0.85rem", opacity: .65, marginBottom: 8 }}>📍 {locationTitle} · Weather</div>
+                  <div
+                    style={{
+                      fontSize: "0.85rem",
+                      opacity: 0.65,
+                      marginBottom: 8,
+                    }}
+                  >
+                    📍 {locationTitle} · Weather
+                  </div>
                   <div className="d-flex align-items-center gap-2 mb-2">
-                    <span style={{ fontSize: "1.9rem", lineHeight: 1 }}>{weather.icon}</span>
+                    <span style={{ fontSize: "1.9rem", lineHeight: 1 }}>
+                      {weather.icon}
+                    </span>
                     <div>
-                      <div className="font-serif fw-bold" style={{ fontSize: "1.6rem", lineHeight: 1 }}>{weather.temp}°C</div>
-                      <div style={{ fontSize: ".7rem", opacity: .75, textTransform: "uppercase", letterSpacing: ".05em", marginTop: 2 }}>{weather.desc}</div>
+                      <div
+                        className="font-serif fw-bold"
+                        style={{ fontSize: "1.6rem", lineHeight: 1 }}
+                      >
+                        {weather.temp}°C
+                      </div>
+                      <div
+                        style={{
+                          fontSize: ".7rem",
+                          opacity: 0.75,
+                          textTransform: "uppercase",
+                          letterSpacing: ".05em",
+                          marginTop: 2,
+                        }}
+                      >
+                        {weather.desc}
+                      </div>
                     </div>
                   </div>
-                  <div className="d-flex gap-2 mb-1 flex-wrap" style={{ fontSize: ".7rem", opacity: .8 }}>
-                    <span>💧 {weather.humidity}%</span><span>🌬️ {weather.wind} km/h</span><span>☀️ UV {weather.uv}</span>
+                  <div
+                    className="d-flex gap-2 mb-1 flex-wrap"
+                    style={{ fontSize: ".7rem", opacity: 0.8 }}
+                  >
+                    <span>💧 {weather.humidity}%</span>
+                    <span>🌬️ {weather.wind} km/h</span>
+                    <span>☀️ UV {weather.uv}</span>
                   </div>
-                  <div style={{ fontSize: ".68rem", opacity: .65, borderTop: "1px solid rgba(255,255,255,.15)", paddingTop: 5, marginTop: 6 }}>🗓️ Best time: {weather.best}</div>
+                  <div
+                    style={{
+                      fontSize: ".68rem",
+                      opacity: 0.65,
+                      borderTop: "1px solid rgba(255,255,255,.15)",
+                      paddingTop: 5,
+                      marginTop: 6,
+                    }}
+                  >
+                    🗓️ Best time: {weather.best}
+                  </div>
                 </>
               ) : (
                 <div>
-                  <div style={{ fontSize: ".73rem", opacity: .6, marginBottom: 8 }}>Loading weather...</div>
-                  {[70, 50, 80].map((w, i) => <Skel key={i} h={10} w={`${w}%`} mb={6} r={5} />)}
+                  <div
+                    style={{
+                      fontSize: ".73rem",
+                      opacity: 0.6,
+                      marginBottom: 8,
+                    }}
+                  >
+                    Loading weather...
+                  </div>
+                  {[70, 50, 80].map((w, i) => (
+                    <Skel key={i} h={10} w={`${w}%`} mb={6} r={5} />
+                  ))}
                 </div>
               )}
             </div>
@@ -832,7 +1813,7 @@ export default function ItineraryPage() {
       {/* ══ STICKY SECTION NAV BAR ══ */}
       <nav className="itp-section-nav">
         <div className="itp-section-nav-inner">
-          {NAV_ITEMS.map(item => (
+          {NAV_ITEMS.map((item) => (
             <button
               key={item.key}
               className={`itp-snav-btn ${activeNavSection === item.key ? "active" : ""} ${item.key === "contribute" ? "itp-snav-contribute" : ""}`}
@@ -853,15 +1834,37 @@ export default function ItineraryPage() {
       <div className="container py-4" style={{ maxWidth: 1280 }}>
         <div className="row g-4 align-items-start">
           <div className="col-lg-8">
-
             {durationOptions.length > 0 && (
               <div className="mb-4">
-                <div className="text-uppercase fw-bold mb-2" style={{ fontSize: ".72rem", color: BRAND.placeholder, letterSpacing: ".07em" }}>Select Package Duration</div>
+                <div
+                  className="text-uppercase fw-bold mb-2"
+                  style={{
+                    fontSize: ".72rem",
+                    color: BRAND.placeholder,
+                    letterSpacing: ".07em",
+                  }}
+                >
+                  Select Package Duration
+                </div>
                 <div className="d-flex flex-wrap gap-2">
                   {durationOptions.map((dur, idx) => (
-                    <button key={idx} className={`itp-dur-pill ${selectedDurationIdx === idx ? "active" : ""}`} onClick={() => setSelectedDurationIdx(idx)}>
+                    <button
+                      key={idx}
+                      className={`itp-dur-pill ${selectedDurationIdx === idx ? "active" : ""}`}
+                      onClick={() => setSelectedDurationIdx(idx)}
+                    >
                       <span>{dur.label}</span>
-                      {pkg?.price > 0 && <span style={{ fontSize: ".67rem", fontWeight: 400, opacity: selectedDurationIdx === idx ? .85 : .7 }}>from ₹{pkg.price.toLocaleString()}</span>}
+                      {pkg?.price > 0 && (
+                        <span
+                          style={{
+                            fontSize: ".67rem",
+                            fontWeight: 400,
+                            opacity: selectedDurationIdx === idx ? 0.85 : 0.7,
+                          }}
+                        >
+                          from ₹{pkg.price.toLocaleString()}
+                        </span>
+                      )}
                     </button>
                   ))}
                 </div>
@@ -870,27 +1873,68 @@ export default function ItineraryPage() {
 
             <div className="d-flex flex-wrap gap-2 mb-4">
               {[
-                selDur?.label && { emoji: "📅", val: selDur.label, sub: "Duration" },
-                pkg?.hotelRating && { emoji: "🏨", val: pkg.hotelRating, sub: "Hotels" },
-                groupSizeDisplay && { emoji: "👥", val: groupSizeDisplay, sub: "Group Size" },
-                pkg?.destination && { emoji: "📍", val: pkg.destination, sub: "Region" },
-              ].filter(Boolean).map((item, i) => (
-                <div key={i} className="itp-stat-chip">
-                  <span style={{ fontSize: "1.2rem" }}>{item.emoji}</span>
-                  <div>
-                    <div className="fw-bold" style={{ fontSize: ".84rem", color: BRAND.charcoal }}>{item.val}</div>
-                    <div style={{ fontSize: ".7rem", color: BRAND.placeholder }}>{item.sub}</div>
+                selDur?.label && {
+                  emoji: "📅",
+                  val: selDur.label,
+                  sub: "Duration",
+                },
+                pkg?.hotelRating && {
+                  emoji: "🏨",
+                  val: pkg.hotelRating,
+                  sub: "Hotels",
+                },
+                groupSizeDisplay && {
+                  emoji: "👥",
+                  val: groupSizeDisplay,
+                  sub: "Group Size",
+                },
+                pkg?.destination && {
+                  emoji: "📍",
+                  val: pkg.destination,
+                  sub: "Region",
+                },
+              ]
+                .filter(Boolean)
+                .map((item, i) => (
+                  <div key={i} className="itp-stat-chip">
+                    <span style={{ fontSize: "1.2rem" }}>{item.emoji}</span>
+                    <div>
+                      <div
+                        className="fw-bold"
+                        style={{ fontSize: ".84rem", color: BRAND.charcoal }}
+                      >
+                        {item.val}
+                      </div>
+                      <div
+                        style={{ fontSize: ".7rem", color: BRAND.placeholder }}
+                      >
+                        {item.sub}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
 
             {/* ── OVERVIEW — ref for click-scroll only, NOT scroll-tracked ── */}
             <div ref={overviewRef}>
               {(pkg?.description || pkg?.about) && (
                 <div className="mb-4">
-                  <h2 className="font-serif fw-bold mb-2" style={{ fontSize: "1.6rem", color: BRAND.charcoal }}>About This Package</h2>
-                  <p style={{ fontSize: ".9rem", color: BRAND.bodyText, lineHeight: 1.8, marginBottom: 0 }}>{pkg.description || pkg.about}</p>
+                  <h2
+                    className="font-serif fw-bold mb-2"
+                    style={{ fontSize: "1.6rem", color: BRAND.charcoal }}
+                  >
+                    About This Package
+                  </h2>
+                  <p
+                    style={{
+                      fontSize: ".9rem",
+                      color: BRAND.bodyText,
+                      lineHeight: 1.8,
+                      marginBottom: 0,
+                    }}
+                  >
+                    {pkg.description || pkg.about}
+                  </p>
                 </div>
               )}
             </div>
@@ -899,9 +1943,18 @@ export default function ItineraryPage() {
             <div ref={highlightsRef}>
               {pkg?.highlights?.length > 0 && (
                 <div className="mb-4">
-                  <h2 className="font-serif fw-bold mb-3" style={{ fontSize: "1.4rem", color: BRAND.charcoal }}>Highlights</h2>
+                  <h2
+                    className="font-serif fw-bold mb-3"
+                    style={{ fontSize: "1.4rem", color: BRAND.charcoal }}
+                  >
+                    Highlights
+                  </h2>
                   <div className="d-flex flex-wrap gap-2">
-                    {pkg.highlights.map((h, i) => <span key={i} className="itp-highlight-pill">✦ {h}</span>)}
+                    {pkg.highlights.map((h, i) => (
+                      <span key={i} className="itp-highlight-pill">
+                        ✦ {h}
+                      </span>
+                    ))}
                   </div>
                 </div>
               )}
@@ -910,32 +1963,63 @@ export default function ItineraryPage() {
             {/* ── ITINERARY ── */}
             <div ref={itineraryRef}>
               <ScrollReveal>
-                <h2 className="font-serif fw-bold mb-4" style={{ fontSize: "1.75rem", color: BRAND.charcoal }}>Itinerary</h2>
+                <h2
+                  className="font-serif fw-bold mb-4"
+                  style={{ fontSize: "1.75rem", color: BRAND.charcoal }}
+                >
+                  Itinerary
+                </h2>
               </ScrollReveal>
               <div className="itp-new-timeline">
-                {itinerary.length > 0 ? itinerary.map((day, i) => (
-                  <ScrollReveal key={i} delay={i * 65}>
-                    <div className="itp-day-item">
-                      <div className="itp-day-num-col">
-                        <div className="itp-day-circle">{day.day}</div>
-                      </div>
-                      <div className="itp-day-card-new">
-                        <h3 className="itp-day-title-new">{day.title}</h3>
-                        {day.description && <p className="itp-day-desc">{day.description}</p>}
-                        {day.activities?.length > 0 && (
-                          <div className="d-flex flex-wrap gap-2 mb-3">
-                            {day.activities.map((a, j) => <span key={j} className="itp-activity-pill-new">✦ {a}</span>)}
+                {itinerary.length > 0 ? (
+                  itinerary.map((day, i) => (
+                    <ScrollReveal key={i} delay={i * 65}>
+                      <div className="itp-day-item">
+                        <div className="itp-day-num-col">
+                          <div className="itp-day-circle">{day.day}</div>
+                        </div>
+                        <div className="itp-day-card-new">
+                          <h3 className="itp-day-title-new">{day.title}</h3>
+                          {day.description && (
+                            <p className="itp-day-desc">{day.description}</p>
+                          )}
+                          {day.activities?.length > 0 && (
+                            <div className="d-flex flex-wrap gap-2 mb-3">
+                              {day.activities.map((a, j) => (
+                                <span key={j} className="itp-activity-pill-new">
+                                  ✦ {a}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                          <div className="itp-day-meta-row">
+                            {day.accommodation && (
+                              <span className="itp-day-meta-chip">
+                                <FaBed size={12} color={BRAND.teal} />{" "}
+                                {day.accommodation}
+                              </span>
+                            )}
+                            {day.meals?.length > 0 && (
+                              <span className="itp-day-meta-chip">
+                                <FaUtensils size={11} color={BRAND.teal} />{" "}
+                                {day.meals.join(" · ")}
+                              </span>
+                            )}
                           </div>
-                        )}
-                        <div className="itp-day-meta-row">
-                          {day.accommodation && <span className="itp-day-meta-chip"><FaBed size={12} color={BRAND.teal} /> {day.accommodation}</span>}
-                          {day.meals?.length > 0 && <span className="itp-day-meta-chip"><FaUtensils size={11} color={BRAND.teal} /> {day.meals.join(" · ")}</span>}
                         </div>
                       </div>
-                    </div>
-                  </ScrollReveal>
-                )) : (
-                  <div className="text-center p-4 rounded-3" style={{ background: BRAND.bgCard, border: `1px dashed ${BRAND.border}`, color: BRAND.placeholder, marginLeft: 64 }}>
+                    </ScrollReveal>
+                  ))
+                ) : (
+                  <div
+                    className="text-center p-4 rounded-3"
+                    style={{
+                      background: BRAND.bgCard,
+                      border: `1px dashed ${BRAND.border}`,
+                      color: BRAND.placeholder,
+                      marginLeft: 64,
+                    }}
+                  >
                     No itinerary details available for this package.
                   </div>
                 )}
@@ -944,18 +2028,57 @@ export default function ItineraryPage() {
 
             {/* ── INCLUSIONS ── */}
             <div ref={inclusionsRef} className="mt-4 mb-4">
-              <h2 className="font-serif fw-bold mb-4" style={{ fontSize: "1.4rem", color: BRAND.charcoal }}>What's Included</h2>
+              <h2
+                className="font-serif fw-bold mb-4"
+                style={{ fontSize: "1.4rem", color: BRAND.charcoal }}
+              >
+                What's Included
+              </h2>
               <div className="row g-4">
                 {[
-                  { title: "Included", items: inclusions, icon: <FaCheck size={11} color={BRAND.success} />, titleColor: "#2e7d32" },
-                  { title: "Not Included", items: exclusions, icon: <FaTimes size={11} color={BRAND.primary} />, titleColor: "#c62828" },
+                  {
+                    title: "Included",
+                    items: inclusions,
+                    icon: <FaCheck size={11} color={BRAND.success} />,
+                    titleColor: "#2e7d32",
+                  },
+                  {
+                    title: "Not Included",
+                    items: exclusions,
+                    icon: <FaTimes size={11} color={BRAND.primary} />,
+                    titleColor: "#c62828",
+                  },
                 ].map((col, ci) => (
                   <div key={ci} className="col-md-6">
-                    <h4 className="d-flex align-items-center gap-2 mb-3" style={{ color: col.titleColor, fontSize: ".9rem", fontWeight: 700 }}>{col.icon} {col.title}</h4>
-                    {col.items.length > 0 ? col.items.map((item, i) => (
-                      <div key={i} className="itp-incl-row"><span style={{ flexShrink: 0, marginTop: 2 }}>{col.icon}</span>{item}</div>
-                    )) : (
-                      <div className="text-center p-3 rounded-3" style={{ background: BRAND.bgCard, border: `1px dashed ${BRAND.border}`, color: BRAND.placeholder, fontSize: ".85rem" }}>
+                    <h4
+                      className="d-flex align-items-center gap-2 mb-3"
+                      style={{
+                        color: col.titleColor,
+                        fontSize: ".9rem",
+                        fontWeight: 700,
+                      }}
+                    >
+                      {col.icon} {col.title}
+                    </h4>
+                    {col.items.length > 0 ? (
+                      col.items.map((item, i) => (
+                        <div key={i} className="itp-incl-row">
+                          <span style={{ flexShrink: 0, marginTop: 2 }}>
+                            {col.icon}
+                          </span>
+                          {item}
+                        </div>
+                      ))
+                    ) : (
+                      <div
+                        className="text-center p-3 rounded-3"
+                        style={{
+                          background: BRAND.bgCard,
+                          border: `1px dashed ${BRAND.border}`,
+                          color: BRAND.placeholder,
+                          fontSize: ".85rem",
+                        }}
+                      >
                         No {col.title.toLowerCase()} listed.
                       </div>
                     )}
@@ -963,91 +2086,293 @@ export default function ItineraryPage() {
                 ))}
               </div>
             </div>
-
           </div>
 
           {/* ── Booking sidebar ── */}
           <div className="col-lg-4">
-            <div ref={bookingRef} className="itp-booking-card" style={{ position: "sticky", top: 56 }}>
+            <div
+              ref={bookingRef}
+              className="itp-booking-card"
+              style={{ position: "sticky", top: 56 }}
+            >
               <div className="itp-booking-head">
                 <div style={{ marginBottom: "1rem" }}>
-                  <div style={{ fontSize: ".75rem", color: "rgba(255,255,255,.55)", textTransform: "uppercase", letterSpacing: ".08em", marginBottom: 4 }}>Starting from</div>
+                  <div
+                    style={{
+                      fontSize: ".75rem",
+                      color: "rgba(255,255,255,.55)",
+                      textTransform: "uppercase",
+                      letterSpacing: ".08em",
+                      marginBottom: 4,
+                    }}
+                  >
+                    Starting from
+                  </div>
                   <div className="d-flex align-items-baseline gap-2">
-                    <div className="font-serif fw-bold" style={{ fontSize: "2.6rem", color: "#fff", lineHeight: 1 }}>
-                      {livePrice > 0 ? `₹${livePrice.toLocaleString()}` : "Price on request"}
+                    <div
+                      className="font-serif fw-bold"
+                      style={{
+                        fontSize: "2.6rem",
+                        color: "#fff",
+                        lineHeight: 1,
+                      }}
+                    >
+                      {livePrice > 0
+                        ? `₹${livePrice.toLocaleString()}`
+                        : "Price on request"}
                     </div>
                     {pkg?.strikePrice && pkg.strikePrice > pkg.price && (
-                      <div style={{ fontSize: "1rem", color: "rgba(255,255,255,.4)", textDecoration: "line-through" }}>₹{pkg.strikePrice.toLocaleString()}</div>
+                      <div
+                        style={{
+                          fontSize: "1rem",
+                          color: "rgba(255,255,255,.4)",
+                          textDecoration: "line-through",
+                        }}
+                      >
+                        ₹{pkg.strikePrice.toLocaleString()}
+                      </div>
                     )}
                   </div>
-                  <div style={{ fontSize: ".78rem", color: "rgba(255,255,255,.55)", marginTop: 4 }}>per person{selDur?.label ? ` · ${selDur.label}` : ""} · all inclusive</div>
+                  <div
+                    style={{
+                      fontSize: ".78rem",
+                      color: "rgba(255,255,255,.55)",
+                      marginTop: 4,
+                    }}
+                  >
+                    per person{selDur?.label ? ` · ${selDur.label}` : ""} · all
+                    inclusive
+                  </div>
                 </div>
                 {inclusions.slice(0, 6).map((item, i) => (
-                  <div key={i} className="itp-checklist-item"><FaCheck size={10} color={BRAND.success} style={{ flexShrink: 0 }} /><span>{item}</span></div>
+                  <div key={i} className="itp-checklist-item">
+                    <FaCheck
+                      size={10}
+                      color={BRAND.success}
+                      style={{ flexShrink: 0 }}
+                    />
+                    <span>{item}</span>
+                  </div>
                 ))}
-                {inclusions.length === 0 && ["Accommodation included", "Daily breakfast", "Airport transfers", "All sightseeing", "Expert guide"].map((item, i) => (
-                  <div key={i} className="itp-checklist-item"><FaCheck size={10} color={BRAND.success} style={{ flexShrink: 0 }} /><span>{item}</span></div>
-                ))}
+                {inclusions.length === 0 &&
+                  [
+                    "Accommodation included",
+                    "Daily breakfast",
+                    "Airport transfers",
+                    "All sightseeing",
+                    "Expert guide",
+                  ].map((item, i) => (
+                    <div key={i} className="itp-checklist-item">
+                      <FaCheck
+                        size={10}
+                        color={BRAND.success}
+                        style={{ flexShrink: 0 }}
+                      />
+                      <span>{item}</span>
+                    </div>
+                  ))}
               </div>
               <div className="itp-booking-body">
                 {livePrice > 0 && (
                   <div className="mb-3">
                     <div className="d-flex align-items-center gap-2 flex-wrap mb-2">
-                      <span className="d-inline-flex align-items-center gap-1 rounded-pill px-2 py-1" style={{ fontSize: ".72rem", fontWeight: 600, background: trend === "rising" ? "#FFF3E0" : trend === "falling" ? "#E8F5E9" : BRAND.borderLight, color: trend === "rising" ? "#E65100" : trend === "falling" ? "#2E7D32" : BRAND.meta }}>
-                        {trend === "rising" ? "📈 Price rising" : trend === "falling" ? "📉 Price dropping" : "📊 Price stable"}
+                      <span
+                        className="d-inline-flex align-items-center gap-1 rounded-pill px-2 py-1"
+                        style={{
+                          fontSize: ".72rem",
+                          fontWeight: 600,
+                          background:
+                            trend === "rising"
+                              ? "#FFF3E0"
+                              : trend === "falling"
+                                ? "#E8F5E9"
+                                : BRAND.borderLight,
+                          color:
+                            trend === "rising"
+                              ? "#E65100"
+                              : trend === "falling"
+                                ? "#2E7D32"
+                                : BRAND.meta,
+                        }}
+                      >
+                        {trend === "rising"
+                          ? "📈 Price rising"
+                          : trend === "falling"
+                            ? "📉 Price dropping"
+                            : "📊 Price stable"}
                       </span>
                     </div>
-                    <div className="d-flex align-items-center gap-2 rounded-3 px-3 py-2" style={{ background: "rgba(240,75,90,.06)", border: `1px solid rgba(240,75,90,.15)`, fontSize: ".78rem" }}>
+                    <div
+                      className="d-flex align-items-center gap-2 rounded-3 px-3 py-2"
+                      style={{
+                        background: "rgba(240,75,90,.06)",
+                        border: `1px solid rgba(240,75,90,.15)`,
+                        fontSize: ".78rem",
+                      }}
+                    >
                       <FaBolt color={BRAND.primary} size={11} />
                       <span style={{ color: BRAND.meta }}>Offer ends in</span>
-                      <span className="fw-bold" style={{ color: BRAND.primary, fontVariantNumeric: "tabular-nums", fontSize: ".94rem" }}>
-                        {String(countdown.h).padStart(2, "0")}:{String(countdown.m).padStart(2, "0")}:{String(countdown.s).padStart(2, "0")}
+                      <span
+                        className="fw-bold"
+                        style={{
+                          color: BRAND.primary,
+                          fontVariantNumeric: "tabular-nums",
+                          fontSize: ".94rem",
+                        }}
+                      >
+                        {String(countdown.h).padStart(2, "0")}:
+                        {String(countdown.m).padStart(2, "0")}:
+                        {String(countdown.s).padStart(2, "0")}
                       </span>
                     </div>
                   </div>
                 )}
                 {!user && (
-                  <div className="d-flex align-items-center gap-2 rounded-3 p-3 mb-3" style={{ background: "linear-gradient(135deg,#f0f4ff,#faf0ff)", border: "1px solid #d8deff", fontSize: ".8rem", color: BRAND.bodyText }}>
+                  <div
+                    className="d-flex align-items-center gap-2 rounded-3 p-3 mb-3"
+                    style={{
+                      background: "linear-gradient(135deg,#f0f4ff,#faf0ff)",
+                      border: "1px solid #d8deff",
+                      fontSize: ".8rem",
+                      color: BRAND.bodyText,
+                    }}
+                  >
                     <FaLock color="#3D52A0" size={13} />
-                    <span><Link to={`/login?redirect=${encodeURIComponent(window.location.pathname)}`} style={{ color: "#3D52A0", fontWeight: 700, borderBottom: "1px solid #3D52A0", textDecoration: "none" }}>Login</Link>{" "}to submit an enquiry and get personalised quotes</span>
+                    <span>
+                      <Link
+                        to={`/login?redirect=${encodeURIComponent(window.location.pathname)}`}
+                        style={{
+                          color: "#3D52A0",
+                          fontWeight: 700,
+                          borderBottom: "1px solid #3D52A0",
+                          textDecoration: "none",
+                        }}
+                      >
+                        Login
+                      </Link>{" "}
+                      to submit an enquiry and get personalised quotes
+                    </span>
                   </div>
                 )}
                 <div className="mb-3">
-                  <label className="d-block text-uppercase fw-bold mb-1" style={{ fontSize: ".72rem", color: BRAND.placeholder, letterSpacing: ".06em" }}>Travel Date</label>
-                  <input type="date" className="itp-input" value={travelDate} min={new Date().toISOString().split("T")[0]} onChange={e => setTravelDate(e.target.value)} />
+                  <label
+                    className="d-block text-uppercase fw-bold mb-1"
+                    style={{
+                      fontSize: ".72rem",
+                      color: BRAND.placeholder,
+                      letterSpacing: ".06em",
+                    }}
+                  >
+                    Travel Date
+                  </label>
+                  <input
+                    type="date"
+                    className="itp-input"
+                    value={travelDate}
+                    min={new Date().toISOString().split("T")[0]}
+                    onChange={(e) => setTravelDate(e.target.value)}
+                  />
                 </div>
                 <div className="mb-3">
-                  <label className="d-block text-uppercase fw-bold mb-1" style={{ fontSize: ".72rem", color: BRAND.placeholder, letterSpacing: ".06em" }}>Travelers</label>
+                  <label
+                    className="d-block text-uppercase fw-bold mb-1"
+                    style={{
+                      fontSize: ".72rem",
+                      color: BRAND.placeholder,
+                      letterSpacing: ".06em",
+                    }}
+                  >
+                    Travelers
+                  </label>
                   <div className="itp-counter">
-                    <button type="button" className="itp-counter-btn" onClick={() => setTravelers(t => Math.max(1, t - 1))}>−</button>
-                    <span className="fw-bold" style={{ color: BRAND.charcoal }}>{travelers}</span>
-                    <button type="button" className="itp-counter-btn" onClick={() => setTravelers(t => Math.min(20, t + 1))}>+</button>
+                    <button
+                      type="button"
+                      className="itp-counter-btn"
+                      onClick={() => setTravelers((t) => Math.max(1, t - 1))}
+                    >
+                      −
+                    </button>
+                    <span className="fw-bold" style={{ color: BRAND.charcoal }}>
+                      {travelers}
+                    </span>
+                    <button
+                      type="button"
+                      className="itp-counter-btn"
+                      onClick={() => setTravelers((t) => Math.min(20, t + 1))}
+                    >
+                      +
+                    </button>
                   </div>
                 </div>
                 {livePrice > 0 && (
-                  <div className="d-flex justify-content-between align-items-center py-3 mb-3" style={{ borderTop: `1px solid ${BRAND.borderLight}` }}>
+                  <div
+                    className="d-flex justify-content-between align-items-center py-3 mb-3"
+                    style={{ borderTop: `1px solid ${BRAND.borderLight}` }}
+                  >
                     <div>
-                      <div style={{ fontSize: ".83rem", color: BRAND.meta }}>Estimated Total</div>
-                      <div style={{ fontSize: ".72rem", color: BRAND.placeholder }}>₹{livePrice.toLocaleString()} × {travelers} {travelers === 1 ? "person" : "people"}</div>
+                      <div style={{ fontSize: ".83rem", color: BRAND.meta }}>
+                        Estimated Total
+                      </div>
+                      <div
+                        style={{ fontSize: ".72rem", color: BRAND.placeholder }}
+                      >
+                        ₹{livePrice.toLocaleString()} × {travelers}{" "}
+                        {travelers === 1 ? "person" : "people"}
+                      </div>
                     </div>
-                    <div className="font-serif fw-bold" style={{ fontSize: "1.55rem", color: BRAND.primary }}>₹{totalPrice.toLocaleString()}</div>
+                    <div
+                      className="font-serif fw-bold"
+                      style={{ fontSize: "1.55rem", color: BRAND.primary }}
+                    >
+                      ₹{totalPrice.toLocaleString()}
+                    </div>
                   </div>
                 )}
-                <button className="itp-btn-primary mb-2" onClick={openEnquiry}><FaEnvelope size={14} />{user ? "Submit Enquiry" : "Login & Enquire"}</button>
-                <button className="itp-btn-outline mb-2" onClick={openCompare}><FaBalanceScale size={13} /> Compare Durations &amp; Packages</button>
-                <TripPlannerModal prefillDestination={locationTitle} prefillTripType={typeTitle} />
+                <button className="itp-btn-primary mb-2" onClick={openEnquiry}>
+                  <FaEnvelope size={14} />
+                  {user ? "Submit Enquiry" : "Login & Enquire"}
+                </button>
+                {showAuth && (
+                  <LoginRegister onClose={() => setShowAuth(false)} />
+                )}
+
+                <button className="itp-btn-outline mb-2" onClick={openCompare}>
+                  <FaBalanceScale size={13} /> Compare Durations &amp; Packages
+                </button>
+                <TripPlannerModal
+                  prefillDestination={locationTitle}
+                  prefillTripType={typeTitle}
+                />
                 <div className="d-flex gap-2 mt-3">
-                  <a href="tel:+917888251550" className="itp-contact-chip"><FaPhone size={11} /> Call Us</a>
-                  <a href="https://wa.me/917888251550" target="_blank" rel="noreferrer" className="itp-contact-chip"><FaWhatsapp size={11} /> WhatsApp</a>
+                  <a href="tel:+917888251550" className="itp-contact-chip">
+                    <FaPhone size={11} /> Call Us
+                  </a>
+                  <a
+                    href="https://wa.me/917888251550"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="itp-contact-chip"
+                  >
+                    <FaWhatsapp size={11} /> WhatsApp
+                  </a>
                 </div>
               </div>
               <div className="itp-booking-trust">
                 {[
-                  { icon: <FaShieldAlt size={10} color={BRAND.success} />, text: "100% secure enquiry" },
+                  {
+                    icon: <FaShieldAlt size={10} color={BRAND.success} />,
+                    text: "100% secure enquiry",
+                  },
                   { icon: "🔄", text: "Free cancellation up to 48 hours" },
                   { icon: "✅", text: "Expert responds within 30 minutes" },
                 ].map((r, i) => (
-                  <div key={i} className="d-flex align-items-center gap-2" style={{ fontSize: ".77rem", color: BRAND.meta }}><span>{r.icon}</span> {r.text}</div>
+                  <div
+                    key={i}
+                    className="d-flex align-items-center gap-2"
+                    style={{ fontSize: ".77rem", color: BRAND.meta }}
+                  >
+                    <span>{r.icon}</span> {r.text}
+                  </div>
                 ))}
               </div>
             </div>
@@ -1076,12 +2401,44 @@ export default function ItineraryPage() {
             <ScrollReveal delay={70}>
               <div className="itp-gal-grid">
                 {images.map((img, i) => (
-                  <div key={i} className="itp-gal-item" style={{ gridColumn: i === 0 ? "span 2" : "span 1", gridRow: i === 0 ? "span 2" : "span 1" }} onClick={() => openLightbox(i)}>
-                    <img src={img.src} alt={img.caption || `${locationTitle} ${i + 1}`} onError={e => { e.target.parentElement.style.display = "none"; }} />
+                  <div
+                    key={i}
+                    className="itp-gal-item"
+                    style={{
+                      gridColumn: i === 0 ? "span 2" : "span 1",
+                      gridRow: i === 0 ? "span 2" : "span 1",
+                    }}
+                    onClick={() => openLightbox(i)}
+                  >
+                    <img
+                      src={img.src}
+                      alt={img.caption || `${locationTitle} ${i + 1}`}
+                      onError={(e) => {
+                        e.target.parentElement.style.display = "none";
+                      }}
+                    />
                     <div className="itp-gal-ov">
-                      <div style={{ width: 58, height: 58, borderRadius: "50%", background: "rgba(255,255,255,0.15)", border: "2px solid rgba(255,255,255,0.55)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 22 }}><FaExpand /></div>
+                      <div
+                        style={{
+                          width: 58,
+                          height: 58,
+                          borderRadius: "50%",
+                          background: "rgba(255,255,255,0.15)",
+                          border: "2px solid rgba(255,255,255,0.55)",
+                          backdropFilter: "blur(8px)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          color: "#fff",
+                          fontSize: 22,
+                        }}
+                      >
+                        <FaExpand />
+                      </div>
                     </div>
-                    {img.caption && <div className="itp-gal-caption">{img.caption}</div>}
+                    {img.caption && (
+                      <div className="itp-gal-caption">{img.caption}</div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -1089,22 +2446,19 @@ export default function ItineraryPage() {
           </div>
         </section>
       )}
-      
 
-  <ReviewsAndQA
-    ref={reviewsRef}
-    onOpenContribute={(tab) => contributeCompRef.current?.openModal(tab)}
-    pkgId={pkg?._id}
+      <ReviewsAndQA
+        ref={reviewsRef}
+        onOpenContribute={(tab) => contributeCompRef.current?.openModal(tab)}
+        pkgId={pkg?._id}
+      />
 
-  />
-
-  <ContributeSection
-    ref={contributeCompRef}
-    sectionRef={contributeRef}
-    packageTitle={pkg?.title || `${locationTitle} ${typeTitle}`}
-    user={user}
-  />
-
+      <ContributeSection
+        ref={contributeCompRef}
+        sectionRef={contributeRef}
+        packageTitle={pkg?.title || `${locationTitle} ${typeTitle}`}
+        user={user}
+      />
 
       {/* ══ REVIEWS ══
       <section className="itp-reviews-section" ref={reviewsRef}>
@@ -1282,38 +2636,83 @@ export default function ItineraryPage() {
           <div className="container text-center" style={{ maxWidth: 1280 }}>
             <ScrollReveal>
               <h2 className="itp-more-places-heading">More Places</h2>
-              <p className="itp-more-places-sub">Discover other amazing destinations</p>
+              <p className="itp-more-places-sub">
+                Discover other amazing destinations
+              </p>
             </ScrollReveal>
             <div className="row g-4 text-start">
-              {morePlacesLoading ? [0, 1, 2].map(i => (
-                <div className="col-md-4" key={i}><Skel h={210} r={16} mb={12} /><Skel h={18} w="60%" mb={8} /><Skel h={14} w="40%" mb={0} /></div>
-              )) : morePlaces.slice(0, 6).map((p, i) => {
-                const slug = slugifyLocation(p.location || "");
-                const cardImg = p.gallery?.[0]?.img || (typeof p.images === "string" ? p.images : "");
-                const cardDurLabel = p.durations?.[0]?.label || "";
-                const cardPrice = p.price || 0;
-                const cardDestSub = p.destination && p.destination !== p.location ? p.destination : typeTitle;
-                return (
-                  <div className="col-md-4 col-sm-6" key={p._id || slug || i}>
-                    <ScrollReveal delay={i * 60}>
-                      <Link to={`/package/${type}/${slug}`} className="itp-more-card">
-                        <div className="itp-more-card-img-wrap">
-                          <img src={getCloudinaryUrl(cardImg, 520)} alt={p.title || prettyLocationName(p.location)} onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=520&q=80"; }} />
-                          {cardPrice > 0 && <span className="itp-more-card-badge">₹{cardPrice.toLocaleString()}</span>}
-                        </div>
-                        <div className="itp-more-card-body">
-                          <h3 className="itp-more-card-title">{prettyLocationName(p.location) || p.title}</h3>
-                          <div className="itp-more-card-dest">{cardDestSub}</div>
-                          <div className="itp-more-card-meta-row">
-                            <span className="itp-more-card-rating"><FaStar size={11} color={BRAND.amber} /> {p.rating ? (p.rating.toFixed ? p.rating.toFixed(1) : p.rating) : "New"}</span>
-                            {cardDurLabel && <span className="itp-more-card-duration"><FaClock size={11} /> {cardDurLabel}</span>}
-                          </div>
-                        </div>
-                      </Link>
-                    </ScrollReveal>
-                  </div>
-                );
-              })}
+              {morePlacesLoading
+                ? [0, 1, 2].map((i) => (
+                    <div className="col-md-4" key={i}>
+                      <Skel h={210} r={16} mb={12} />
+                      <Skel h={18} w="60%" mb={8} />
+                      <Skel h={14} w="40%" mb={0} />
+                    </div>
+                  ))
+                : morePlaces.slice(0, 6).map((p, i) => {
+                    const slug = slugifyLocation(p.location || "");
+                    const cardImg =
+                      p.gallery?.[0]?.img ||
+                      (typeof p.images === "string" ? p.images : "");
+                    const cardDurLabel = p.durations?.[0]?.label || "";
+                    const cardPrice = p.price || 0;
+                    const cardDestSub =
+                      p.destination && p.destination !== p.location
+                        ? p.destination
+                        : typeTitle;
+                    return (
+                      <div
+                        className="col-md-4 col-sm-6"
+                        key={p._id || slug || i}
+                      >
+                        <ScrollReveal delay={i * 60}>
+                          <Link
+                            to={`/package/${type}/${slug}`}
+                            className="itp-more-card"
+                          >
+                            <div className="itp-more-card-img-wrap">
+                              <img
+                                src={getCloudinaryUrl(cardImg, 520)}
+                                alt={p.title || prettyLocationName(p.location)}
+                                onError={(e) => {
+                                  e.target.src =
+                                    "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=520&q=80";
+                                }}
+                              />
+                              {cardPrice > 0 && (
+                                <span className="itp-more-card-badge">
+                                  ₹{cardPrice.toLocaleString()}
+                                </span>
+                              )}
+                            </div>
+                            <div className="itp-more-card-body">
+                              <h3 className="itp-more-card-title">
+                                {prettyLocationName(p.location) || p.title}
+                              </h3>
+                              <div className="itp-more-card-dest">
+                                {cardDestSub}
+                              </div>
+                              <div className="itp-more-card-meta-row">
+                                <span className="itp-more-card-rating">
+                                  <FaStar size={11} color={BRAND.amber} />{" "}
+                                  {p.rating
+                                    ? p.rating.toFixed
+                                      ? p.rating.toFixed(1)
+                                      : p.rating
+                                    : "New"}
+                                </span>
+                                {cardDurLabel && (
+                                  <span className="itp-more-card-duration">
+                                    <FaClock size={11} /> {cardDurLabel}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </Link>
+                        </ScrollReveal>
+                      </div>
+                    );
+                  })}
             </div>
           </div>
         </section>
@@ -1322,29 +2721,113 @@ export default function ItineraryPage() {
       {/* ── Sticky mobile bar ── */}
       <div className="itp-sticky-bar px-4 py-2 align-items-center justify-content-between">
         <div>
-          <div className="font-serif fw-bold" style={{ fontSize: "1.45rem", color: BRAND.primary }}>{livePrice > 0 ? `₹${livePrice.toLocaleString()}` : "Price on request"}</div>
-          <div style={{ fontSize: ".72rem", color: BRAND.meta }}>{selDur?.label || ""} · per person</div>
+          <div
+            className="font-serif fw-bold"
+            style={{ fontSize: "1.45rem", color: BRAND.primary }}
+          >
+            {livePrice > 0
+              ? `₹${livePrice.toLocaleString()}`
+              : "Price on request"}
+          </div>
+          <div style={{ fontSize: ".72rem", color: BRAND.meta }}>
+            {selDur?.label || ""} · per person
+          </div>
         </div>
-        <button className="itp-btn-primary" style={{ width: "auto", padding: ".6rem 1.5rem", fontSize: ".88rem" }} onClick={() => bookingRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })}>
+        <button
+          className="itp-btn-primary"
+          style={{ width: "auto", padding: ".6rem 1.5rem", fontSize: ".88rem" }}
+          onClick={() =>
+            bookingRef.current?.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            })
+          }
+        >
           Enquire Now →
         </button>
       </div>
 
-      {lightboxOpen && imageSrcs.length > 0 && <Lightbox images={imageSrcs} startIndex={lightboxIndex} onClose={closeLightbox} />}
+      {lightboxOpen && imageSrcs.length > 0 && (
+        <Lightbox
+          images={imageSrcs}
+          startIndex={lightboxIndex}
+          onClose={closeLightbox}
+        />
+      )}
 
       {/* ══ CONTRIBUTE MODAL ══ */}
       {contributeOpen && (
-        <div className="position-fixed d-flex align-items-end align-items-sm-center justify-content-center p-0 p-sm-3"
-          style={{ inset: 0, background: "rgba(10,10,30,.55)", backdropFilter: "blur(6px)", zIndex: 1050 }}
-          onClick={e => { if (e.target === e.currentTarget) { setContributeOpen(false); setContributeDone(false); } }}>
-          <div className="itp-modal-anim bg-white overflow-hidden d-flex flex-column"
-            style={{ borderRadius: "20px", width: "100%", maxWidth: 580, maxHeight: "90vh", boxShadow: "0 32px 80px rgba(0,0,0,.22)" }}>
+        <div
+          className="position-fixed d-flex align-items-end align-items-sm-center justify-content-center p-0 p-sm-3"
+          style={{
+            inset: 0,
+            background: "rgba(10,10,30,.55)",
+            backdropFilter: "blur(6px)",
+            zIndex: 1050,
+          }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setContributeOpen(false);
+              setContributeDone(false);
+            }
+          }}
+        >
+          <div
+            className="itp-modal-anim bg-white overflow-hidden d-flex flex-column"
+            style={{
+              borderRadius: "20px",
+              width: "100%",
+              maxWidth: 580,
+              maxHeight: "90vh",
+              boxShadow: "0 32px 80px rgba(0,0,0,.22)",
+            }}
+          >
             {!contributeDone ? (
               <>
-                <div className="p-4 pb-3" style={{ borderBottom: `1px solid ${BRAND.borderLight}`, background: BRAND.navy }}>
-                  <button onClick={() => { setContributeOpen(false); setContributeDone(false); }} style={{ position: "absolute", top: "1.1rem", right: "1.1rem", width: 32, height: 32, background: "rgba(255,255,255,.12)", borderRadius: "50%", border: "none", cursor: "pointer", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}><FaTimes /></button>
-                  <div className="font-serif fw-bold" style={{ fontSize: "1.4rem", color: "#fff" }}>Share Your Experience</div>
-                  <div style={{ fontSize: ".8rem", color: "rgba(255,255,255,.55)" }}>{pkg?.title || `${locationTitle} ${typeTitle}`}</div>
+                <div
+                  className="p-4 pb-3"
+                  style={{
+                    borderBottom: `1px solid ${BRAND.borderLight}`,
+                    background: BRAND.navy,
+                  }}
+                >
+                  <button
+                    onClick={() => {
+                      setContributeOpen(false);
+                      setContributeDone(false);
+                    }}
+                    style={{
+                      position: "absolute",
+                      top: "1.1rem",
+                      right: "1.1rem",
+                      width: 32,
+                      height: 32,
+                      background: "rgba(255,255,255,.12)",
+                      borderRadius: "50%",
+                      border: "none",
+                      cursor: "pointer",
+                      color: "#fff",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <FaTimes />
+                  </button>
+                  <div
+                    className="font-serif fw-bold"
+                    style={{ fontSize: "1.4rem", color: "#fff" }}
+                  >
+                    Share Your Experience
+                  </div>
+                  <div
+                    style={{
+                      fontSize: ".8rem",
+                      color: "rgba(255,255,255,.55)",
+                    }}
+                  >
+                    {pkg?.title || `${locationTitle} ${typeTitle}`}
+                  </div>
                 </div>
                 <div className="p-4 overflow-auto" style={{ flex: 1 }}>
                   <div className="d-flex gap-2 mb-4">
@@ -1352,85 +2835,304 @@ export default function ItineraryPage() {
                       { key: "review", label: "⭐ Review" },
                       { key: "photo", label: "📷 Photo" },
                       { key: "qa", label: "❓ Question" },
-                    ].map(t => (
-                      <button key={t.key} className={`itp-contribute-tab ${contributeTab === t.key ? "active" : ""}`} onClick={() => setContributeTab(t.key)}>{t.label}</button>
+                    ].map((t) => (
+                      <button
+                        key={t.key}
+                        className={`itp-contribute-tab ${contributeTab === t.key ? "active" : ""}`}
+                        onClick={() => setContributeTab(t.key)}
+                      >
+                        {t.label}
+                      </button>
                     ))}
                   </div>
                   {contributeTab === "review" && (
                     <div>
                       <div className="mb-4">
-                        <label className="d-block fw-bold mb-2" style={{ fontSize: ".82rem", color: BRAND.charcoal }}>Your Rating <span style={{ color: BRAND.primary }}>*</span></label>
+                        <label
+                          className="d-block fw-bold mb-2"
+                          style={{ fontSize: ".82rem", color: BRAND.charcoal }}
+                        >
+                          Your Rating{" "}
+                          <span style={{ color: BRAND.primary }}>*</span>
+                        </label>
                         <div className="d-flex gap-2">
-                          {[1, 2, 3, 4, 5].map(star => (
-                            <span key={star} className="itp-star-pick"
-                              onClick={() => setNewReview(r => ({ ...r, rating: star }))}
-                              onMouseEnter={() => setNewReview(r => ({ ...r, hoverRating: star }))}
-                              onMouseLeave={() => setNewReview(r => ({ ...r, hoverRating: 0 }))}>
-                              <FaStar size={28} color={(newReview.hoverRating || newReview.rating) >= star ? BRAND.amber : BRAND.borderLight} />
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <span
+                              key={star}
+                              className="itp-star-pick"
+                              onClick={() =>
+                                setNewReview((r) => ({ ...r, rating: star }))
+                              }
+                              onMouseEnter={() =>
+                                setNewReview((r) => ({
+                                  ...r,
+                                  hoverRating: star,
+                                }))
+                              }
+                              onMouseLeave={() =>
+                                setNewReview((r) => ({ ...r, hoverRating: 0 }))
+                              }
+                            >
+                              <FaStar
+                                size={28}
+                                color={
+                                  (newReview.hoverRating || newReview.rating) >=
+                                  star
+                                    ? BRAND.amber
+                                    : BRAND.borderLight
+                                }
+                              />
                             </span>
                           ))}
-                          {newReview.rating > 0 && <span style={{ fontSize: ".82rem", color: BRAND.meta, alignSelf: "center", marginLeft: 6 }}>
-                            {["", "Terrible", "Poor", "Average", "Very Good", "Excellent"][newReview.rating]}
-                          </span>}
+                          {newReview.rating > 0 && (
+                            <span
+                              style={{
+                                fontSize: ".82rem",
+                                color: BRAND.meta,
+                                alignSelf: "center",
+                                marginLeft: 6,
+                              }}
+                            >
+                              {
+                                [
+                                  "",
+                                  "Terrible",
+                                  "Poor",
+                                  "Average",
+                                  "Very Good",
+                                  "Excellent",
+                                ][newReview.rating]
+                              }
+                            </span>
+                          )}
                         </div>
                       </div>
                       <div className="mb-3">
-                        <label className="d-block fw-bold mb-1" style={{ fontSize: ".82rem", color: BRAND.charcoal }}>Trip Type</label>
+                        <label
+                          className="d-block fw-bold mb-1"
+                          style={{ fontSize: ".82rem", color: BRAND.charcoal }}
+                        >
+                          Trip Type
+                        </label>
                         <div className="d-flex flex-wrap gap-2">
-                          {["Solo", "Couple", "Family", "Friends", "Business"].map(t => (
-                            <button key={t} onClick={() => setNewReview(r => ({ ...r, tripType: t }))} className="itp-mention-tag" style={{ background: newReview.tripType === t ? BRAND.primary : "#fff", color: newReview.tripType === t ? "#fff" : BRAND.bodyText, borderColor: newReview.tripType === t ? BRAND.primary : BRAND.border }}>{t}</button>
+                          {[
+                            "Solo",
+                            "Couple",
+                            "Family",
+                            "Friends",
+                            "Business",
+                          ].map((t) => (
+                            <button
+                              key={t}
+                              onClick={() =>
+                                setNewReview((r) => ({ ...r, tripType: t }))
+                              }
+                              className="itp-mention-tag"
+                              style={{
+                                background:
+                                  newReview.tripType === t
+                                    ? BRAND.primary
+                                    : "#fff",
+                                color:
+                                  newReview.tripType === t
+                                    ? "#fff"
+                                    : BRAND.bodyText,
+                                borderColor:
+                                  newReview.tripType === t
+                                    ? BRAND.primary
+                                    : BRAND.border,
+                              }}
+                            >
+                              {t}
+                            </button>
                           ))}
                         </div>
                       </div>
                       <div className="mb-3">
-                        <label className="d-block fw-bold mb-1" style={{ fontSize: ".82rem", color: BRAND.charcoal }}>Title</label>
-                        <input type="text" className="itp-input" placeholder="Summarise your experience" value={newReview.title} onChange={e => setNewReview(r => ({ ...r, title: e.target.value }))} />
+                        <label
+                          className="d-block fw-bold mb-1"
+                          style={{ fontSize: ".82rem", color: BRAND.charcoal }}
+                        >
+                          Title
+                        </label>
+                        <input
+                          type="text"
+                          className="itp-input"
+                          placeholder="Summarise your experience"
+                          value={newReview.title}
+                          onChange={(e) =>
+                            setNewReview((r) => ({
+                              ...r,
+                              title: e.target.value,
+                            }))
+                          }
+                        />
                       </div>
                       <div className="mb-3">
-                        <label className="d-block fw-bold mb-1" style={{ fontSize: ".82rem", color: BRAND.charcoal }}>Your Review <span style={{ color: BRAND.primary }}>*</span></label>
-                        <textarea className="itp-input" rows={4} placeholder="Tell others what made this trip special..." value={newReview.text} onChange={e => setNewReview(r => ({ ...r, text: e.target.value }))} />
+                        <label
+                          className="d-block fw-bold mb-1"
+                          style={{ fontSize: ".82rem", color: BRAND.charcoal }}
+                        >
+                          Your Review{" "}
+                          <span style={{ color: BRAND.primary }}>*</span>
+                        </label>
+                        <textarea
+                          className="itp-input"
+                          rows={4}
+                          placeholder="Tell others what made this trip special..."
+                          value={newReview.text}
+                          onChange={(e) =>
+                            setNewReview((r) => ({
+                              ...r,
+                              text: e.target.value,
+                            }))
+                          }
+                        />
                       </div>
                     </div>
                   )}
                   {contributeTab === "photo" && (
                     <div className="text-center py-4">
-                      <div style={{ border: `2px dashed ${BRAND.border}`, borderRadius: 16, padding: "2.5rem", cursor: "pointer" }}>
-                        <FaCamera size={36} color={BRAND.placeholder} style={{ marginBottom: 12 }} />
-                        <div className="fw-bold mb-1" style={{ color: BRAND.charcoal }}>Upload your photos</div>
-                        <div style={{ fontSize: ".82rem", color: BRAND.meta }}>JPG, PNG up to 10MB each</div>
-                        <button className="itp-btn-primary mt-3" style={{ width: "auto", padding: ".55rem 1.5rem", fontSize: ".85rem" }}>Choose Photos</button>
+                      <div
+                        style={{
+                          border: `2px dashed ${BRAND.border}`,
+                          borderRadius: 16,
+                          padding: "2.5rem",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <FaCamera
+                          size={36}
+                          color={BRAND.placeholder}
+                          style={{ marginBottom: 12 }}
+                        />
+                        <div
+                          className="fw-bold mb-1"
+                          style={{ color: BRAND.charcoal }}
+                        >
+                          Upload your photos
+                        </div>
+                        <div style={{ fontSize: ".82rem", color: BRAND.meta }}>
+                          JPG, PNG up to 10MB each
+                        </div>
+                        <button
+                          className="itp-btn-primary mt-3"
+                          style={{
+                            width: "auto",
+                            padding: ".55rem 1.5rem",
+                            fontSize: ".85rem",
+                          }}
+                        >
+                          Choose Photos
+                        </button>
                       </div>
                     </div>
                   )}
                   {contributeTab === "qa" && (
                     <div>
                       <div className="mb-3">
-                        <label className="d-block fw-bold mb-1" style={{ fontSize: ".82rem", color: BRAND.charcoal }}>Your Question <span style={{ color: BRAND.primary }}>*</span></label>
-                        <textarea className="itp-input" rows={4} placeholder="What would you like to know about this package or destination?" value={newQuestion} onChange={e => setNewQuestion(e.target.value)} />
+                        <label
+                          className="d-block fw-bold mb-1"
+                          style={{ fontSize: ".82rem", color: BRAND.charcoal }}
+                        >
+                          Your Question{" "}
+                          <span style={{ color: BRAND.primary }}>*</span>
+                        </label>
+                        <textarea
+                          className="itp-input"
+                          rows={4}
+                          placeholder="What would you like to know about this package or destination?"
+                          value={newQuestion}
+                          onChange={(e) => setNewQuestion(e.target.value)}
+                        />
                       </div>
-                      <div className="p-3 rounded-3" style={{ background: BRAND.bgCard, border: `1px solid ${BRAND.borderLight}`, fontSize: ".78rem", color: BRAND.meta }}>
-                        💡 Tip: Specific questions get answered faster. Include details like travel dates, group type, or specific concerns.
+                      <div
+                        className="p-3 rounded-3"
+                        style={{
+                          background: BRAND.bgCard,
+                          border: `1px solid ${BRAND.borderLight}`,
+                          fontSize: ".78rem",
+                          color: BRAND.meta,
+                        }}
+                      >
+                        💡 Tip: Specific questions get answered faster. Include
+                        details like travel dates, group type, or specific
+                        concerns.
                       </div>
                     </div>
                   )}
                 </div>
-                <div className="px-4 py-3" style={{ borderTop: `1px solid ${BRAND.borderLight}` }}>
-                  <button className="itp-btn-primary" onClick={handleContributeSubmit}>
-                    {contributeTab === "review" ? "✉️ Submit Review" : contributeTab === "photo" ? "📷 Upload Photos" : "❓ Submit Question"}
+                <div
+                  className="px-4 py-3"
+                  style={{ borderTop: `1px solid ${BRAND.borderLight}` }}
+                >
+                  <button
+                    className="itp-btn-primary"
+                    onClick={handleContributeSubmit}
+                  >
+                    {contributeTab === "review"
+                      ? "✉️ Submit Review"
+                      : contributeTab === "photo"
+                        ? "📷 Upload Photos"
+                        : "❓ Submit Question"}
                   </button>
-                  <p className="text-center mt-2 mb-0" style={{ fontSize: ".73rem", color: BRAND.placeholder }}>Your contribution helps fellow travellers make better decisions</p>
+                  <p
+                    className="text-center mt-2 mb-0"
+                    style={{ fontSize: ".73rem", color: BRAND.placeholder }}
+                  >
+                    Your contribution helps fellow travellers make better
+                    decisions
+                  </p>
                 </div>
               </>
             ) : (
               <div className="text-center p-5">
-                <div style={{ fontSize: "3.5rem", marginBottom: "1rem" }}>🎉</div>
-                <div className="font-serif fw-bold mb-2" style={{ fontSize: "1.6rem", color: BRAND.charcoal }}>
-                  {contributeTab === "review" ? "Review Submitted!" : contributeTab === "photo" ? "Photos Uploaded!" : "Question Posted!"}
+                <div style={{ fontSize: "3.5rem", marginBottom: "1rem" }}>
+                  🎉
                 </div>
-                <p style={{ fontSize: ".86rem", color: BRAND.meta, lineHeight: 1.7, maxWidth: 340, margin: "0 auto 1.5rem" }}>
-                  {contributeTab === "review" ? "Your review has been added and will help other travellers decide." : contributeTab === "photo" ? "Your photos will appear after a quick review." : "Your question has been posted. The community will answer soon!"}
+                <div
+                  className="font-serif fw-bold mb-2"
+                  style={{ fontSize: "1.6rem", color: BRAND.charcoal }}
+                >
+                  {contributeTab === "review"
+                    ? "Review Submitted!"
+                    : contributeTab === "photo"
+                      ? "Photos Uploaded!"
+                      : "Question Posted!"}
+                </div>
+                <p
+                  style={{
+                    fontSize: ".86rem",
+                    color: BRAND.meta,
+                    lineHeight: 1.7,
+                    maxWidth: 340,
+                    margin: "0 auto 1.5rem",
+                  }}
+                >
+                  {contributeTab === "review"
+                    ? "Your review has been added and will help other travellers decide."
+                    : contributeTab === "photo"
+                      ? "Your photos will appear after a quick review."
+                      : "Your question has been posted. The community will answer soon!"}
                 </p>
-                <button className="itp-btn-primary" style={{ width: "auto", padding: ".75rem 2.5rem" }} onClick={() => { setContributeOpen(false); setContributeDone(false); setNewReview({ rating: 0, hoverRating: 0, title: "", text: "", tripType: "Family" }); setNewQuestion(""); }}>Done</button>
+                <button
+                  className="itp-btn-primary"
+                  style={{ width: "auto", padding: ".75rem 2.5rem" }}
+                  onClick={() => {
+                    setContributeOpen(false);
+                    setContributeDone(false);
+                    setNewReview({
+                      rating: 0,
+                      hoverRating: 0,
+                      title: "",
+                      text: "",
+                      tripType: "Family",
+                    });
+                    setNewQuestion("");
+                  }}
+                >
+                  Done
+                </button>
               </div>
             )}
           </div>
@@ -1439,93 +3141,430 @@ export default function ItineraryPage() {
 
       {/* ══ ENQUIRY MODAL ══ */}
       {enquiryOpen && (
-        <div className="position-fixed d-flex align-items-end align-items-sm-center justify-content-center p-0 p-sm-3"
-          style={{ inset: 0, background: "rgba(10,10,30,.55)", backdropFilter: "blur(6px)", zIndex: 1050 }}
-          onClick={e => { if (e.target === e.currentTarget) setEnquiryOpen(false); }}>
-          <div className="itp-modal-anim bg-white overflow-hidden d-flex flex-column"
-            style={{ borderRadius: "20px", width: "100%", maxWidth: 580, maxHeight: "92vh", boxShadow: "0 32px 80px rgba(0,0,0,.22)" }}>
+        <div
+          className="position-fixed d-flex align-items-end align-items-sm-center justify-content-center p-0 p-sm-3"
+          style={{
+            inset: 0,
+            background: "rgba(10,10,30,.55)",
+            backdropFilter: "blur(6px)",
+            zIndex: 1050,
+          }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setEnquiryOpen(false);
+          }}
+        >
+          <div
+            className="itp-modal-anim bg-white overflow-hidden d-flex flex-column"
+            style={{
+              borderRadius: "20px",
+              width: "100%",
+              maxWidth: 580,
+              maxHeight: "92vh",
+              boxShadow: "0 32px 80px rgba(0,0,0,.22)",
+            }}
+          >
             {!enquiryDone ? (
               <>
-                <div className="shrink-0 p-4 pb-3" style={{ borderBottom: `1px solid ${BRAND.borderLight}`, background: BRAND.navy }}>
-                  <button onClick={() => setEnquiryOpen(false)} className="position-absolute border-0 d-flex align-items-center justify-content-center" style={{ top: "1.1rem", right: "1.1rem", width: 32, height: 32, background: "rgba(255,255,255,.12)", borderRadius: "50%", cursor: "pointer", color: "#fff", zIndex: 1 }}><FaTimes /></button>
-                  <div className="font-serif fw-bold" style={{ fontSize: "1.5rem", color: "#fff" }}>Submit Enquiry</div>
-                  <div style={{ fontSize: ".82rem", color: "rgba(255,255,255,.55)" }}>{pkg?.title || `${locationTitle} ${typeTitle}`}{selDur?.label ? ` · ${selDur.label}` : ""}</div>
+                <div
+                  className="shrink-0 p-4 pb-3"
+                  style={{
+                    borderBottom: `1px solid ${BRAND.borderLight}`,
+                    background: BRAND.navy,
+                  }}
+                >
+                  <button
+                    onClick={() => setEnquiryOpen(false)}
+                    className="position-absolute border-0 d-flex align-items-center justify-content-center"
+                    style={{
+                      top: "1.1rem",
+                      right: "1.1rem",
+                      width: 32,
+                      height: 32,
+                      background: "rgba(255,255,255,.12)",
+                      borderRadius: "50%",
+                      cursor: "pointer",
+                      color: "#fff",
+                      zIndex: 1,
+                    }}
+                  >
+                    <FaTimes />
+                  </button>
+                  <div
+                    className="font-serif fw-bold"
+                    style={{ fontSize: "1.5rem", color: "#fff" }}
+                  >
+                    Submit Enquiry
+                  </div>
+                  <div
+                    style={{
+                      fontSize: ".82rem",
+                      color: "rgba(255,255,255,.55)",
+                    }}
+                  >
+                    {pkg?.title || `${locationTitle} ${typeTitle}`}
+                    {selDur?.label ? ` · ${selDur.label}` : ""}
+                  </div>
                 </div>
                 <div className="p-4 overflow-auto grow">
-                  <div className="rounded-3 p-3 mb-4" style={{ background: "linear-gradient(135deg,#f7f9ff,#fdf5ff)", border: "1px solid #e4e8ff" }}>
-                    <div className="fw-bold mb-2" style={{ fontSize: ".92rem", color: BRAND.charcoal }}>📦 Package Summary</div>
+                  <div
+                    className="rounded-3 p-3 mb-4"
+                    style={{
+                      background: "linear-gradient(135deg,#f7f9ff,#fdf5ff)",
+                      border: "1px solid #e4e8ff",
+                    }}
+                  >
+                    <div
+                      className="fw-bold mb-2"
+                      style={{ fontSize: ".92rem", color: BRAND.charcoal }}
+                    >
+                      📦 Package Summary
+                    </div>
                     {[
                       ["Destination", enquiryForm.destination || locationTitle],
                       ["Tour Type", typeTitle],
                       selDur?.label && ["Duration", selDur.label],
-                      livePrice > 0 && ["Price / person", `₹${livePrice.toLocaleString()}`],
+                      livePrice > 0 && [
+                        "Price / person",
+                        `₹${livePrice.toLocaleString()}`,
+                      ],
                       ["Adults", enquiryForm.adults],
                       groupSizeDisplay && ["Group Size", groupSizeDisplay],
-                    ].filter(Boolean).map(([k, v], i) => (
-                      <div key={i} className="d-flex justify-content-between" style={{ fontSize: ".8rem", color: BRAND.meta, padding: ".2rem 0" }}>
-                        <span>{k}</span><span className="fw-semibold" style={{ color: BRAND.charcoal }}>{v}</span>
-                      </div>
-                    ))}
+                    ]
+                      .filter(Boolean)
+                      .map(([k, v], i) => (
+                        <div
+                          key={i}
+                          className="d-flex justify-content-between"
+                          style={{
+                            fontSize: ".8rem",
+                            color: BRAND.meta,
+                            padding: ".2rem 0",
+                          }}
+                        >
+                          <span>{k}</span>
+                          <span
+                            className="fw-semibold"
+                            style={{ color: BRAND.charcoal }}
+                          >
+                            {v}
+                          </span>
+                        </div>
+                      ))}
                     {livePrice > 0 && (
-                      <div className="d-flex justify-content-between align-items-center pt-2 mt-1" style={{ borderTop: "1px dashed #d8deff" }}>
-                        <span className="fw-bold" style={{ fontSize: ".82rem", color: BRAND.bodyText }}>Quoted Total</span>
-                        <span className="font-serif fw-bold" style={{ fontSize: "1.45rem", color: BRAND.primary }}>₹{(livePrice * enquiryForm.adults).toLocaleString()}</span>
+                      <div
+                        className="d-flex justify-content-between align-items-center pt-2 mt-1"
+                        style={{ borderTop: "1px dashed #d8deff" }}
+                      >
+                        <span
+                          className="fw-bold"
+                          style={{ fontSize: ".82rem", color: BRAND.bodyText }}
+                        >
+                          Quoted Total
+                        </span>
+                        <span
+                          className="font-serif fw-bold"
+                          style={{ fontSize: "1.45rem", color: BRAND.primary }}
+                        >
+                          ₹{(livePrice * enquiryForm.adults).toLocaleString()}
+                        </span>
                       </div>
                     )}
                   </div>
-                  {enquiryError && <div className="rounded-3 p-3 mb-3" style={{ background: "#FFF0F0", border: "1px solid #FFD0D0", fontSize: ".82rem", color: "#c62828" }}>⚠️ {enquiryError}</div>}
-                  <p style={{ fontSize: ".72rem", color: BRAND.placeholder, marginBottom: ".85rem" }}><span style={{ color: BRAND.primary }}>*</span> Required fields</p>
+                  {enquiryError && (
+                    <div
+                      className="rounded-3 p-3 mb-3"
+                      style={{
+                        background: "#FFF0F0",
+                        border: "1px solid #FFD0D0",
+                        fontSize: ".82rem",
+                        color: "#c62828",
+                      }}
+                    >
+                      ⚠️ {enquiryError}
+                    </div>
+                  )}
+                  <p
+                    style={{
+                      fontSize: ".72rem",
+                      color: BRAND.placeholder,
+                      marginBottom: ".85rem",
+                    }}
+                  >
+                    <span style={{ color: BRAND.primary }}>*</span> Required
+                    fields
+                  </p>
                   <form id="enquiry-form" onSubmit={handleEnquirySubmit}>
                     <div className="row g-3">
                       {[
-                        { col: "col-6", label: "Full Name", req: true, icon: <FaUser size={11} className="itp-input-icon" />, type: "text", ph: "Your full name", key: "fullName" },
-                        { col: "col-6", label: "Mobile", req: true, icon: <FaMobileAlt size={11} className="itp-input-icon" />, type: "tel", ph: "10-digit number", key: "mobile", pattern: "[0-9]{10}" },
-                        { col: "col-6", label: "Email", req: true, icon: <FaEnvelope size={11} className="itp-input-icon" />, type: "email", ph: "you@email.com", key: "email" },
-                        { col: "col-6", label: "Your City", req: false, icon: <FaCity size={11} className="itp-input-icon" />, type: "text", ph: "Travelling from", key: "city" },
-                        { col: "col-12", label: "Destination", req: true, icon: <FaMapMarkerAlt size={11} className="itp-input-icon" />, type: "text", ph: "Travel destination", key: "destination" },
-                      ].map(f => (
+                        {
+                          col: "col-6",
+                          label: "Full Name",
+                          req: true,
+                          icon: <FaUser size={11} className="itp-input-icon" />,
+                          type: "text",
+                          ph: "Your full name",
+                          key: "fullName",
+                        },
+                        {
+                          col: "col-6",
+                          label: "Mobile",
+                          req: true,
+                          icon: (
+                            <FaMobileAlt size={11} className="itp-input-icon" />
+                          ),
+                          type: "tel",
+                          ph: "10-digit number",
+                          key: "mobile",
+                          pattern: "[0-9]{10}",
+                        },
+                        {
+                          col: "col-6",
+                          label: "Email",
+                          req: true,
+                          icon: (
+                            <FaEnvelope size={11} className="itp-input-icon" />
+                          ),
+                          type: "email",
+                          ph: "you@email.com",
+                          key: "email",
+                        },
+                        {
+                          col: "col-6",
+                          label: "Your City",
+                          req: false,
+                          icon: <FaCity size={11} className="itp-input-icon" />,
+                          type: "text",
+                          ph: "Travelling from",
+                          key: "city",
+                        },
+                        {
+                          col: "col-12",
+                          label: "Destination",
+                          req: true,
+                          icon: (
+                            <FaMapMarkerAlt
+                              size={11}
+                              className="itp-input-icon"
+                            />
+                          ),
+                          type: "text",
+                          ph: "Travel destination",
+                          key: "destination",
+                        },
+                      ].map((f) => (
                         <div key={f.key} className={f.col}>
-                          <label className="d-block text-uppercase fw-bold mb-1" style={{ fontSize: ".72rem", color: BRAND.placeholder, letterSpacing: ".06em" }}>{f.label} {f.req && <span style={{ color: BRAND.primary }}>*</span>}</label>
-                          <div className="itp-input-group">{f.icon}<input type={f.type} className="itp-input" placeholder={f.ph} required={f.req} pattern={f.pattern} value={enquiryForm[f.key]} onChange={e => setEnquiryForm(fm => ({ ...fm, [f.key]: e.target.value }))} /></div>
+                          <label
+                            className="d-block text-uppercase fw-bold mb-1"
+                            style={{
+                              fontSize: ".72rem",
+                              color: BRAND.placeholder,
+                              letterSpacing: ".06em",
+                            }}
+                          >
+                            {f.label}{" "}
+                            {f.req && (
+                              <span style={{ color: BRAND.primary }}>*</span>
+                            )}
+                          </label>
+                          <div className="itp-input-group">
+                            {f.icon}
+                            <input
+                              type={f.type}
+                              className="itp-input"
+                              placeholder={f.ph}
+                              required={f.req}
+                              pattern={f.pattern}
+                              value={enquiryForm[f.key]}
+                              onChange={(e) =>
+                                setEnquiryForm((fm) => ({
+                                  ...fm,
+                                  [f.key]: e.target.value,
+                                }))
+                              }
+                            />
+                          </div>
                         </div>
                       ))}
                       <div className="col-6">
-                        <label className="d-block text-uppercase fw-bold mb-1" style={{ fontSize: ".72rem", color: BRAND.placeholder, letterSpacing: ".06em" }}>Travel Date</label>
-                        <div className="itp-input-group"><FaCalendarAlt size={11} className="itp-input-icon" /><input type="date" className="itp-input" min={new Date().toISOString().split("T")[0]} value={enquiryForm.travelDate} onChange={e => setEnquiryForm(f => ({ ...f, travelDate: e.target.value }))} /></div>
+                        <label
+                          className="d-block text-uppercase fw-bold mb-1"
+                          style={{
+                            fontSize: ".72rem",
+                            color: BRAND.placeholder,
+                            letterSpacing: ".06em",
+                          }}
+                        >
+                          Travel Date
+                        </label>
+                        <div className="itp-input-group">
+                          <FaCalendarAlt size={11} className="itp-input-icon" />
+                          <input
+                            type="date"
+                            className="itp-input"
+                            min={new Date().toISOString().split("T")[0]}
+                            value={enquiryForm.travelDate}
+                            onChange={(e) =>
+                              setEnquiryForm((f) => ({
+                                ...f,
+                                travelDate: e.target.value,
+                              }))
+                            }
+                          />
+                        </div>
                       </div>
                       <div className="col-6">
-                        <label className="d-block text-uppercase fw-bold mb-1" style={{ fontSize: ".72rem", color: BRAND.placeholder, letterSpacing: ".06em" }}>Adults <span style={{ color: BRAND.primary }}>*</span></label>
+                        <label
+                          className="d-block text-uppercase fw-bold mb-1"
+                          style={{
+                            fontSize: ".72rem",
+                            color: BRAND.placeholder,
+                            letterSpacing: ".06em",
+                          }}
+                        >
+                          Adults <span style={{ color: BRAND.primary }}>*</span>
+                        </label>
                         <div className="itp-counter">
-                          <button type="button" className="itp-counter-btn" onClick={() => setEnquiryForm(f => { const n = Math.max(1, f.adults - 1); return { ...f, adults: n, travelers: n }; })}>−</button>
-                          <span className="fw-bold" style={{ color: BRAND.charcoal }}>{enquiryForm.adults}</span>
-                          <button type="button" className="itp-counter-btn" onClick={() => setEnquiryForm(f => { const n = Math.min(20, f.adults + 1); return { ...f, adults: n, travelers: n }; })}>+</button>
+                          <button
+                            type="button"
+                            className="itp-counter-btn"
+                            onClick={() =>
+                              setEnquiryForm((f) => {
+                                const n = Math.max(1, f.adults - 1);
+                                return { ...f, adults: n, travelers: n };
+                              })
+                            }
+                          >
+                            −
+                          </button>
+                          <span
+                            className="fw-bold"
+                            style={{ color: BRAND.charcoal }}
+                          >
+                            {enquiryForm.adults}
+                          </span>
+                          <button
+                            type="button"
+                            className="itp-counter-btn"
+                            onClick={() =>
+                              setEnquiryForm((f) => {
+                                const n = Math.min(20, f.adults + 1);
+                                return { ...f, adults: n, travelers: n };
+                              })
+                            }
+                          >
+                            +
+                          </button>
                         </div>
                       </div>
                       <div className="col-12">
-                        <label className="d-block text-uppercase fw-bold mb-1" style={{ fontSize: ".72rem", color: BRAND.placeholder, letterSpacing: ".06em" }}>Special Requests / Notes</label>
-                        <div className="itp-input-group" style={{ alignItems: "flex-start" }}>
-                          <FaStickyNote size={11} className="itp-input-icon" style={{ top: 14, transform: "none" }} />
-                          <textarea className="itp-input" rows={3} placeholder="Dietary requirements, preferred hotels, special occasions..." value={enquiryForm.notes} onChange={e => setEnquiryForm(f => ({ ...f, notes: e.target.value }))} />
+                        <label
+                          className="d-block text-uppercase fw-bold mb-1"
+                          style={{
+                            fontSize: ".72rem",
+                            color: BRAND.placeholder,
+                            letterSpacing: ".06em",
+                          }}
+                        >
+                          Special Requests / Notes
+                        </label>
+                        <div
+                          className="itp-input-group"
+                          style={{ alignItems: "flex-start" }}
+                        >
+                          <FaStickyNote
+                            size={11}
+                            className="itp-input-icon"
+                            style={{ top: 14, transform: "none" }}
+                          />
+                          <textarea
+                            className="itp-input"
+                            rows={3}
+                            placeholder="Dietary requirements, preferred hotels, special occasions..."
+                            value={enquiryForm.notes}
+                            onChange={(e) =>
+                              setEnquiryForm((f) => ({
+                                ...f,
+                                notes: e.target.value,
+                              }))
+                            }
+                          />
                         </div>
                       </div>
                     </div>
                   </form>
                 </div>
-                <div className="px-4 py-3 shrink-0" style={{ borderTop: `1px solid ${BRAND.borderLight}` }}>
-                  <button type="submit" form="enquiry-form" className="itp-btn-primary" disabled={enquiryLoading}>{enquiryLoading ? "Submitting..." : "✉️  Submit Enquiry"}</button>
-                  <p className="text-center mt-2 mb-0" style={{ fontSize: ".73rem", color: BRAND.placeholder }}>Your details are safe with us · No spam, ever</p>
+                <div
+                  className="px-4 py-3 shrink-0"
+                  style={{ borderTop: `1px solid ${BRAND.borderLight}` }}
+                >
+                  <button
+                    type="submit"
+                    form="enquiry-form"
+                    className="itp-btn-primary"
+                    disabled={enquiryLoading}
+                  >
+                    {enquiryLoading ? "Submitting..." : "✉️  Submit Enquiry"}
+                  </button>
+                  <p
+                    className="text-center mt-2 mb-0"
+                    style={{ fontSize: ".73rem", color: BRAND.placeholder }}
+                  >
+                    Your details are safe with us · No spam, ever
+                  </p>
                 </div>
               </>
             ) : (
               <div className="text-center p-5">
-                <div style={{ fontSize: "3.5rem", marginBottom: "1rem" }}>🎉</div>
-                <div className="font-serif fw-bold mb-2" style={{ fontSize: "1.7rem", color: BRAND.charcoal }}>Enquiry Submitted!</div>
-                <p style={{ fontSize: ".86rem", color: BRAND.meta, lineHeight: 1.7, maxWidth: 380, margin: "0 auto 1.25rem" }}>
-                  Our travel expert will call you within 30 minutes. A confirmation has been sent to <strong style={{ color: BRAND.charcoal }}>{enquiryForm.email}</strong>.
+                <div style={{ fontSize: "3.5rem", marginBottom: "1rem" }}>
+                  🎉
+                </div>
+                <div
+                  className="font-serif fw-bold mb-2"
+                  style={{ fontSize: "1.7rem", color: BRAND.charcoal }}
+                >
+                  Enquiry Submitted!
+                </div>
+                <p
+                  style={{
+                    fontSize: ".86rem",
+                    color: BRAND.meta,
+                    lineHeight: 1.7,
+                    maxWidth: 380,
+                    margin: "0 auto 1.25rem",
+                  }}
+                >
+                  Our travel expert will call you within 30 minutes. A
+                  confirmation has been sent to{" "}
+                  <strong style={{ color: BRAND.charcoal }}>
+                    {enquiryForm.email}
+                  </strong>
+                  .
                 </p>
-                <div className="d-inline-block rounded-3 px-4 py-2 mb-3" style={{ background: BRAND.bgCard, fontSize: ".79rem", color: "#3D52A0", fontWeight: 600 }}>📋 Ref: ENQ-{Date.now().toString(36).toUpperCase()}</div>
-                <div className="d-flex align-items-center justify-content-center gap-2 mb-4" style={{ fontSize: ".76rem", color: BRAND.placeholder }}><FaPrint size={11} /> Your full itinerary is saved — print option coming soon</div>
-                <button className="itp-btn-primary" style={{ width: "auto", padding: ".75rem 2.5rem" }} onClick={() => setEnquiryOpen(false)}>Close</button>
+                <div
+                  className="d-inline-block rounded-3 px-4 py-2 mb-3"
+                  style={{
+                    background: BRAND.bgCard,
+                    fontSize: ".79rem",
+                    color: "#3D52A0",
+                    fontWeight: 600,
+                  }}
+                >
+                  📋 Ref: ENQ-{Date.now().toString(36).toUpperCase()}
+                </div>
+                <div
+                  className="d-flex align-items-center justify-content-center gap-2 mb-4"
+                  style={{ fontSize: ".76rem", color: BRAND.placeholder }}
+                >
+                  <FaPrint size={11} /> Your full itinerary is saved — print
+                  option coming soon
+                </div>
+                <button
+                  className="itp-btn-primary"
+                  style={{ width: "auto", padding: ".75rem 2.5rem" }}
+                  onClick={() => setEnquiryOpen(false)}
+                >
+                  Close
+                </button>
               </div>
             )}
           </div>
@@ -1533,177 +3572,342 @@ export default function ItineraryPage() {
       )}
 
       {/* ══ COMPARE MODAL ══ */}
-      {compareOpen && (() => {
-        const getPkgDur = (p, idx) => {
-          const durs = Array.isArray(p.durations) && p.durations.length ? p.durations : null;
-          if (durs) return durs[Math.min(idx, durs.length - 1)];
-          return { price: p.price, discountedPrice: null, label: p.duration || "—", days: p.durationDays, nights: null };
-        };
-        if (compareScope === "duration") {
-          const cols = durationOptions;
-          const rows = [
-            { label: "Duration", render: (_p, d) => <strong style={{ color: BRAND.charcoal }}>{d?.label || "—"}</strong> },
-            { label: "Price / person", render: (_p, d) => { const price = d?.discountedPrice ?? d?.price ?? pkg?.price ?? 0; const original = d?.originalPrice ?? pkg?.strikePrice; return <div><span className="font-serif fw-bold" style={{ fontSize: "1.3rem", color: BRAND.primary }}>₹{price.toLocaleString()}</span>{original && original > price && <div style={{ fontSize: ".67rem", color: BRAND.placeholder, textDecoration: "line-through" }}>₹{original.toLocaleString()}</div>}</div>; } },
-            { label: "Nights / Days", render: (_p, d) => d?.nights ? `${d.nights}N / ${d.days}D` : d?.days ? `${d.days} Days` : "—" },
-            { label: "Hotels", render: () => pkg?.hotelRating || "3★ / 4★" },
-            { label: "Meals", render: () => pkg?.meals || "As per itinerary" },
-            { label: "Transport", render: () => pkg?.transport || "Private AC Vehicle" },
-            { label: "Group Size", render: () => groupSizeDisplay || "—" },
-            { label: "Rating", render: () => pkg?.rating ? `⭐ ${pkg.rating}` : "—" },
-          ];
-          return (
-            <div className="position-fixed d-flex align-items-center justify-content-center p-3" style={{ inset: 0, background: "rgba(10,10,30,.62)", backdropFilter: "blur(6px)", zIndex: 1060, overflowY: "auto" }} onClick={e => { if (e.target === e.currentTarget) setCompareOpen(false); }}>
-              <div className="bg-white rounded-4 itp-modal-anim d-flex flex-column" style={{ width: "100%", maxWidth: 1000, maxHeight: "88vh", boxShadow: "0 40px 100px rgba(0,0,0,.28)", overflow: "hidden" }}>
-                <div className="d-flex align-items-start justify-content-between p-4 pb-3 shrink-0 flex-wrap gap-2" style={{ borderBottom: `1px solid ${BRAND.borderLight}`, background: BRAND.navy }}>
-                  <div>
-                    <div className="font-serif fw-bold" style={{ fontSize: "1.45rem", color: "#fff" }}>⚖️ Compare Durations</div>
-                    <div style={{ fontSize: ".74rem", color: "rgba(255,255,255,.5)" }}>{pkg?.title || `${locationTitle} ${typeTitle}`} — all available options</div>
-                  </div>
-                  <div className="d-flex align-items-center gap-2 flex-wrap">
-                    <button onClick={() => { setCompareScope("city"); setCompareSelected(pkg?._id ? [pkg._id] : []); }} className="btn btn-sm rounded-pill fw-bold" style={{ background: "rgba(255,255,255,.12)", color: "#fff", border: "1px solid rgba(255,255,255,.2)", fontSize: ".78rem" }}>📍 {locationTitle} Packages</button>
-                    <button onClick={() => { setCompareScope("all"); setCompareSelected(pkg?._id ? [pkg._id] : []); }} className="btn btn-sm rounded-pill" style={{ background: "rgba(255,255,255,.08)", color: "rgba(255,255,255,.7)", border: "1px solid rgba(255,255,255,.15)", fontSize: ".78rem" }}>🌏 All Cities</button>
-                    <button onClick={() => setCompareOpen(false)} className="d-flex align-items-center justify-content-center border-0" style={{ width: 32, height: 32, background: "rgba(255,255,255,.12)", borderRadius: "50%", cursor: "pointer", color: "#fff" }}><FaTimes /></button>
-                  </div>
-                </div>
-                <div className="grow overflow-auto">
-                  {cols.length === 0 ? <div className="text-center p-5" style={{ color: BRAND.meta }}>Only one duration available.</div> : (
-                    <table className="table table-bordered mb-0" style={{ minWidth: "100%", tableLayout: "auto" }}>
-                      <thead>
-                        <tr style={{ background: BRAND.bgCard }}>
-                          <th style={{ width: 130, fontSize: ".7rem", fontWeight: 700, color: BRAND.placeholder, textTransform: "uppercase", letterSpacing: ".06em", textAlign: "left", background: BRAND.borderLight, position: "sticky", left: 0, zIndex: 3 }}>Feature</th>
-                          {cols.map((d, i) => (
-                            <th key={i} className="text-center" style={{ minWidth: 170, background: _safeIdx === i ? "rgba(240,75,90,.06)" : BRAND.bgCard, fontSize: ".82rem", fontWeight: 700, color: BRAND.charcoal }}>
-                              <span className="d-block">{d.label}</span>
-                              <span className="d-block fw-normal" style={{ fontSize: ".72rem", color: BRAND.placeholder }}>₹{(d.discountedPrice ?? d.price ?? pkg?.price ?? 0).toLocaleString()} / person</span>
-                              {_safeIdx === i && <span className="badge mt-1" style={{ background: "#E8F5E9", color: "#2E7D32", fontSize: ".67rem" }}>Selected</span>}
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {rows.map(row => (
-                          <tr key={row.label}>
-                            <td className="fw-semibold" style={{ fontSize: ".78rem", color: BRAND.meta, background: BRAND.bgCard, position: "sticky", left: 0, zIndex: 2, whiteSpace: "nowrap" }}>{row.label}</td>
-                            {cols.map((d, i) => (
-                              <td key={i} className="text-center" style={{ background: _safeIdx === i ? "rgba(240,75,90,.04)" : "transparent", fontWeight: _safeIdx === i ? 600 : 400, fontSize: ".84rem", color: BRAND.bodyText }}>{row.render(pkg, d)}</td>
-                            ))}
-                          </tr>
-                        ))}
-                        <tr>
-                          <td className="fw-semibold" style={{ fontSize: ".78rem", color: BRAND.meta, background: BRAND.bgCard, position: "sticky", left: 0 }}>Select</td>
-                          {cols.map((d, i) => (
-                            <td key={i} className="text-center" style={{ background: _safeIdx === i ? "rgba(240,75,90,.04)" : "transparent" }}>
-                              <button onClick={() => { setSelectedDurationIdx(i); setCompareOpen(false); bookingRef.current?.scrollIntoView({ behavior: "smooth" }); }} className="btn btn-sm rounded-pill fw-bold" style={{ background: _safeIdx === i ? BRAND.primary : BRAND.borderLight, color: _safeIdx === i ? "#fff" : BRAND.meta, border: "none", fontSize: ".76rem" }}>
-                                {_safeIdx === i ? "✓ Selected" : "Choose"}
-                              </button>
-                            </td>
-                          ))}
-                        </tr>
-                      </tbody>
-                    </table>
-                  )}
-                </div>
-              </div>
-            </div>
-          );
-        }
-        const visibleList = compareScope === "city" ? compareAllPkgs.filter(p => (p.location || "").toLowerCase().replace(/\s+/g, "-") === (location || "").toLowerCase()) : compareAllPkgs;
-        const effectiveSelected = compareSelected.length === 0 && pkg?._id ? [pkg._id] : compareSelected;
-        const selectedPkgs = visibleList.filter(p => effectiveSelected.includes(p._id));
-        const displayPkgs = selectedPkgs.length > 0 ? selectedPkgs : (pkg ? [pkg, ...visibleList.filter(p => p._id !== pkg._id).slice(0, 2)] : visibleList.slice(0, 3));
-        const allDurLabels = Array.from(new Set(displayPkgs.flatMap(p => Array.isArray(p.durations) && p.durations.length ? p.durations.map(d => d.label) : [p.duration || selDur?.label || "3N / 4D"])));
-        const safeCmpDurIdx = Math.min(compareDurIdx, Math.max(0, allDurLabels.length - 1));
-        const pkgRows = [
-          { label: "Price / person", render: p => { const d = getPkgDur(p, safeCmpDurIdx); const price = d?.discountedPrice ?? d?.price ?? p.price ?? 0; const original = d?.originalPrice ?? p.strikePrice; return <div><span className="font-serif fw-bold" style={{ fontSize: "1.3rem", color: BRAND.primary }}>₹{price.toLocaleString()}</span>{original && original > price && <div style={{ fontSize: ".67rem", color: BRAND.placeholder, textDecoration: "line-through" }}>₹{original.toLocaleString()}</div>}</div>; } },
-          { label: "Destination", render: p => p.location || p.locationTitle || "—" },
-          { label: "Duration", render: p => getPkgDur(p, safeCmpDurIdx)?.label || p.duration || "—" },
-          { label: "Nights / Days", render: p => { const d = getPkgDur(p, safeCmpDurIdx); return d?.nights ? `${d.nights}N / ${d.days}D` : d?.days ? `${d.days} Days` : "—"; } },
-          { label: "Rating", render: p => p.rating ? `⭐ ${p.rating} (${p.reviews || 0})` : "—" },
-          { label: "Hotels", render: p => p.hotelRating || "3★ / 4★" },
-          { label: "Group Size", render: p => { const gs = p.groupSize; if (Array.isArray(gs) && gs.length > 1) return `${gs[0]} – ${gs[gs.length - 1]} pax`; if (Array.isArray(gs) && gs.length === 1) return gs[0]; return gs || "—"; } },
-          { label: "Meals", render: p => p.meals || "As per itinerary" },
-          { label: "Transport", render: p => p.transport || "Private AC Vehicle" },
-          { label: "Inclusions", render: p => `${(p.inclusions || inclusions).length} items` },
-        ];
-        return (
-          <div className="position-fixed d-flex align-items-end align-items-md-center justify-content-center" style={{ inset: 0, background: "rgba(10,10,30,.62)", backdropFilter: "blur(6px)", zIndex: 1060, overflowY: "auto", padding: "1rem" }} onClick={e => { if (e.target === e.currentTarget) setCompareOpen(false); }}>
-            <div className="bg-white rounded-4 itp-modal-anim d-flex flex-column" style={{ width: "100%", maxWidth: 1000, maxHeight: "88vh", boxShadow: "0 40px 100px rgba(0,0,0,.28)", overflow: "hidden" }}>
-              <div className="d-flex align-items-start justify-content-between p-4 pb-3 shrink-0 flex-wrap gap-2" style={{ borderBottom: `1px solid ${BRAND.borderLight}`, background: BRAND.navy }}>
-                <div>
-                  <div className="font-serif fw-bold" style={{ fontSize: "1.45rem", color: "#fff" }}>⚖️ Compare {typeTitle} Packages</div>
-                  <div style={{ fontSize: ".74rem", color: "rgba(255,255,255,.5)" }}>{compareScope === "city" ? `${visibleList.length} package${visibleList.length !== 1 ? "s" : ""} in ${locationTitle}` : `${visibleList.length} package${visibleList.length !== 1 ? "s" : ""} across all cities`}{" · tap to select up to 3"}</div>
-                </div>
-                <div className="d-flex align-items-center gap-2 flex-wrap">
-                  <button onClick={() => setCompareScope("duration")} className="btn btn-sm rounded-pill" style={{ background: "rgba(255,255,255,.12)", color: "#fff", border: "1px solid rgba(255,255,255,.2)", fontSize: ".78rem" }}>← Duration Compare</button>
-                  <div className="d-flex rounded-pill p-1" style={{ background: "rgba(255,255,255,.08)" }}>
-                    {[{ key: "city", label: `📍 ${locationTitle}` }, { key: "all", label: "🌏 All Cities" }].map(s => (
-                      <button key={s.key} className={`itp-scope-btn ${compareScope === s.key ? "active" : ""}`} style={compareScope === s.key ? { background: "#fff", color: BRAND.charcoal } : { color: "rgba(255,255,255,.65)" }} onClick={() => { setCompareScope(s.key); setCompareSelected(pkg?._id ? [pkg._id] : []); }}>{s.label}</button>
-                    ))}
-                  </div>
-                  <button onClick={() => setCompareOpen(false)} className="d-flex align-items-center justify-content-center border-0" style={{ width: 32, height: 32, background: "rgba(255,255,255,.12)", borderRadius: "50%", cursor: "pointer", color: "#fff" }}><FaTimes /></button>
-                </div>
-              </div>
-              {compareLoading ? (
-                <div className="p-4"><Skel h={38} mb={10} r={50} w="280px" /><Skel h={48} mb={8} r={10} /><Skel h={48} mb={8} r={10} /><Skel h={48} mb={8} r={10} /></div>
-              ) : (
-                <>
-                  <div className="px-4 py-3 shrink-0" style={{ borderBottom: `1px solid ${BRAND.borderLight}` }}>
-                    <div className="text-uppercase fw-bold mb-2" style={{ fontSize: ".72rem", color: BRAND.placeholder, letterSpacing: ".07em" }}>Choose packages to compare (up to 3)</div>
-                    {visibleList.length === 0 ? (
-                      <div style={{ fontSize: ".82rem", color: BRAND.placeholder }}>{compareScope === "city" ? `No packages found for ${locationTitle}. Switch to "🌏 All Cities".` : "No packages found for this tour type."}</div>
-                    ) : (
-                      <div className="d-flex flex-wrap gap-2">
-                        {visibleList.map(p => {
-                          const isSelected = effectiveSelected.includes(p._id);
-                          const isCurrent = p._id === pkg?._id;
-                          const label = compareScope === "all" ? (p.location || p.title || "Package") : (p.durations?.[0]?.label || p.duration || p.title || p.location || "Package");
-                          return (
-                            <button key={p._id} className={`itp-cmp-pkg-chip ${isSelected ? "selected" : ""}`} onClick={() => setCompareSelected(prev => { const cur = prev.length === 0 && pkg?._id ? [pkg._id] : prev; if (cur.includes(p._id)) return cur.filter(x => x !== p._id); if (cur.length >= 3) return cur; return [...cur, p._id]; })} disabled={!isSelected && effectiveSelected.length >= 3}>
-                              {isSelected && <FaCheck size={9} style={{ marginRight: 4 }} />}
-                              {label}{isCurrent && <span style={{ fontSize: ".64rem", opacity: .65 }}> (current)</span>}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                  {displayPkgs.length > 0 && allDurLabels.length > 1 && (
-                    <div className="px-4 py-2 d-flex align-items-center gap-2 flex-wrap shrink-0" style={{ borderBottom: `1px solid ${BRAND.borderLight}`, background: BRAND.bgCard }}>
-                      <span className="text-uppercase fw-bold" style={{ fontSize: ".7rem", color: BRAND.placeholder, letterSpacing: ".06em", whiteSpace: "nowrap" }}>By Duration:</span>
-                      {allDurLabels.map((lbl, i) => <button key={lbl} className={`itp-cmp-dur-tab ${safeCmpDurIdx === i ? "active" : ""}`} onClick={() => setCompareDurIdx(i)}>{lbl}</button>)}
+      {compareOpen &&
+        (() => {
+          const getPkgDur = (p, idx) => {
+            const durs =
+              Array.isArray(p.durations) && p.durations.length
+                ? p.durations
+                : null;
+            if (durs) return durs[Math.min(idx, durs.length - 1)];
+            return {
+              price: p.price,
+              discountedPrice: null,
+              label: p.duration || "—",
+              days: p.durationDays,
+              nights: null,
+            };
+          };
+          if (compareScope === "duration") {
+            const cols = durationOptions;
+            const rows = [
+              {
+                label: "Duration",
+                render: (_p, d) => (
+                  <strong style={{ color: BRAND.charcoal }}>
+                    {d?.label || "—"}
+                  </strong>
+                ),
+              },
+              {
+                label: "Price / person",
+                render: (_p, d) => {
+                  const price =
+                    d?.discountedPrice ?? d?.price ?? pkg?.price ?? 0;
+                  const original = d?.originalPrice ?? pkg?.strikePrice;
+                  return (
+                    <div>
+                      <span
+                        className="font-serif fw-bold"
+                        style={{ fontSize: "1.3rem", color: BRAND.primary }}
+                      >
+                        ₹{price.toLocaleString()}
+                      </span>
+                      {original && original > price && (
+                        <div
+                          style={{
+                            fontSize: ".67rem",
+                            color: BRAND.placeholder,
+                            textDecoration: "line-through",
+                          }}
+                        >
+                          ₹{original.toLocaleString()}
+                        </div>
+                      )}
                     </div>
-                  )}
+                  );
+                },
+              },
+              {
+                label: "Nights / Days",
+                render: (_p, d) =>
+                  d?.nights
+                    ? `${d.nights}N / ${d.days}D`
+                    : d?.days
+                      ? `${d.days} Days`
+                      : "—",
+              },
+              { label: "Hotels", render: () => pkg?.hotelRating || "3★ / 4★" },
+              {
+                label: "Meals",
+                render: () => pkg?.meals || "As per itinerary",
+              },
+              {
+                label: "Transport",
+                render: () => pkg?.transport || "Private AC Vehicle",
+              },
+              { label: "Group Size", render: () => groupSizeDisplay || "—" },
+              {
+                label: "Rating",
+                render: () => (pkg?.rating ? `⭐ ${pkg.rating}` : "—"),
+              },
+            ];
+            return (
+              <div
+                className="position-fixed d-flex align-items-center justify-content-center p-3"
+                style={{
+                  inset: 0,
+                  background: "rgba(10,10,30,.62)",
+                  backdropFilter: "blur(6px)",
+                  zIndex: 1060,
+                  overflowY: "auto",
+                }}
+                onClick={(e) => {
+                  if (e.target === e.currentTarget) setCompareOpen(false);
+                }}
+              >
+                <div
+                  className="bg-white rounded-4 itp-modal-anim d-flex flex-column"
+                  style={{
+                    width: "100%",
+                    maxWidth: 1000,
+                    maxHeight: "88vh",
+                    boxShadow: "0 40px 100px rgba(0,0,0,.28)",
+                    overflow: "hidden",
+                  }}
+                >
+                  <div
+                    className="d-flex align-items-start justify-content-between p-4 pb-3 shrink-0 flex-wrap gap-2"
+                    style={{
+                      borderBottom: `1px solid ${BRAND.borderLight}`,
+                      background: BRAND.navy,
+                    }}
+                  >
+                    <div>
+                      <div
+                        className="font-serif fw-bold"
+                        style={{ fontSize: "1.45rem", color: "#fff" }}
+                      >
+                        ⚖️ Compare Durations
+                      </div>
+                      <div
+                        style={{
+                          fontSize: ".74rem",
+                          color: "rgba(255,255,255,.5)",
+                        }}
+                      >
+                        {pkg?.title || `${locationTitle} ${typeTitle}`} — all
+                        available options
+                      </div>
+                    </div>
+                    <div className="d-flex align-items-center gap-2 flex-wrap">
+                      <button
+                        onClick={() => {
+                          setCompareScope("city");
+                          setCompareSelected(pkg?._id ? [pkg._id] : []);
+                        }}
+                        className="btn btn-sm rounded-pill fw-bold"
+                        style={{
+                          background: "rgba(255,255,255,.12)",
+                          color: "#fff",
+                          border: "1px solid rgba(255,255,255,.2)",
+                          fontSize: ".78rem",
+                        }}
+                      >
+                        📍 {locationTitle} Packages
+                      </button>
+                      <button
+                        onClick={() => {
+                          setCompareScope("all");
+                          setCompareSelected(pkg?._id ? [pkg._id] : []);
+                        }}
+                        className="btn btn-sm rounded-pill"
+                        style={{
+                          background: "rgba(255,255,255,.08)",
+                          color: "rgba(255,255,255,.7)",
+                          border: "1px solid rgba(255,255,255,.15)",
+                          fontSize: ".78rem",
+                        }}
+                      >
+                        🌏 All Cities
+                      </button>
+                      <button
+                        onClick={() => setCompareOpen(false)}
+                        className="d-flex align-items-center justify-content-center border-0"
+                        style={{
+                          width: 32,
+                          height: 32,
+                          background: "rgba(255,255,255,.12)",
+                          borderRadius: "50%",
+                          cursor: "pointer",
+                          color: "#fff",
+                        }}
+                      >
+                        <FaTimes />
+                      </button>
+                    </div>
+                  </div>
                   <div className="grow overflow-auto">
-                    {displayPkgs.length < 1 ? (
-                      <div className="text-center p-5" style={{ color: BRAND.meta }}>Select packages above to compare them side by side.</div>
+                    {cols.length === 0 ? (
+                      <div
+                        className="text-center p-5"
+                        style={{ color: BRAND.meta }}
+                      >
+                        Only one duration available.
+                      </div>
                     ) : (
-                      <table className="table table-bordered mb-0" style={{ minWidth: "100%", tableLayout: "auto" }}>
+                      <table
+                        className="table table-bordered mb-0"
+                        style={{ minWidth: "100%", tableLayout: "auto" }}
+                      >
                         <thead>
-                          <tr>
-                            <th style={{ width: 130, fontSize: ".7rem", fontWeight: 700, color: BRAND.placeholder, textTransform: "uppercase", letterSpacing: ".06em", textAlign: "left", background: BRAND.borderLight, position: "sticky", left: 0, zIndex: 3 }}>Feature</th>
-                            {displayPkgs.map(p => (
-                              <th key={p._id} className="text-center" style={{ minWidth: 170, background: p._id === pkg?._id ? "rgba(240,75,90,.06)" : BRAND.bgCard, fontSize: ".82rem", fontWeight: 700, color: BRAND.charcoal }}>
-                                <span className="d-block">{p.location || p.title || "Package"}</span>
-                                <span className="d-block fw-normal" style={{ fontSize: ".72rem", color: BRAND.placeholder }}>{getPkgDur(p, safeCmpDurIdx)?.label || p.duration || "—"}</span>
-                                {p._id === pkg?._id && <span className="badge mt-1" style={{ background: "#E8F5E9", color: "#2E7D32", fontSize: ".67rem" }}>Viewing</span>}
+                          <tr style={{ background: BRAND.bgCard }}>
+                            <th
+                              style={{
+                                width: 130,
+                                fontSize: ".7rem",
+                                fontWeight: 700,
+                                color: BRAND.placeholder,
+                                textTransform: "uppercase",
+                                letterSpacing: ".06em",
+                                textAlign: "left",
+                                background: BRAND.borderLight,
+                                position: "sticky",
+                                left: 0,
+                                zIndex: 3,
+                              }}
+                            >
+                              Feature
+                            </th>
+                            {cols.map((d, i) => (
+                              <th
+                                key={i}
+                                className="text-center"
+                                style={{
+                                  minWidth: 170,
+                                  background:
+                                    _safeIdx === i
+                                      ? "rgba(240,75,90,.06)"
+                                      : BRAND.bgCard,
+                                  fontSize: ".82rem",
+                                  fontWeight: 700,
+                                  color: BRAND.charcoal,
+                                }}
+                              >
+                                <span className="d-block">{d.label}</span>
+                                <span
+                                  className="d-block fw-normal"
+                                  style={{
+                                    fontSize: ".72rem",
+                                    color: BRAND.placeholder,
+                                  }}
+                                >
+                                  ₹
+                                  {(
+                                    d.discountedPrice ??
+                                    d.price ??
+                                    pkg?.price ??
+                                    0
+                                  ).toLocaleString()}{" "}
+                                  / person
+                                </span>
+                                {_safeIdx === i && (
+                                  <span
+                                    className="badge mt-1"
+                                    style={{
+                                      background: "#E8F5E9",
+                                      color: "#2E7D32",
+                                      fontSize: ".67rem",
+                                    }}
+                                  >
+                                    Selected
+                                  </span>
+                                )}
                               </th>
                             ))}
                           </tr>
                         </thead>
                         <tbody>
-                          {pkgRows.map(row => (
+                          {rows.map((row) => (
                             <tr key={row.label}>
-                              <td className="fw-semibold" style={{ fontSize: ".78rem", color: BRAND.meta, background: BRAND.bgCard, position: "sticky", left: 0, zIndex: 2, whiteSpace: "nowrap" }}>{row.label}</td>
-                              {displayPkgs.map(p => <td key={p._id} className="text-center" style={{ background: p._id === pkg?._id ? "rgba(240,75,90,.04)" : "transparent", fontSize: ".84rem", color: BRAND.bodyText }}>{row.render(p)}</td>)}
+                              <td
+                                className="fw-semibold"
+                                style={{
+                                  fontSize: ".78rem",
+                                  color: BRAND.meta,
+                                  background: BRAND.bgCard,
+                                  position: "sticky",
+                                  left: 0,
+                                  zIndex: 2,
+                                  whiteSpace: "nowrap",
+                                }}
+                              >
+                                {row.label}
+                              </td>
+                              {cols.map((d, i) => (
+                                <td
+                                  key={i}
+                                  className="text-center"
+                                  style={{
+                                    background:
+                                      _safeIdx === i
+                                        ? "rgba(240,75,90,.04)"
+                                        : "transparent",
+                                    fontWeight: _safeIdx === i ? 600 : 400,
+                                    fontSize: ".84rem",
+                                    color: BRAND.bodyText,
+                                  }}
+                                >
+                                  {row.render(pkg, d)}
+                                </td>
+                              ))}
                             </tr>
                           ))}
                           <tr>
-                            <td className="fw-semibold" style={{ fontSize: ".78rem", color: BRAND.meta, background: BRAND.bgCard, position: "sticky", left: 0 }}>Action</td>
-                            {displayPkgs.map(p => (
-                              <td key={p._id} className="text-center" style={{ background: p._id === pkg?._id ? "rgba(240,75,90,.04)" : "transparent" }}>
-                                {p._id === pkg?._id ? <span className="fw-bold" style={{ color: BRAND.primary, fontSize: ".78rem" }}>✓ Current</span> : (
-                                  <Link to={`/package/${type}/${(p.location || "").toLowerCase().replace(/\s+/g, "-") || p._id}`} className="btn btn-sm rounded-pill fw-bold" style={{ color: BRAND.primary, border: `1.5px solid ${BRAND.primary}`, background: "transparent", fontSize: ".78rem" }} onClick={() => setCompareOpen(false)}>View →</Link>
-                                )}
+                            <td
+                              className="fw-semibold"
+                              style={{
+                                fontSize: ".78rem",
+                                color: BRAND.meta,
+                                background: BRAND.bgCard,
+                                position: "sticky",
+                                left: 0,
+                              }}
+                            >
+                              Select
+                            </td>
+                            {cols.map((d, i) => (
+                              <td
+                                key={i}
+                                className="text-center"
+                                style={{
+                                  background:
+                                    _safeIdx === i
+                                      ? "rgba(240,75,90,.04)"
+                                      : "transparent",
+                                }}
+                              >
+                                <button
+                                  onClick={() => {
+                                    setSelectedDurationIdx(i);
+                                    setCompareOpen(false);
+                                    bookingRef.current?.scrollIntoView({
+                                      behavior: "smooth",
+                                    });
+                                  }}
+                                  className="btn btn-sm rounded-pill fw-bold"
+                                  style={{
+                                    background:
+                                      _safeIdx === i
+                                        ? BRAND.primary
+                                        : BRAND.borderLight,
+                                    color: _safeIdx === i ? "#fff" : BRAND.meta,
+                                    border: "none",
+                                    fontSize: ".76rem",
+                                  }}
+                                >
+                                  {_safeIdx === i ? "✓ Selected" : "Choose"}
+                                </button>
                               </td>
                             ))}
                           </tr>
@@ -1711,21 +3915,525 @@ export default function ItineraryPage() {
                       </table>
                     )}
                   </div>
-                </>
-              )}
+                </div>
+              </div>
+            );
+          }
+          const visibleList =
+            compareScope === "city"
+              ? compareAllPkgs.filter(
+                  (p) =>
+                    (p.location || "").toLowerCase().replace(/\s+/g, "-") ===
+                    (location || "").toLowerCase(),
+                )
+              : compareAllPkgs;
+          const effectiveSelected =
+            compareSelected.length === 0 && pkg?._id
+              ? [pkg._id]
+              : compareSelected;
+          const selectedPkgs = visibleList.filter((p) =>
+            effectiveSelected.includes(p._id),
+          );
+          const displayPkgs =
+            selectedPkgs.length > 0
+              ? selectedPkgs
+              : pkg
+                ? [
+                    pkg,
+                    ...visibleList.filter((p) => p._id !== pkg._id).slice(0, 2),
+                  ]
+                : visibleList.slice(0, 3);
+          const allDurLabels = Array.from(
+            new Set(
+              displayPkgs.flatMap((p) =>
+                Array.isArray(p.durations) && p.durations.length
+                  ? p.durations.map((d) => d.label)
+                  : [p.duration || selDur?.label || "3N / 4D"],
+              ),
+            ),
+          );
+          const safeCmpDurIdx = Math.min(
+            compareDurIdx,
+            Math.max(0, allDurLabels.length - 1),
+          );
+          const pkgRows = [
+            {
+              label: "Price / person",
+              render: (p) => {
+                const d = getPkgDur(p, safeCmpDurIdx);
+                const price = d?.discountedPrice ?? d?.price ?? p.price ?? 0;
+                const original = d?.originalPrice ?? p.strikePrice;
+                return (
+                  <div>
+                    <span
+                      className="font-serif fw-bold"
+                      style={{ fontSize: "1.3rem", color: BRAND.primary }}
+                    >
+                      ₹{price.toLocaleString()}
+                    </span>
+                    {original && original > price && (
+                      <div
+                        style={{
+                          fontSize: ".67rem",
+                          color: BRAND.placeholder,
+                          textDecoration: "line-through",
+                        }}
+                      >
+                        ₹{original.toLocaleString()}
+                      </div>
+                    )}
+                  </div>
+                );
+              },
+            },
+            {
+              label: "Destination",
+              render: (p) => p.location || p.locationTitle || "—",
+            },
+            {
+              label: "Duration",
+              render: (p) =>
+                getPkgDur(p, safeCmpDurIdx)?.label || p.duration || "—",
+            },
+            {
+              label: "Nights / Days",
+              render: (p) => {
+                const d = getPkgDur(p, safeCmpDurIdx);
+                return d?.nights
+                  ? `${d.nights}N / ${d.days}D`
+                  : d?.days
+                    ? `${d.days} Days`
+                    : "—";
+              },
+            },
+            {
+              label: "Rating",
+              render: (p) =>
+                p.rating ? `⭐ ${p.rating} (${p.reviews || 0})` : "—",
+            },
+            { label: "Hotels", render: (p) => p.hotelRating || "3★ / 4★" },
+            {
+              label: "Group Size",
+              render: (p) => {
+                const gs = p.groupSize;
+                if (Array.isArray(gs) && gs.length > 1)
+                  return `${gs[0]} – ${gs[gs.length - 1]} pax`;
+                if (Array.isArray(gs) && gs.length === 1) return gs[0];
+                return gs || "—";
+              },
+            },
+            { label: "Meals", render: (p) => p.meals || "As per itinerary" },
+            {
+              label: "Transport",
+              render: (p) => p.transport || "Private AC Vehicle",
+            },
+            {
+              label: "Inclusions",
+              render: (p) => `${(p.inclusions || inclusions).length} items`,
+            },
+          ];
+          return (
+            <div
+              className="position-fixed d-flex align-items-end align-items-md-center justify-content-center"
+              style={{
+                inset: 0,
+                background: "rgba(10,10,30,.62)",
+                backdropFilter: "blur(6px)",
+                zIndex: 1060,
+                overflowY: "auto",
+                padding: "1rem",
+              }}
+              onClick={(e) => {
+                if (e.target === e.currentTarget) setCompareOpen(false);
+              }}
+            >
+              <div
+                className="bg-white rounded-4 itp-modal-anim d-flex flex-column"
+                style={{
+                  width: "100%",
+                  maxWidth: 1000,
+                  maxHeight: "88vh",
+                  boxShadow: "0 40px 100px rgba(0,0,0,.28)",
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  className="d-flex align-items-start justify-content-between p-4 pb-3 shrink-0 flex-wrap gap-2"
+                  style={{
+                    borderBottom: `1px solid ${BRAND.borderLight}`,
+                    background: BRAND.navy,
+                  }}
+                >
+                  <div>
+                    <div
+                      className="font-serif fw-bold"
+                      style={{ fontSize: "1.45rem", color: "#fff" }}
+                    >
+                      ⚖️ Compare {typeTitle} Packages
+                    </div>
+                    <div
+                      style={{
+                        fontSize: ".74rem",
+                        color: "rgba(255,255,255,.5)",
+                      }}
+                    >
+                      {compareScope === "city"
+                        ? `${visibleList.length} package${visibleList.length !== 1 ? "s" : ""} in ${locationTitle}`
+                        : `${visibleList.length} package${visibleList.length !== 1 ? "s" : ""} across all cities`}
+                      {" · tap to select up to 3"}
+                    </div>
+                  </div>
+                  <div className="d-flex align-items-center gap-2 flex-wrap">
+                    <button
+                      onClick={() => setCompareScope("duration")}
+                      className="btn btn-sm rounded-pill"
+                      style={{
+                        background: "rgba(255,255,255,.12)",
+                        color: "#fff",
+                        border: "1px solid rgba(255,255,255,.2)",
+                        fontSize: ".78rem",
+                      }}
+                    >
+                      ← Duration Compare
+                    </button>
+                    <div
+                      className="d-flex rounded-pill p-1"
+                      style={{ background: "rgba(255,255,255,.08)" }}
+                    >
+                      {[
+                        { key: "city", label: `📍 ${locationTitle}` },
+                        { key: "all", label: "🌏 All Cities" },
+                      ].map((s) => (
+                        <button
+                          key={s.key}
+                          className={`itp-scope-btn ${compareScope === s.key ? "active" : ""}`}
+                          style={
+                            compareScope === s.key
+                              ? { background: "#fff", color: BRAND.charcoal }
+                              : { color: "rgba(255,255,255,.65)" }
+                          }
+                          onClick={() => {
+                            setCompareScope(s.key);
+                            setCompareSelected(pkg?._id ? [pkg._id] : []);
+                          }}
+                        >
+                          {s.label}
+                        </button>
+                      ))}
+                    </div>
+                    <button
+                      onClick={() => setCompareOpen(false)}
+                      className="d-flex align-items-center justify-content-center border-0"
+                      style={{
+                        width: 32,
+                        height: 32,
+                        background: "rgba(255,255,255,.12)",
+                        borderRadius: "50%",
+                        cursor: "pointer",
+                        color: "#fff",
+                      }}
+                    >
+                      <FaTimes />
+                    </button>
+                  </div>
+                </div>
+                {compareLoading ? (
+                  <div className="p-4">
+                    <Skel h={38} mb={10} r={50} w="280px" />
+                    <Skel h={48} mb={8} r={10} />
+                    <Skel h={48} mb={8} r={10} />
+                    <Skel h={48} mb={8} r={10} />
+                  </div>
+                ) : (
+                  <>
+                    <div
+                      className="px-4 py-3 shrink-0"
+                      style={{ borderBottom: `1px solid ${BRAND.borderLight}` }}
+                    >
+                      <div
+                        className="text-uppercase fw-bold mb-2"
+                        style={{
+                          fontSize: ".72rem",
+                          color: BRAND.placeholder,
+                          letterSpacing: ".07em",
+                        }}
+                      >
+                        Choose packages to compare (up to 3)
+                      </div>
+                      {visibleList.length === 0 ? (
+                        <div
+                          style={{
+                            fontSize: ".82rem",
+                            color: BRAND.placeholder,
+                          }}
+                        >
+                          {compareScope === "city"
+                            ? `No packages found for ${locationTitle}. Switch to "🌏 All Cities".`
+                            : "No packages found for this tour type."}
+                        </div>
+                      ) : (
+                        <div className="d-flex flex-wrap gap-2">
+                          {visibleList.map((p) => {
+                            const isSelected = effectiveSelected.includes(
+                              p._id,
+                            );
+                            const isCurrent = p._id === pkg?._id;
+                            const label =
+                              compareScope === "all"
+                                ? p.location || p.title || "Package"
+                                : p.durations?.[0]?.label ||
+                                  p.duration ||
+                                  p.title ||
+                                  p.location ||
+                                  "Package";
+                            return (
+                              <button
+                                key={p._id}
+                                className={`itp-cmp-pkg-chip ${isSelected ? "selected" : ""}`}
+                                onClick={() =>
+                                  setCompareSelected((prev) => {
+                                    const cur =
+                                      prev.length === 0 && pkg?._id
+                                        ? [pkg._id]
+                                        : prev;
+                                    if (cur.includes(p._id))
+                                      return cur.filter((x) => x !== p._id);
+                                    if (cur.length >= 3) return cur;
+                                    return [...cur, p._id];
+                                  })
+                                }
+                                disabled={
+                                  !isSelected && effectiveSelected.length >= 3
+                                }
+                              >
+                                {isSelected && (
+                                  <FaCheck
+                                    size={9}
+                                    style={{ marginRight: 4 }}
+                                  />
+                                )}
+                                {label}
+                                {isCurrent && (
+                                  <span
+                                    style={{
+                                      fontSize: ".64rem",
+                                      opacity: 0.65,
+                                    }}
+                                  >
+                                    {" "}
+                                    (current)
+                                  </span>
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                    {displayPkgs.length > 0 && allDurLabels.length > 1 && (
+                      <div
+                        className="px-4 py-2 d-flex align-items-center gap-2 flex-wrap shrink-0"
+                        style={{
+                          borderBottom: `1px solid ${BRAND.borderLight}`,
+                          background: BRAND.bgCard,
+                        }}
+                      >
+                        <span
+                          className="text-uppercase fw-bold"
+                          style={{
+                            fontSize: ".7rem",
+                            color: BRAND.placeholder,
+                            letterSpacing: ".06em",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          By Duration:
+                        </span>
+                        {allDurLabels.map((lbl, i) => (
+                          <button
+                            key={lbl}
+                            className={`itp-cmp-dur-tab ${safeCmpDurIdx === i ? "active" : ""}`}
+                            onClick={() => setCompareDurIdx(i)}
+                          >
+                            {lbl}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    <div className="grow overflow-auto">
+                      {displayPkgs.length < 1 ? (
+                        <div
+                          className="text-center p-5"
+                          style={{ color: BRAND.meta }}
+                        >
+                          Select packages above to compare them side by side.
+                        </div>
+                      ) : (
+                        <table
+                          className="table table-bordered mb-0"
+                          style={{ minWidth: "100%", tableLayout: "auto" }}
+                        >
+                          <thead>
+                            <tr>
+                              <th
+                                style={{
+                                  width: 130,
+                                  fontSize: ".7rem",
+                                  fontWeight: 700,
+                                  color: BRAND.placeholder,
+                                  textTransform: "uppercase",
+                                  letterSpacing: ".06em",
+                                  textAlign: "left",
+                                  background: BRAND.borderLight,
+                                  position: "sticky",
+                                  left: 0,
+                                  zIndex: 3,
+                                }}
+                              >
+                                Feature
+                              </th>
+                              {displayPkgs.map((p) => (
+                                <th
+                                  key={p._id}
+                                  className="text-center"
+                                  style={{
+                                    minWidth: 170,
+                                    background:
+                                      p._id === pkg?._id
+                                        ? "rgba(240,75,90,.06)"
+                                        : BRAND.bgCard,
+                                    fontSize: ".82rem",
+                                    fontWeight: 700,
+                                    color: BRAND.charcoal,
+                                  }}
+                                >
+                                  <span className="d-block">
+                                    {p.location || p.title || "Package"}
+                                  </span>
+                                  <span
+                                    className="d-block fw-normal"
+                                    style={{
+                                      fontSize: ".72rem",
+                                      color: BRAND.placeholder,
+                                    }}
+                                  >
+                                    {getPkgDur(p, safeCmpDurIdx)?.label ||
+                                      p.duration ||
+                                      "—"}
+                                  </span>
+                                  {p._id === pkg?._id && (
+                                    <span
+                                      className="badge mt-1"
+                                      style={{
+                                        background: "#E8F5E9",
+                                        color: "#2E7D32",
+                                        fontSize: ".67rem",
+                                      }}
+                                    >
+                                      Viewing
+                                    </span>
+                                  )}
+                                </th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {pkgRows.map((row) => (
+                              <tr key={row.label}>
+                                <td
+                                  className="fw-semibold"
+                                  style={{
+                                    fontSize: ".78rem",
+                                    color: BRAND.meta,
+                                    background: BRAND.bgCard,
+                                    position: "sticky",
+                                    left: 0,
+                                    zIndex: 2,
+                                    whiteSpace: "nowrap",
+                                  }}
+                                >
+                                  {row.label}
+                                </td>
+                                {displayPkgs.map((p) => (
+                                  <td
+                                    key={p._id}
+                                    className="text-center"
+                                    style={{
+                                      background:
+                                        p._id === pkg?._id
+                                          ? "rgba(240,75,90,.04)"
+                                          : "transparent",
+                                      fontSize: ".84rem",
+                                      color: BRAND.bodyText,
+                                    }}
+                                  >
+                                    {row.render(p)}
+                                  </td>
+                                ))}
+                              </tr>
+                            ))}
+                            <tr>
+                              <td
+                                className="fw-semibold"
+                                style={{
+                                  fontSize: ".78rem",
+                                  color: BRAND.meta,
+                                  background: BRAND.bgCard,
+                                  position: "sticky",
+                                  left: 0,
+                                }}
+                              >
+                                Action
+                              </td>
+                              {displayPkgs.map((p) => (
+                                <td
+                                  key={p._id}
+                                  className="text-center"
+                                  style={{
+                                    background:
+                                      p._id === pkg?._id
+                                        ? "rgba(240,75,90,.04)"
+                                        : "transparent",
+                                  }}
+                                >
+                                  {p._id === pkg?._id ? (
+                                    <span
+                                      className="fw-bold"
+                                      style={{
+                                        color: BRAND.primary,
+                                        fontSize: ".78rem",
+                                      }}
+                                    >
+                                      ✓ Current
+                                    </span>
+                                  ) : (
+                                    <Link
+                                      to={`/package/${type}/${(p.location || "").toLowerCase().replace(/\s+/g, "-") || p._id}`}
+                                      className="btn btn-sm rounded-pill fw-bold"
+                                      style={{
+                                        color: BRAND.primary,
+                                        border: `1.5px solid ${BRAND.primary}`,
+                                        background: "transparent",
+                                        fontSize: ".78rem",
+                                      }}
+                                      onClick={() => setCompareOpen(false)}
+                                    >
+                                      View →
+                                    </Link>
+                                  )}
+                                </td>
+                              ))}
+                            </tr>
+                          </tbody>
+                        </table>
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
-          </div>
-        );
-      })()}
+          );
+        })()}
     </>
   );
 }
-
-
-
-
-
-
-
-
-

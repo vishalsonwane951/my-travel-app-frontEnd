@@ -1,53 +1,23 @@
 /* ------------------------------------------------------------------
    STAY SERVICE
    Handles all API communication for stay/hotel search & booking flow.
-   Provider: Hotels.com (via RapidAPI, host: hotels-com-provider)
+
+   Provider: Xeni's Wholesale Rate Hotel Booking (RapidAPI).
+   The old Hotels.com provider has been fully removed — every step now
+   runs against Xeni.
 
    Flow:
-   1. Search Location        -> searchRegions()
-   2. Get Region ID          -> (pick a "CITY"/"NEIGHBORHOOD" result's gaiaId)
-   3. Search Hotels          -> searchStays()
-   4. Show Hotel List        -> (render searchStays() result, normalized via normalizeStayCard())
-   5. Click Hotel            -> (navigate with hotelId)
-   6. Get Hotel Details      -> getHotelDetails()
-   7. Get Hotel Info         -> getHotelInfo()
-   8. Get Reviews Summary    -> getReviewsSummary()
-   9. Get Reviews List       -> getReviewsList()   [endpoint unconfirmed, see note below]
-   10. Get Hotel Rooms       -> getHotelRooms()    [shape CONFIRMED, path best-guess — see note below]
-   11. Proceed to Booking    -> (use selected offer from getHotelRooms())
+   1. Autocomplete             -> searchRegions()      [path TODO, see below]
+   2. Search Hotels            -> searchStays()         [path CONFIRMED]
+   3. Check Availability       -> getHotelRooms()       [path CONFIRMED]
+   4. Property Details         -> getPropertyDetails()  [path CONFIRMED]
+   5. Get Price Confirmation   -> getPriceConfirmation() [path CONFIRMED, method CONFIRMED — see note below]
+   6. Create Booking           -> createBooking()        [path CONFIRMED, method inferred from body presence; RESPONSE SHAPE UNCONFIRMED — see note below]
+   7. Get Booking Detail       -> getBookingDetail()      [path TODO, see below — mirrors Property Details' shape as a starting guess, NOT confirmed]
+   8. Cancel Booking           -> not yet implemented
 
-   CONFIRMED endpoints (matched to real sample responses):
-     GET /v2/regions
-     GET /v3/hotels/search
-     GET /v2/hotels/details
-     GET /v3/hotels/info
-     GET /v2/hotels/reviews/summary
-
-   GET /v3/hotels/offers (getHotelRooms) — the PATH is still a best guess
-   (no confirmed request URL yet), but the RESPONSE SHAPE is now confirmed
-   against a real sample: an "OfferDetails" object returned directly (not
-   wrapped in `.data`), with room types under `categorizedListings[]`:
-     { id, soldOut, stickyBar: { displayPrice }, categorizedListings: [
-         { unitId, header: { text }, featureHeader: { text }, features: [
-             { text, graphic: { id } } ],
-           primarySelections: [ { propertyUnit: {
-               id, unitGallery: { gallery: [ { image: { url, description } } ] },
-               ratePlans: [ { id, badge: { text }, priceDetails: [ {
-                   availability: { available, scarcityMessage },
-                   price: { options: [ { formattedDisplayPrice, strikeOut: { formatted } } ] },
-                   propertyNaturalKeys: [ { id, roomTypeId, ratePlanId,
-                     checkIn: { day, month, year }, checkOut: {...} } ] } ] } ],
-               availabilityCallToAction: { value } // e.g. "We are sold out", present
-                                                    // instead of ratePlans when unavailable
-           } } ] } ] }
-   Replace the path below once you've got a confirmed request URL to match.
-
-   NOT YET CONFIRMED (no sample response provided) — path below is a best
-   guess following this API's existing /v2 and /v3 naming convention.
-   Swap it once you've got a real response to match against:
-     GET /v2/hotels/reviews/list   (getReviewsList)
-
-   Headers: x-rapidapi-host, x-rapidapi-key
+   Headers (confirmed from playground/sample): x-rapidapi-host,
+   x-rapidapi-key, Content-Type
 ------------------------------------------------------------------- */
 
 export const getBestDeals = async () => {
@@ -62,16 +32,32 @@ export const getOffers = async () => {
   };
 };
 
-const RAPIDAPI_HOST = "hotels-com-provider.p.rapidapi.com";
-const RAPIDAPI_KEY = import.meta.env.VITE_RAPIDAPI_KEY;
-const BASE_URL = "https://hotels-com-provider.p.rapidapi.com";
-
-const DEFAULT_LOCALE = "en_IN";
-const DEFAULT_DOMAIN = "IN";
-
 /* ------------------------------------------------------------------
-   Internal fetch helper
+   PROVIDER CONFIG — Xeni's Wholesale Rate Hotel Booking (RapidAPI)
 ------------------------------------------------------------------- */
+
+// TODO: confirm exact value from the RapidAPI playground's code snippet /
+// x-rapidapi-host header. Placeholder follows this API's slug naming
+// convention but has NOT been confirmed against a real request yet.
+const RAPIDAPI_HOST = "xenis-wholesale-rate-hotel-booking.p.rapidapi.com";
+const RAPIDAPI_KEY = import.meta.env.VITE_RAPIDAPI_KEY;
+const BASE_URL = `https://${RAPIDAPI_HOST}`;
+
+const AUTOCOMPLETE_PATH = "/api/hotels/api/v2/autocomplete"; // <-- REPLACE WITH CONFIRMED PATH
+
+const SEARCH_HOTELS_PATH = "/api/hotels/api/v2/properties";
+
+const CHECK_AVAILABILITY_PATH = "/api/hotels/api/v2/properties/availability";
+
+const PROPERTY_DETAILS_PATH = "/api/hotels/api/v2/property";
+
+const PRICE_CONFIRMATION_PATH = "/api/hotels/api/v2/properties/price";
+
+const CREATE_BOOKING_PATH = "/api/hotels/api/v2/bookings";
+
+const BOOKING_DETAIL_PATH = "/api/hotels/api/v2/bookings"; // <-- REPLACE WITH CONFIRMED PATH
+
+  //  Internal fetch helpers
 async function apiGet(path, params = {}) {
   const url = new URL(`${BASE_URL}${path}`);
 
@@ -86,6 +72,7 @@ async function apiGet(path, params = {}) {
     headers: {
       "x-rapidapi-host": RAPIDAPI_HOST,
       "x-rapidapi-key": RAPIDAPI_KEY,
+      "Content-Type": "application/json",
     },
   });
 
@@ -96,118 +83,101 @@ async function apiGet(path, params = {}) {
   return response.json();
 }
 
-/* ------------------------------------------------------------------
-   1 & 2. REGIONS SEARCH
-   GET /v2/regions?query=pune&locale=en_IN&domain=IN
-   Response: { query, data: [ { "@type": "gaiaRegionResult" | "gaiaHotelResult",
-     gaiaId | hotelId, type: "CITY"|"AIRPORT"|"NEIGHBORHOOD"|"HOTEL",
-     regionNames: { fullName, shortName, displayName, primaryDisplayName, secondaryDisplayName },
-     coordinates: { lat, long } } ] }
-------------------------------------------------------------------- */
+async function apiPost(path, { params = {}, body = {} } = {}) {
+  const url = new URL(`${BASE_URL}${path}`);
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
+      url.searchParams.set(key, value);
+    }
+  });
+
+  const response = await fetch(url.toString(), {
+    method: "POST",
+    headers: {
+      "x-rapidapi-host": RAPIDAPI_HOST,
+      "x-rapidapi-key": RAPIDAPI_KEY,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Request failed [${path}] with status ${response.status}`);
+  }
+
+  return response.json();
+}
+
+  //  1. AUTOCOMPLETE  (path unconfirmed, see TODO above)
+   
+const PLACE_TYPES = new Set([
+  "State",
+  "City",
+  "Point of Interest",
+  "Train Station",
+  "Airport",
+]);
+
 /**
- * @param {{ query: string, locale?: string, domain?: string }} params
+ * @param {{ query: string }} params
  * @returns {Promise<{ list: Array }>}
  */
-export async function searchRegions({ query, locale = DEFAULT_LOCALE, domain = DEFAULT_DOMAIN }) {
-  const json = await apiGet("/v2/regions", { query, locale, domain });
+export async function searchRegions({ query }) {
+  const json = await apiGet(AUTOCOMPLETE_PATH, { key: query });
 
   const raw = json?.data || [];
 
-  // Normalize both region and hotel-direct results into one shape.
-  const list = raw.map((r) => ({
-    kind: r["@type"] === "gaiaHotelResult" ? "hotel" : "region",
-    id: r.gaiaId || r.hotelId,
-    type: r.type,
-    name: r.regionNames?.primaryDisplayName || r.regionNames?.shortName,
-    subtitle: r.regionNames?.secondaryDisplayName,
-    fullName: r.regionNames?.fullName,
-    coordinates: r.coordinates,
-  }));
+  const list = raw.map((r) => {
+    const isProperty = r.type === "property" || !PLACE_TYPES.has(r.type);
+
+    return {
+      kind: isProperty ? "hotel" : "region",
+      id: r.id,
+      type: r.type,
+      name: r.name,
+      subtitle: [r.state, r.country].filter(Boolean).join(", "),
+      fullName: r.full_name,
+      coordinates: r.location
+        ? { lat: r.location.lat, long: r.location.long }
+        : undefined,
+    };
+  });
 
   return { list };
 }
 
-/* ------------------------------------------------------------------
-   3 & 4. HOTELS SEARCH
-   GET /v3/hotels/search?region_id=...&checkin_date=YYYY-MM-DD&checkout_date=YYYY-MM-DD
-     &adults_number=2&locale=en_IN&domain=IN&sort_order=REVIEW&page_number=1
-   Response: { data: { properties: [ { id, link, name, messages: [neighborhood],
-     short_amenities: [...], guestRating: { rating, totalReviews, starRating },
-     mediaSection: { media: [{ id, description, url }] },
-     price: { badge: { text }, priceSummary: { definition: { displayPrice, strikeOut,
-       accessibilityLabel, priceDisclaimer }, priceMessaging: [{ value }] } } } ] } }
-
-   NOTE: this returns the RAW property objects from the API, not the flat
-   shape StayCard.jsx expects. Callers rendering a card grid should map
-   each item through normalizeStayCard() below before passing it to
-   <StayCard />.
-------------------------------------------------------------------- */
+  //  2. SEARCH HOTELS  (path CONFIRMED)
 /**
- * @param {{ regionId: string, checkIn: string, checkOut: string, adults?: number, sortOrder?: string, page?: number, locale?: string, domain?: string }} params
- * @returns {Promise<{ list: Array }>}
+ * @param {{ placeId: string, checkIn: string, checkOut: string, adults?: number, children?: number, childrenAges?: number[], countryOfResidence?: string, page?: number, limit?: number }} params
+ * @returns {Promise<{ list: Array, total: number }>}
  */
 export async function searchStays({
-  regionId,
+  placeId,
   checkIn,
   checkOut,
   adults = 2,
-  sortOrder = "REVIEW",
+  children = 0,
+  childrenAges = [],
+  countryOfResidence = "IN",
   page = 1,
-  locale = DEFAULT_LOCALE,
-  domain = DEFAULT_DOMAIN,
+  limit = 20,
 }) {
-  const json = await apiGet("/v3/hotels/search", {
-    region_id: regionId,
-    checkin_date: checkIn,
-    checkout_date: checkOut,
-    adults_number: adults,
-    locale,
-    domain,
-    sort_order: sortOrder,
-    page_number: page,
+  const json = await apiPost(SEARCH_HOTELS_PATH, {
+    params: { page, limit },
+    body: {
+      place_id: placeId,
+      checkin_date: checkIn,
+      checkout_date: checkOut,
+      occupancy: [{ adults, children, childrenAges }],
+      country_of_residence: countryOfResidence,
+    },
   });
 
   return {
-    list: json?.data?.properties || [],
+    list: json?.data?.hotels || [],
+    total: json?.data?.total ?? 0,
   };
-}
-
-/* ------------------------------------------------------------------
-   CARD NORMALIZATION
-   Maps a raw searchStays() `properties[]` item into the flat shape
-   StayCard.jsx expects:
-     { id, name, ribbon, starRating, location, distanceLabel,
-       rating: { score, label, count }, amenities: [{ key, label }],
-       tagline, roomsLeft, price, originalPrice, taxes }
-
-   Anything not present in the CONFIRMED /v3/hotels/search response shape
-   (roomsLeft, taxes) is left undefined rather than guessed at — StayCard
-   already hides those pills gracefully when the value is nullish.
-------------------------------------------------------------------- */
-
-// Raw short_amenities strings -> StayCard's AMENITY_ICON keys.
-// Case-insensitive substring match since we don't have a confirmed enum
-// of possible values from the API yet.
-const AMENITY_KEY_MAP = [
-  { match: /wifi|internet/i, key: "wifi" },
-  { match: /breakfast/i, key: "breakfast" },
-  { match: /restaurant|dining/i, key: "restaurant" },
-  { match: /room service/i, key: "roomService" },
-  { match: /parking/i, key: "parking" },
-  { match: /air.?condition|\bac\b/i, key: "ac" },
-  { match: /fitness|gym/i, key: "fitness" },
-  { match: /accessible|wheelchair/i, key: "accessible" },
-];
-
-function mapAmenityKey(label) {
-  const found = AMENITY_KEY_MAP.find((m) => m.match.test(label));
-  return found?.key || "default";
-}
-
-function parsePriceNumber(str) {
-  if (!str) return undefined;
-  const n = Number(String(str).replace(/[^\d.]/g, ""));
-  return Number.isNaN(n) ? undefined : n;
 }
 
 function ratingLabel(score) {
@@ -218,212 +188,399 @@ function ratingLabel(score) {
   return undefined;
 }
 
+// CURRENCY CONVERSION
+const USD_TO_INR_RATE = 83.5; // approximate — not live, update periodically
+
+function convertToINR(amount, fromCurrency) {
+  if (amount == null) return undefined;
+  if (!fromCurrency || fromCurrency === "INR") return amount;
+  if (fromCurrency === "USD") return Math.round(amount * USD_TO_INR_RATE * 100) / 100;
+  console.warn(`[convertToINR] Unhandled currency "${fromCurrency}" — returning unconverted amount.`);
+  return amount;
+}
+
 /**
- * Normalizes one raw `properties[]` entry from searchStays() into the
- * flat shape StayCard.jsx expects.
+ * Normalizes one raw `hotels[]` entry from searchStays() into the flat
+ * shape StayCard.jsx expects.
  *
- * NOT YET CONFIRMED against a real payload:
- *   - `messages[1]` as distanceLabel (module comment only confirms
- *     messages[0] = neighborhood; index 1 is a guess)
- *   - `roomsLeft` — no field for this in the confirmed shape; left undefined
- *   - `taxes` — no field for this in the confirmed shape; left undefined
- *
- * @param {Object} p raw property object from searchStays()
+ * @param {Object} p raw hotel object from searchStays()
  * @returns {Object} normalized card data
  */
 export function normalizeStayCard(p = {}) {
-  const priceDef = p?.price?.priceSummary?.definition;
-  const mediaList = p?.mediaSection?.media || [];
+  const address = p?.contact?.address;
+  const largeImages = p?.property_images?.large || [];
+  const thumbImages = p?.property_images?.thumbnail || [];
+  const rate = p?.rate || {};
+  const sourceCurrency = rate.currency;
 
   return {
-    id: p.id,
+    id: p.property_id,
     name: p.name,
-    images: mediaList
-      .map((m) => ({ url: m.url, alt: m.description || p.name }))
-      .filter((m) => m.url),
-    ribbon: p?.price?.badge?.text,
-    starRating: p?.guestRating?.starRating,
-    location: p?.messages?.[0],
-    distanceLabel: p?.messages?.[1],
-    rating: p?.guestRating
-      ? {
-          score: p.guestRating.rating,
-          label: ratingLabel(p.guestRating.rating),
-          count: p.guestRating.totalReviews,
-        }
-      : undefined,
-    amenities: (p?.short_amenities || []).slice(0, 3).map((label) => ({
-      key: mapAmenityKey(label),
-      label,
+    images: (largeImages.length ? largeImages : thumbImages).map((url, i) => ({
+      url,
+      alt: p.name ? `${p.name} photo ${i + 1}` : `Hotel photo ${i + 1}`,
     })),
-    tagline: priceDef?.priceDisclaimer,
-    price: parsePriceNumber(priceDef?.displayPrice),
-    originalPrice: parsePriceNumber(priceDef?.strikeOut),
-    taxes: undefined,
+    ribbon: p.hot_deal ? "Hot Deal" : undefined,
+    starRating: p?.ratings?.star_rating,
+    location: [address?.city, address?.state].filter(Boolean).join(", "),
+    distanceLabel: p.distance != null ? `${p.distance} from center` : undefined,
+    rating:
+      p?.ratings?.user_rating != null && p.ratings.user_rating > 0
+        ? {
+            score: p.ratings.user_rating,
+            label: ratingLabel(p.ratings.user_rating),
+            count: undefined, // not provided by this endpoint
+          }
+        : undefined,
+    amenities: [],
+    tagline: undefined,
+    price: convertToINR(rate.total_rate, sourceCurrency),
+    originalPrice: convertToINR(rate.recommended_selling_price, sourceCurrency),
+    savedPrice: convertToINR(rate.saved_price, sourceCurrency),
+    taxes: convertToINR(rate.tax_and_fees, sourceCurrency),
+    currency: "INR",
     roomsLeft: undefined,
   };
 }
-/* ------------------------------------------------------------------
-   6. HOTEL DETAILS
-   GET /v2/hotels/details?domain=IN&hotel_id=...&locale=en_IN
-   Response is a large object; the pieces we use:
-     .summary                        -> name, tagline, rating, address, policies
-     .propertyGallery.images         -> gallery photos
-     .propertyContentSectionGroups   -> "About this property" long description
-     .reviewInfo.summary             -> quick review blurb (full breakdown is
-                                         a separate call, see getReviewsSummary)
-------------------------------------------------------------------- */
+
+  //  3. CHECK AVAILABILITY  (path CONFIRMED)
+
 /**
- * @param {{ hotelId: string, locale?: string, domain?: string }} params
- * @returns {Promise<Object>} raw hotel details payload (see shape above)
- */
-export async function getHotelDetails({ hotelId, locale = DEFAULT_LOCALE, domain = DEFAULT_DOMAIN }) {
-  const json = await apiGet("/v2/hotels/details", { hotel_id: hotelId, locale, domain });
-
-  return json || {};
-}
-
-/* ------------------------------------------------------------------
-   7. HOTEL INFO
-   GET /v3/hotels/info?hotel_id=...&locale=en_IN&domain=IN
-   Response: { data: { aboutThisProperty: [...], policies: [...],
-     specialFeatures: [], amenities: [ { header: { text }, sections: [
-       { header: { text }, items: [{ text, primary, markupType }] } ] } ] } }
-------------------------------------------------------------------- */
-/**
- * @param {{ hotelId: string, locale?: string, domain?: string }} params
- * @returns {Promise<Object>} { aboutThisProperty, policies, specialFeatures, amenities }
- */
-export async function getHotelInfo({ hotelId, locale = DEFAULT_LOCALE, domain = DEFAULT_DOMAIN }) {
-  const json = await apiGet("/v3/hotels/info", { hotel_id: hotelId, locale, domain });
-
-  return json?.data || {};
-}
-
-/* ------------------------------------------------------------------
-   8. REVIEWS SUMMARY
-   GET /v2/hotels/reviews/summary?locale=en_IN&hotel_id=...&domain=IN
-   Response: an ARRAY with a single object:
-     [{ averageOverallRating: { raw }, cleanliness: { raw }, hotelCondition: { raw },
-        roomComfort: { raw }, serviceAndStaff: { raw }, totalCount: { raw },
-        reviewDisclaimer, propertyId }]
-------------------------------------------------------------------- */
-/**
- * @param {{ hotelId: string, locale?: string, domain?: string }} params
- * @returns {Promise<Object>} the single summary object (already unwrapped from the array)
- */
-export async function getReviewsSummary({ hotelId, locale = DEFAULT_LOCALE, domain = DEFAULT_DOMAIN }) {
-  const json = await apiGet("/v2/hotels/reviews/summary", { hotel_id: hotelId, locale, domain });
-
-  // API returns an array with one summary object per hotel.
-  return Array.isArray(json) ? json[0] || {} : json || {};
-}
-
-/* ------------------------------------------------------------------
-   9. REVIEWS LIST  — endpoint NOT yet confirmed against a real response.
-   Guessed path/params follow the same convention as the endpoints above.
-   Replace once you have a sample payload.
-------------------------------------------------------------------- */
-/**
- * @param {{ hotelId: string, page?: number, locale?: string, domain?: string }} params
- * @returns {Promise<{ list: Array, page: number }>}
- */
-export async function getReviewsList({
-  hotelId,
-  page = 1,
-  locale = DEFAULT_LOCALE,
-  domain = DEFAULT_DOMAIN,
-}) {
-  const json = await apiGet("/v2/hotels/reviews/list", {
-    hotel_id: hotelId,
-    page_number: page,
-    locale,
-    domain,
-  });
-
-  return {
-    list: json?.data?.reviews || json?.data?.list || [],
-    page: json?.data?.page_number || page,
-  };
-}
-
-/* ------------------------------------------------------------------
-   10. HOTEL ROOMS / OFFERS
-   GET /v3/hotels/offers?hotel_id=...&checkin_date=YYYY-MM-DD&checkout_date=YYYY-MM-DD
-     &adults_number=2&locale=en_IN&domain=IN
-   RESPONSE SHAPE CONFIRMED (see module header comment for the full raw
-   shape). The response is a single "OfferDetails" object returned
-   directly — each room type lives in `categorizedListings[]`, and each
-   one may be sold out (no ratePlans, `propertyUnit.availabilityCallToAction`
-   set instead) or bookable (ratePlans[0] has the price + the natural key
-   IDs booking needs).
-
-   We normalize each categorized listing down to one flat "room" object
-   so HotelDetailsPage doesn't need to know about the nested GraphQL-ish
-   shape at all.
-------------------------------------------------------------------- */
-/**
- * @param {{ hotelId: string, checkIn: string, checkOut: string, adults?: number, locale?: string, domain?: string }} params
+ * @param {{ placeId: string, propertyId: string, checkIn: string, checkOut: string, adults?: number, children?: number, childrenAges?: number[], countryOfResidence?: string }} params
  * @returns {Promise<{ list: Array }>}
  */
 export async function getHotelRooms({
-  hotelId,
+  placeId,
+  propertyId,
   checkIn,
   checkOut,
   adults = 2,
-  locale = DEFAULT_LOCALE,
-  domain = DEFAULT_DOMAIN,
+  children = 0,
+  childrenAges = [],
+  countryOfResidence = "IN",
 }) {
-  const json = await apiGet("/v3/hotels/offers", {
-    hotel_id: hotelId,
-    checkin_date: checkIn,
-    checkout_date: checkOut,
-    adults_number: adults,
-    locale,
-    domain,
+  const json = await apiPost(CHECK_AVAILABILITY_PATH, {
+    body: {
+      place_id: placeId,
+      property_id: propertyId,
+      checkin_date: checkIn,
+      checkout_date: checkOut,
+      occupancy: [{ adults, children, childrenAges }],
+      country_of_residence: countryOfResidence,
+    },
   });
 
-  // The confirmed sample has categorizedListings at the top level, but this
-  // API is inconsistent about wrapping responses in `.data` (compare
-  // getHotelDetails vs. getHotelInfo above) — check both until the real
-  // request URL/shape for THIS endpoint is confirmed.
-  const categorized = json?.categorizedListings || json?.data?.categorizedListings || [];
+  const rooms = json?.data || [];
 
-  if (categorized.length === 0) {
-    // eslint-disable-next-line no-console
-    console.warn(
-      "[getHotelRooms] No categorizedListings found in response — the path or shape may not match what was confirmed. Raw response:",
-      json
-    );
-  }
+  const list = rooms.map((room) => {
+    const largeImages = room?.images?.large || [];
+    const thumbImages = room?.images?.thumbnail || [];
 
-  const list = categorized.map((unit) => {
-    const propertyUnit = unit.primarySelections?.[0]?.propertyUnit;
-    const ratePlan = propertyUnit?.ratePlans?.[0];
-    const offer = ratePlan?.priceDetails?.[0];
-    const priceOption = offer?.price?.options?.[0];
-    const naturalKey = offer?.propertyNaturalKeys?.[0];
-    const soldOutMessage = propertyUnit?.availabilityCallToAction?.value;
+    const rates = (room.rates || []).map((rate) => {
+      const sourceCurrency = rate.currency;
+
+      return {
+        refundable: !!rate.refundable,
+        price: convertToINR(rate.total_rate, sourceCurrency),
+        originalPrice: convertToINR(rate.recommended_selling_price, sourceCurrency),
+        savedPrice: convertToINR(rate.saved_price, sourceCurrency),
+        taxes: convertToINR(rate.tax_and_fees, sourceCurrency),
+        currency: "INR",
+        boardBasis: rate.board_basis || [],
+        amenities: rate.amenities || [],
+        extras: rate.extras || [],
+        beds: (rate.beds || []).map((b) => ({
+          name: b.name,
+          availabilityToken: b.availability_token,
+        })),
+        cancellationPolicy: (rate.cancellation_policy || []).map((c) => ({
+          start: c.start,
+          end: c.end,
+          value: c.value,
+          type: c.type,
+          estimateAmount: convertToINR(c.estimate_amount, c.currency),
+          billableAmount: convertToINR(c.billable_amount, c.billable_currency),
+          currency: "INR",
+        })),
+      };
+    });
 
     return {
-      id: unit.unitId,
-      name: unit.header?.text,
-      tagline: unit.featureHeader?.text,
-      image: propertyUnit?.unitGallery?.gallery?.[0]?.image?.url,
-      imageAlt: propertyUnit?.unitGallery?.gallery?.[0]?.image?.description || unit.header?.text,
-      features: (unit.features || []).map((f) => f.text).filter(Boolean),
-      badge: ratePlan?.badge?.text,
-      scarcityMessage: offer?.availability?.scarcityMessage,
-      soldOut: !ratePlan || offer?.availability?.available === false,
-      soldOutMessage,
-      displayPrice: priceOption?.formattedDisplayPrice,
-      strikeOutPrice: priceOption?.strikeOut?.formatted,
-      // IDs needed to build the booking request in STEP 11.
-      hotelId: naturalKey?.id || hotelId,
-      roomTypeId: naturalKey?.roomTypeId || propertyUnit?.id,
-      ratePlanId: naturalKey?.ratePlanId || ratePlan?.id,
+      id: room.id,
+      name: room.name,
+      sleeps: room.sleeps,
+      descriptionHtml: room.descriptions,
+      images: (largeImages.length ? largeImages : thumbImages).map((url, i) => ({
+        url,
+        alt: room.name ? `${room.name} photo ${i + 1}` : `Room photo ${i + 1}`,
+      })),
+      availability: room.availability,
+      amenities: room.amenities || [],
+      areaSqFt: room?.area?.square_feet,
+      areaSqM: room?.area?.square_meters,
+      rates,
+      soldOut: rates.length === 0,
     };
   });
 
   return { list };
+}
+
+  //  4. PROPERTY DETAILS  (path CONFIRMED)
+
+function policyValue(policies, type) {
+  return policies.find((p) => p.type === type)?.description;
+}
+
+function highlightValue(highlights, type) {
+  return highlights.find((h) => h.type === type)?.description;
+}
+
+function mapImageSet(images = []) {
+  return images.map((url, i) => ({ url, alt: `Hotel photo ${i + 1}` }));
+}
+
+/**
+ *
+ * @param {Object} d raw `data` object from the Property Details response
+ * @returns {Object} normalized property details
+ */
+export function normalizePropertyDetails(d = {}) {
+  const address = d?.contact?.address;
+  const ratings = d?.ratings || {};
+  const policies = d?.policies || [];
+  const highlights = d?.highlights || [];
+
+  return {
+    id: d.property_id,
+    name: d.name,
+    phone: d?.contact?.phone,
+    address: {
+      line1: address?.line_1,
+      city: address?.city,
+      state: address?.state,
+      country: address?.country,
+      postalCode: address?.postal_code,
+    },
+    coordinates: d.location ? { lat: d.location.lat, long: d.location.long } : undefined,
+
+    starRating: ratings.star_rating,
+    rating:
+      ratings.user_rating != null && ratings.user_rating > 0
+        ? {
+            score: ratings.user_rating,
+            label: ratingLabel(ratings.user_rating),
+            count: ratings.reviews_count,
+          }
+        : undefined,
+    subRatings: {
+      amenities: ratings.amenities,
+      condition: ratings.condition,
+      service: ratings.service,
+      comfort: ratings.comfort,
+      cleanliness: ratings.cleanliness,
+    },
+
+    accessibilities: d.accessibilities || [],
+    amenities: d.amenities || [],
+
+    checkIn: {
+      beginTime: policyValue(policies, "check_in_begin_time"),
+      endTime: policyValue(policies, "check_in_end_time"),
+      minAge: policyValue(policies, "check_in_min_age"),
+      instructionsHtml: policyValue(policies, "check_in_instructions"),
+      specialInstructions: policyValue(policies, "check_in_special_instructions"),
+    },
+    checkOutTime: policyValue(policies, "check_out_time"),
+    policies: policies.map((p) => ({ type: p.type, description: p.description })),
+
+    headline: highlightValue(highlights, "headline"),
+    locationSummary: highlightValue(highlights, "location"),
+    dining: highlightValue(highlights, "dining"),
+    businessAmenities: highlightValue(highlights, "business_amenities"),
+    attractionsHtml: highlightValue(highlights, "attractions"),
+    roomsSummary: highlightValue(highlights, "rooms"),
+    // Full raw list too, same rationale as `policies` above.
+    highlights: highlights.map((h) => ({ type: h.type, description: h.description })),
+
+    images: {
+      thumbnail: mapImageSet(d?.images?.thumbnail),
+      small: mapImageSet(d?.images?.small),
+      large: mapImageSet(d?.images?.large),
+      extraLarge: mapImageSet(d?.images?.extra_large),
+    },
+  };
+}
+
+/**
+ * @param {{ propertyId: string }} params
+ * @returns {Promise<{ details: Object }>}
+ */
+export async function getPropertyDetails({ propertyId }) {
+  const json = await apiGet(`${PROPERTY_DETAILS_PATH}/${propertyId}`);
+
+  return { details: normalizePropertyDetails(json?.data) };
+}
+
+  //  5. GET PRICE CONFIRMATION  (path CONFIRMED, method CONFIRMED — see
+
+function normalizeCancellationPolicy(list) {
+  return (list || []).map((c) => ({
+    start: c.start,
+    end: c.end,
+    type: c.type,
+    value: c.value,
+    estimateAmount: convertToINR(c.estimate_amount, c.currency),
+    billableAmount: convertToINR(c.billable_amount, c.billable_currency),
+    currency: "INR",
+  }));
+}
+
+/**
+ *
+ * @param {Object} d raw `data` object from the Get Price Confirmation response
+ * @returns {Object} normalized price confirmation
+ */
+export function normalizePriceConfirmation(d = {}) {
+  const sourceCurrency = d.currency;
+  const room = d.rooms?.[0] || {};
+  const largeImages = room?.images?.large || [];
+  const thumbImages = room?.images?.thumbnail || [];
+
+  return {
+    available: d.status === "available",
+    status: d.status,
+
+    propertyId: d.property_id,
+    checkIn: d.checkin_date,
+    checkOut: d.checkout_date,
+    refundable: !!d.refundable,
+    boardBasis: d.board_basis || [],
+    amenities: d.amenities || [],
+    extras: d.extras || [],
+
+    price: convertToINR(d.total_price, sourceCurrency),
+    originalPrice: convertToINR(d.recommended_selling_price, sourceCurrency),
+    savedPrice: convertToINR(d.saved_price, sourceCurrency),
+    taxes: convertToINR(d.tax_and_fees, sourceCurrency),
+    currency: "INR",
+
+    cancellationPolicy: normalizeCancellationPolicy(d.cancellation_policy),
+
+    room: {
+      id: room.id,
+      name: room.name,
+      descriptionHtml: room.descriptions,
+      images: (largeImages.length ? largeImages : thumbImages).map((url, i) => ({
+        url,
+        alt: room.name ? `${room.name} photo ${i + 1}` : `Room photo ${i + 1}`,
+      })),
+      amenities: room.amenities || [],
+      adults: room.number_of_adults,
+      bed: room.bed,
+      sleeps: room.sleeps,
+      allGuestInfoRequired: !!room.all_guest_info_required,
+      specialRequestSupported: !!room.special_request_supported,
+    },
+
+    pricingToken: d.pricing_token,
+  };
+}
+
+/**
+ * @param {{ availabilityToken: string }} params
+ * @returns {Promise<{ confirmation: Object }>}
+ */
+export async function getPriceConfirmation({ availabilityToken }) {
+  const json = await apiPost(PRICE_CONFIRMATION_PATH, {
+    body: { availability_token: availabilityToken },
+  });
+
+  return { confirmation: normalizePriceConfirmation(json?.data) };
+}
+
+  //  6. CREATE BOOKING  (path CONFIRMED, method inferred — see
+
+const BOOKING_ID_KEYS = ["booking_id", "bookingId", "id", "reference_number", "confirmation_number"];
+const BOOKING_STATUS_KEYS = ["status", "booking_status"];
+
+function firstDefined(obj, keys) {
+  for (const key of keys) {
+    if (obj?.[key] !== undefined) return obj[key];
+  }
+  return undefined;
+}
+
+/**
+ * @param {{
+ *   pricingToken: string,
+ *   email: string,
+ *   phone: { countryCode: string, number: string },
+ *   rooms: Array<{ title: string, firstName: string, lastName: string }>
+ * }} params
+ * @returns {Promise<{ raw: Object, bookingId: string|undefined, status: string|undefined }>}
+ */
+export async function createBooking({ pricingToken, email, phone, rooms }) {
+  const json = await apiPost(CREATE_BOOKING_PATH, {
+    body: {
+      pricing_token: pricingToken,
+      email,
+      phone: {
+        country_code: phone?.countryCode,
+        number: phone?.number,
+      },
+      rooms: (rooms || []).map((r) => ({
+        title: r.title,
+        first_name: r.firstName,
+        last_name: r.lastName,
+      })),
+    },
+  });
+
+  const container = json?.data || json || {};
+
+  return {
+    raw: json,
+    bookingId: firstDefined(container, BOOKING_ID_KEYS),
+    status: firstDefined(container, BOOKING_STATUS_KEYS),
+  };
+}
+
+  //  7. GET BOOKING DETAIL  (path NOT CONFIRMED — see BOOKING_DETAIL_PATH
+const BOOKING_DETAIL_STATUS_KEYS = ["status", "booking_status"];
+const BOOKING_DETAIL_CHECKIN_KEYS = ["checkin_date", "check_in_date"];
+const BOOKING_DETAIL_CHECKOUT_KEYS = ["checkout_date", "check_out_date"];
+const BOOKING_DETAIL_PROPERTY_ID_KEYS = ["property_id", "propertyId"];
+const BOOKING_DETAIL_TOTAL_KEYS = ["total_price", "total_rate", "amount"];
+const BOOKING_DETAIL_CURRENCY_KEYS = ["currency"];
+
+/**
+ *
+ * @param {Object} json raw parsed response from the Get Booking Detail request
+ * @returns {Object}
+ */
+export function normalizeBookingDetail(json = {}) {
+  const container = json?.data || json || {};
+  const sourceCurrency = firstDefined(container, BOOKING_DETAIL_CURRENCY_KEYS);
+
+  return {
+    raw: json,
+    bookingId: firstDefined(container, BOOKING_ID_KEYS),
+    status: firstDefined(container, BOOKING_DETAIL_STATUS_KEYS),
+    propertyId: firstDefined(container, BOOKING_DETAIL_PROPERTY_ID_KEYS),
+    checkIn: firstDefined(container, BOOKING_DETAIL_CHECKIN_KEYS),
+    checkOut: firstDefined(container, BOOKING_DETAIL_CHECKOUT_KEYS),
+    total: convertToINR(firstDefined(container, BOOKING_DETAIL_TOTAL_KEYS), sourceCurrency),
+    currency: "INR",
+  };
+}
+
+/**
+ * @param {{ bookingId: string }} params
+ * @returns {Promise<Object>} normalized booking detail (see normalizeBookingDetail)
+ */
+export async function getBookingDetail({ bookingId }) {
+  const json = await apiGet(`${BOOKING_DETAIL_PATH}/${bookingId}`);
+
+  return normalizeBookingDetail(json);
 }

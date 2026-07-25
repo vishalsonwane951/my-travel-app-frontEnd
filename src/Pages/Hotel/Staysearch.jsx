@@ -294,9 +294,10 @@ export default function SearchPage() {
   return (
     <>
       <Header />
+      <HotelHeader />
       <PageStyles />
       <div className="obk-app">
-        <HotelHeader />
+        
 
         {/* ---------------- Hero (gate-display band) ---------------- */}
         <section className="obk-hero">

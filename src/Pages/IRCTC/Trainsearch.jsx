@@ -9,9 +9,9 @@ import {
 } from 'react-icons/fa';
 import api from '../../utils/api.js';
 import { AuthContext } from '../../Context/AuthContext.jsx';
-import TrainBookingModal from '../../Services/IRCTC/IRCTC.listModel.js';
 import HotelHeader from '../Hotel/component/Header.jsx';
 import Header from '../../Components/Header/Header.jsx';
+import TrainBookingModal from './Trainbookingmodal.jsx';
 
 // ─── Design tokens reused from the Desi V Desi home page ──────
 // --saffron #E8813A / --forest #1A3C34 / --cream #FBF5EC / --ink #0F1923

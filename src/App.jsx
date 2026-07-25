@@ -48,6 +48,7 @@ import Trainsearch from "./Pages/IRCTC/Trainsearch.jsx";
 import SearchPage from "./Pages/Hotel/Staysearch.jsx";
 import StayListPage from "./Pages/Hotel/Staylistpage.jsx";
 import HotelDetailsPage from "./Pages/Hotel/Hoteldetailspage.jsx";
+import BookingPage from "./Pages/Hotel/Booking.jsx";
 /* Lazy Pages */
 const Start = lazy(() => import("./Pages/Start"));
 const CustomTourP = lazy(() => import("./Pages/Packages/CustomTourP"));
@@ -71,7 +72,7 @@ const App = () => {
             {/* Landing */}
             <Route path="/" element={<Start />} />
             <Route path="/services" element={<Services />} />
-            <Route path="/login" element={<Login />} />
+            {/* <Route path="/login" element={<Login />} /> */}
 
             {/* Tour Categories */}
             {/* <Route path="/tourcard" element={<BaseTourPage />} /> */}
@@ -143,9 +144,10 @@ const App = () => {
             <Route path="/hotel" element={<SearchPage />} />
             <Route path="/stays" element={<StayListPage />} />
             <Route
-              path="/stays/hotel/:hotelId"
+              path="/stays/hotel/:property_id"
               element={<HotelDetailsPage />}
             />
+            <Route path="/booking" element={<BookingPage />} />
 
             {/* 404 */}
             <Route path="*" element={<PageNotFound />} />
