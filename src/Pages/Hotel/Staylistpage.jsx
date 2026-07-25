@@ -79,6 +79,9 @@ const PROMO_BANNER = {
   note: "Valid once per user",
 };
 
+// Page size for the results list. Passed straight through to searchStays().
+const PAGE_SIZE = 20;
+
 export default function StayListPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -106,6 +109,12 @@ export default function StayListPage() {
   const [loading, setLoading] = useState(false);
   const [notice, setNotice] = useState(null);
 
+  // ---- pagination state ----
+  // `page` drives the actual request to searchStays(); `total` comes back
+  // from the API response so we know how many pages exist.
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+
   // ---- filter / sort state ----
   const [sortBy, setSortBy] = useState("popularity");
   const [searchWithin, setSearchWithin] = useState("");
@@ -116,9 +125,18 @@ export default function StayListPage() {
   const [starFilters, setStarFilters] = useState(new Set());
   const [facilitySelected, setFacilitySelected] = useState(new Set());
 
+  // Whenever the actual search criteria change (new destination, dates,
+  // or guest counts), jump back to page 1. This is intentionally a
+  // separate effect from the fetch effect below so that paging forward
+  // (which only changes `page`) doesn't get caught by this reset.
+  useEffect(() => {
+    setPage(1);
+  }, [regionId, checkIn, checkOut, adults, children]);
+
   useEffect(() => {
     if (!regionId || !checkIn || !checkOut) {
       setList([]);
+      setTotal(0);
       setNotice({
         type: "error",
         text: "Missing destination or dates. Go back and search again.",
@@ -139,6 +157,8 @@ export default function StayListPage() {
       checkOut,
       ...(adults != null ? { adults } : {}),
       ...(children != null ? { children } : {}),
+      page,
+      limit: PAGE_SIZE,
     })
       .then((res) => {
         if (cancelled) return;
@@ -149,6 +169,7 @@ export default function StayListPage() {
 
         const results = extractList(res).map(normalizeStayCard);
         setList(results);
+        setTotal(res?.total ?? results.length);
         setPriceRange(null);
         setNotice(
           results.length === 0
@@ -159,6 +180,7 @@ export default function StayListPage() {
       .catch((err) => {
         if (cancelled) return;
         setList([]);
+        setTotal(0);
         setNotice({
           type: "error",
           text: `Couldn't load live results (${err.message}).`,
@@ -171,7 +193,7 @@ export default function StayListPage() {
     return () => {
       cancelled = true;
     };
-  }, [regionId, checkIn, checkOut, adults, children]);
+  }, [regionId, checkIn, checkOut, adults, children, page]);
 
   const handleSelect = useCallback(
     (item) => {
@@ -201,6 +223,57 @@ export default function StayListPage() {
     };
     return `${fmt(a)} → ${fmt(b)}`;
   };
+
+  // ---- pagination derived values / handlers ----
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+
+  const goToPage = useCallback(
+    (p) => {
+      const clamped = Math.min(Math.max(1, p), totalPages);
+      setPage((prev) => {
+        if (clamped === prev) return prev;
+        // Scroll results back into view on page change.
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return clamped;
+      });
+    },
+    [totalPages],
+  );
+
+  // Builds the row of page numbers with "…" gaps, e.g.
+  // [1, 2, 3, 4, "ellipsis-right", 12] instead of listing every page.
+  // Always keeps: first page, last page, current page, and one
+  // neighbour on each side of current.
+  const pageNumbers = useMemo(() => {
+    const siblingCount = 1;
+    const totalNumbers = siblingCount * 2 + 5; // first,last,current,2 siblings,2 ellipses
+
+    if (totalPages <= totalNumbers) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+
+    const leftSibling = Math.max(page - siblingCount, 1);
+    const rightSibling = Math.min(page + siblingCount, totalPages);
+
+    const showLeftEllipsis = leftSibling > 2;
+    const showRightEllipsis = rightSibling < totalPages - 1;
+
+    const pages = [1];
+
+    if (showLeftEllipsis) pages.push("ellipsis-left");
+    for (
+      let p = Math.max(leftSibling, 2);
+      p <= Math.min(rightSibling, totalPages - 1);
+      p++
+    ) {
+      pages.push(p);
+    }
+    if (showRightEllipsis) pages.push("ellipsis-right");
+
+    pages.push(totalPages);
+
+    return pages;
+  }, [page, totalPages]);
 
   // ---- derived data for filter counts / bounds ----
   const priceBounds = useMemo(() => {
@@ -660,6 +733,52 @@ export default function StayListPage() {
                   </div>
                 )}
               </div>
+            )}
+
+            {/* ---------------- Pagination ---------------- */}
+            {!loading && total > PAGE_SIZE && (
+              <nav
+                className="stays-pagination"
+                aria-label="Search results pages"
+              >
+                <button
+                  type="button"
+                  className="pagination-btn pagination-nav"
+                  onClick={() => goToPage(page - 1)}
+                  disabled={page <= 1}
+                >
+                  Previous
+                </button>
+
+                <div className="pagination-numbers">
+                  {pageNumbers.map((p, idx) =>
+                    typeof p === "number" ? (
+                      <button
+                        type="button"
+                        key={p}
+                        className={`pagination-num ${p === page ? "is-active" : ""}`}
+                        aria-current={p === page ? "page" : undefined}
+                        onClick={() => goToPage(p)}
+                      >
+                        {p}
+                      </button>
+                    ) : (
+                      <span className="pagination-ellipsis" key={`${p}-${idx}`}>
+                        …
+                      </span>
+                    ),
+                  )}
+                </div>
+
+                <button
+                  type="button"
+                  className="pagination-btn pagination-nav"
+                  onClick={() => goToPage(page + 1)}
+                  disabled={page >= totalPages}
+                >
+                  Next
+                </button>
+              </nav>
             )}
           </main>
         </div>

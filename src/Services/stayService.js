@@ -43,7 +43,7 @@ console.log('RAPIDAPI_KEY',import.meta.env.VITE_RAPIDAPI_KEY);
 const RAPIDAPI_HOST = "xenis-wholesale-rate-hotel-booking.p.rapidapi.com";
 const RAPIDAPI_KEY = import.meta.env.VITE_RAPIDAPI_KEY;
 const BASE_URL = `https://${RAPIDAPI_HOST}`;
-const AUTOCOMPLETE_PATH = "/api/hotels/api/v2/autocomplete"; // <-- REPLACE WITH CONFIRMED PATH
+const AUTOCOMPLETE_PATH = "/api/hotels/api/v2/autocomplete";
 
 const SEARCH_HOTELS_PATH = "/api/hotels/api/v2/properties";
 
@@ -55,7 +55,7 @@ const PRICE_CONFIRMATION_PATH = "/api/hotels/api/v2/properties/price";
 
 const CREATE_BOOKING_PATH = "/api/hotels/api/v2/bookings";
 
-const BOOKING_DETAIL_PATH = "/api/hotels/api/v2/bookings"; // <-- REPLACE WITH CONFIRMED PATH
+const BOOKING_DETAIL_PATH = "/api/hotels/api/v2/bookings";
 
   //  Internal fetch helpers
 async function apiGet(path, params = {}) {

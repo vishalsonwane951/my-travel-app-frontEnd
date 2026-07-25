@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import ProfileDropdown from "../../../Components/ProfileDropdown/ProfileDropdown";
 import { AuthContext } from "../../../Context/AuthContext";
 import LoginRegister from "../../LoginRegister";
@@ -82,6 +82,7 @@ function HeaderStyles() {
         flex: 1;
       }
       .sf-nav-item {
+        position: relative;
         display: flex;
         align-items: center;
         gap: 8px;
@@ -91,13 +92,40 @@ function HeaderStyles() {
         color: var(--text-on-ink-muted);
         background: none;
         border: none;
-        border-bottom: 2px solid transparent;
         padding: 8px 10px 10px;
         cursor: pointer;
         transition: color 0.15s ease;
       }
       .sf-nav-item:hover:not(:disabled) { color: var(--text-on-ink); }
       .sf-nav-item:disabled { cursor: default; opacity: 0.5; }
+
+      /* Animated underline bar — sits under every tab, scales in/out */
+      .sf-nav-item::after {
+        content: "";
+        position: absolute;
+        left: 10px;
+        right: 10px;
+        bottom: 0;
+        height: 2px;
+        border-radius: 2px;
+        background: var(--text-on-ink-muted);
+        transform: scaleX(0);
+        transform-origin: center;
+        opacity: 0;
+        transition: transform 0.25s ease, opacity 0.25s ease, background 0.25s ease;
+      }
+      .sf-nav-item:hover:not(:disabled)::after {
+        transform: scaleX(1);
+        opacity: 0.6;
+      }
+      .sf-nav-item.active::after {
+        background: var(--gold);
+        transform: scaleX(1);
+        opacity: 1;
+      }
+      .sf-nav-item.active:hover::after {
+        background: var(--gold-bright);
+      }
 
       .sf-nav-icon {
         display: flex;
@@ -107,6 +135,7 @@ function HeaderStyles() {
         height: 26px;
         border-radius: 8px;
         flex-shrink: 0;
+        transition: background 0.2s ease, color 0.2s ease;
       }
       .sf-nav-icon svg { width: 15px; height: 15px; }
 
@@ -119,7 +148,6 @@ function HeaderStyles() {
 
       .sf-nav-item.active {
         color: var(--text-on-ink);
-        border-bottom-color: var(--gold);
       }
       .sf-nav-item.active .sf-nav-icon {
         background: var(--text-on-ink);
@@ -196,20 +224,10 @@ const NAV_ITEMS = [
     key: "flights",
     label: "Flights",
     path: "#",
-    active: false,
     disabled: true,
     icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
-        <path
-          d="M2 12l20-7-7 20-3-8-8-3 8 8"
-          strokeLinejoin="round"
-          strokeLinecap="round"
-        />
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M2 12l20-7-7 20-3-8-8-3 8 8" strokeLinejoin="round" strokeLinecap="round" />
       </svg>
     ),
   },
@@ -217,14 +235,8 @@ const NAV_ITEMS = [
     key: "stays",
     label: "Hotels",
     path: "/hotel",
-    active: true,
     icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <path d="M3 21V8l9-5 9 5v13" strokeLinejoin="round" />
         <path d="M8 21v-7h8v7" strokeLinejoin="round" />
       </svg>
@@ -234,15 +246,9 @@ const NAV_ITEMS = [
     key: "trains",
     label: "Trains",
     path: "/Trains",
-    active: false,
     disabled: false,
     icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <rect x="5" y="3" width="14" height="14" rx="3" />
         <circle cx="8.5" cy="14" r="0.5" fill="currentColor" />
         <circle cx="15.5" cy="14" r="0.5" fill="currentColor" />
@@ -254,15 +260,9 @@ const NAV_ITEMS = [
     key: "buses",
     label: "Buses",
     path: "#",
-    active: false,
     disabled: true,
     icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <rect x="3" y="5" width="18" height="12" rx="2.5" />
         <path d="M3 12h18" />
         <circle cx="7.5" cy="19" r="1.4" fill="currentColor" stroke="none" />
@@ -274,15 +274,9 @@ const NAV_ITEMS = [
     key: "more",
     label: "More",
     path: "#",
-    active: false,
-    disabled: true,
+    disabled: false,
     icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <rect x="3" y="3" width="7" height="7" rx="1.5" />
         <rect x="14" y="3" width="7" height="7" rx="1.5" />
         <rect x="3" y="14" width="7" height="7" rx="1.5" />
@@ -315,13 +309,7 @@ const SUPPORT_ICON = (
 );
 
 const CHEVRON_ICON = (
-  <svg
-    className="sf-nav-chevron"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.5"
-  >
+  <svg className="sf-nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
     <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
@@ -336,42 +324,41 @@ const AVATAR_ICON = (
 export default function HotelHeader() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
   const [showAuth, setShowAuth] = useState(false);
+
   return (
     <>
       <HeaderStyles />
       <header className="sf-header">
         <div className="sf-header-inner">
-          <button
-            type="button"
-            className="sf-logo"
-            onClick={() => navigate("/")}
-          >
+          <button type="button" className="sf-logo" onClick={() => navigate("/")}>
             <span className="sf-logo-badge">
               Desi<span className="sf-logo-v">V</span>Desi
             </span>
           </button>
 
           <nav className="sf-nav">
-            {NAV_ITEMS.map((item) => (
-              <button
-                key={item.key}
-                type="button"
-                data-key={item.key}
-                className={`sf-nav-item${item.active ? " active" : ""}`}
-                disabled={item.disabled}
-                onClick={() =>
-                  !item.disabled && item.path !== "#" && navigate(item.path)
-                }
-                title={
-                  item.disabled ? `${item.label} — coming soon` : item.label
-                }
-              >
-                <span className="sf-nav-icon">{item.icon}</span>
-                <span className="sf-nav-label">{item.label}</span>
-                {item.chevron && CHEVRON_ICON}
-              </button>
-            ))}
+            {NAV_ITEMS.map((item) => {
+              const isActive = item.path !== "#" && location.pathname === item.path;
+              return (
+                <button
+                  key={item.key}
+                  type="button"
+                  data-key={item.key}
+                  className={`sf-nav-item${isActive ? " active" : ""}`}
+                  disabled={item.disabled}
+                  onClick={() =>
+                    !item.disabled && item.path !== "#" && navigate(item.path)
+                  }
+                  title={item.disabled ? `${item.label} — coming soon` : item.label}
+                >
+                  <span className="sf-nav-icon">{item.icon}</span>
+                  <span className="sf-nav-label">{item.label}</span>
+                  {item.chevron && CHEVRON_ICON}
+                </button>
+              );
+            })}
           </nav>
 
           <div className="sf-header-actions">
@@ -387,7 +374,7 @@ export default function HotelHeader() {
               <button
                 type="button"
                 className="sf-header-login"
-                onClick={() => {setShowAuth(true)}}
+                onClick={() => setShowAuth(true)}
               >
                 <span className="sf-header-login-avatar">{AVATAR_ICON}</span>
                 Log in/Sign up

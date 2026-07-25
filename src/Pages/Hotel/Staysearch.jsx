@@ -8,23 +8,6 @@ import {
 import Header from "../../Components/Header/Header.jsx";
 import HotelHeader from "./component/Header.jsx";
 
-/* ------------------------------------------------------------------
-   DESIGN CONCEPT
-   -------------------------------------------------------------------
-   Signature element: the search kiosk is drawn as a boarding pass —
-   a torn-edge stub with perforation notches separating the
-   destination/date fields from the "Search" stub, echoing the
-   existing hero copy ("Boarding pass to your next stay"). This is
-   the one bold move; everything else stays disciplined and quiet.
-
-   Palette & type are pulled 1:1 from the ixigo-derived token set
-   (see :root custom properties below) — nothing is hardcoded outside
-   that block, so the whole page can be re-themed by editing tokens.
-
-   All data other than "Popular destinations" and the FAQ/About copy
-   is fetched live via searchRegions()/getBestDeals()/getOffers().
-------------------------------------------------------------------- */
-
 const POPULAR_DESTINATIONS = [
   {
     name: "New Delhi",
