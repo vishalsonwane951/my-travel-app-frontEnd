@@ -70,14 +70,8 @@ import ItineraryTimeline from "./AITrip Planner/Itinerarytimeline.jsx";
 import HotelHeader from "./Hotel/component/Header.jsx";
 import Header from "../Components/Header.jsx";
 
-// ─── FIX 1: Lazy-load heavy sections (code splitting) ─────────
-const Domestic = lazy(() => import("./Domestic.jsx"));
-const International = lazy(() => import("./International.jsx"));
-// const NorthIndiaSection = lazy(() => import('./sections/NorthIndiaSection.jsx'));
-
 const BASE = "https://my-travel-app-backend-6.onrender.com";
 
-// ─── FIX 2: Memoized image URL cache (module-level, not re-created per render)
 const _imgCache = new Map();
 const getImageUrl = (path) => {
   if (!path) return "/placeholder.jpg";
@@ -94,30 +88,6 @@ const getImageUrl = (path) => {
   return url;
 };
 
-// ─── FIX 3: Custom hook — only mount section when scrolled near it
-function useIsVisible(ref, rootMargin = "300px") {
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    if (!ref.current) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          obs.disconnect();
-        }
-      },
-      { rootMargin },
-    );
-    obs.observe(ref.current);
-    return () => obs.disconnect();
-  }, [ref, rootMargin]);
-  return visible;
-}
-
-// ─── New: Reveal-on-scroll hook + wrapper component ────────────
-// Adds a 'reveal-visible' class once the element enters the viewport,
-// triggering the CSS fade-up animation. Used to make sections/cards
-// appear one by one as the user scrolls down.
 function useRevealOnScroll(threshold = 0.15) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
@@ -160,7 +130,6 @@ const Reveal = ({
   );
 };
 
-// ─── Global Styles ────────────────────────────────────────────
 const GlobalStyles = () => (
   <style>{`
     /* FIX 4: Font import moved to index.html <head> for parallel loading.
@@ -566,7 +535,7 @@ const GlobalStyles = () => (
   `}</style>
 );
 
-// ─── Skeleton Card ─────────────────────────────────────────────
+// Skeleton Card
 const SkeletonCard = () => (
   <div
     style={{
@@ -588,7 +557,7 @@ const SkeletonCard = () => (
   </div>
 );
 
-// ─── Section Skeleton (for lazy-loaded sections) ───────────────
+// Section Skeleton (for lazy-loaded sections)
 const SectionSkeleton = () => (
   <div style={{ maxWidth: 1400, margin: "0 auto", padding: "60px 24px" }}>
     <div
@@ -605,7 +574,7 @@ const SectionSkeleton = () => (
   </div>
 );
 
-// ─── Navbar ───────────────────────────────────────────────────
+// Navbar
 const Navbar = ({ wishlistCount, onWishlistOpen, onBookNow }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -679,16 +648,6 @@ const Navbar = ({ wishlistCount, onWishlistOpen, onBookNow }) => {
             </div>
           </div>
         </Link>
-        <div
-          className="hide-mobile"
-          style={{ display: "flex", alignItems: "center", gap: 32 }}
-        >
-          {["Destinations", "Domestic", "International", "About"].map((l) => (
-            <a key={l} href={`#${l.toLowerCase()}`} className="nav-link">
-              {l}
-            </a>
-          ))}
-        </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <button
             onClick={onWishlistOpen}
@@ -751,7 +710,7 @@ const Navbar = ({ wishlistCount, onWishlistOpen, onBookNow }) => {
             borderTop: "1px solid var(--glass-border)",
           }}
         >
-          {["Destinations", "Domestic", "International", "About"].map((l) => (
+          {["Destinations", "About"].map((l) => (
             <a
               key={l}
               href={`#${l.toLowerCase()}`}
@@ -773,7 +732,7 @@ const Navbar = ({ wishlistCount, onWishlistOpen, onBookNow }) => {
   );
 };
 
-// ─── Hero Section ──────────────────────────────────────────────
+//  Hero Section
 const HeroSection = React.memo(({ onBookNow, onSearch }) => {
   const [activeSlide, setActiveSlide] = useState(0);
   const [searchValue, setSearchValue] = useState("");
@@ -836,14 +795,12 @@ const HeroSection = React.memo(({ onBookNow, onSearch }) => {
           key={i}
           className={`hero-slide ${i === activeSlide ? "active" : "inactive"}`}
         >
-          {/* FIX 5: fetchpriority="high" on hero image, lazy on rest */}
           <img
             src={s.img}
             alt={s.tag}
             className="hero-img"
             loading={i === 0 ? "eager" : "lazy"}
             fetchPriority={i === 0 ? "high" : "low"}
-            // onError={e => e.target.src = '/placeholder.jpg'}
           />
           <div className="hero-overlay" />
         </div>
@@ -971,64 +928,9 @@ const HeroSection = React.memo(({ onBookNow, onSearch }) => {
               </form>
             </div>
           </div>
-          <div
-            key={`cta-${activeSlide}`}
-            className="animate-fadeup stagger-5"
-            style={{ display: "flex", gap: 14, marginTop: 24 }}
-          >
-            <button
-              onClick={onBookNow}
-              className="btn-primary"
-              style={{ padding: "13px 32px", fontSize: "0.9rem" }}
-            >
-              {slides[activeSlide].cta}{" "}
-              <FaArrowRight style={{ marginLeft: 6, display: "inline" }} />
-            </button>
-            <a
-              href="#destinations"
-              className="btn-outline"
-              style={{
-                padding: "13px 28px",
-                fontSize: "0.9rem",
-                textDecoration: "none",
-                display: "inline-flex",
-                alignItems: "center",
-              }}
-            >
-              Browse All
-            </a>
-          </div>
         </div>
       </div>
-      <div
-        style={{
-          position: "absolute",
-          bottom: 32,
-          left: "50%",
-          transform: "translateX(-50%)",
-          display: "flex",
-          gap: 8,
-          zIndex: 4,
-        }}
-      >
-        {slides.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setActiveSlide(i)}
-            style={{
-              width: i === activeSlide ? 32 : 8,
-              height: 8,
-              borderRadius: 4,
-              border: "none",
-              background:
-                i === activeSlide ? "var(--saffron)" : "rgba(255,255,255,0.4)",
-              cursor: "pointer",
-              transition: "all 0.3s",
-              padding: 0,
-            }}
-          />
-        ))}
-      </div>
+
       <button
         onClick={() =>
           setActiveSlide((p) => (p - 1 + slides.length) % slides.length)
@@ -1081,7 +983,7 @@ const HeroSection = React.memo(({ onBookNow, onSearch }) => {
   );
 });
 
-// ─── Stats Bar ────────────────────────────────────────────────
+// Stats Bar
 const StatsBar = React.memo(() => (
   <div style={{ background: "var(--forest)", padding: "28px 24px" }}>
     <div
@@ -1141,22 +1043,16 @@ const StatsBar = React.memo(() => (
   </div>
 ));
 
-// ─── Weather + Currency Widgets ───────────────────────────────
+// Weather + Currency Widgets
 const WidgetsRow = React.memo(() => {
   const [amount, setAmount] = useState("");
   const [converted, setConverted] = useState(null);
   const [toCurrency, setToCurrency] = useState("USD");
-  const rates = useMemo(
-    () => ({
-      USD: 0.012,
-      EUR: 0.011,
-      GBP: 0.0094,
-      AED: 0.044,
-      SGD: 0.016,
-      JPY: 1.79,
-    }),
-    [],
-  );
+  const [rates, setRates] = useState(null);
+  const [currencyList, setCurrencyList] = useState([]);
+  const [ratesStatus,setRatesStatus] = useState('loading');
+  const [lastUpdated, setLastUpdated] = useState(null);
+
   const weatherData = useMemo(
     () => [
       { city: "Mumbai", temp: 32, icon: <FaSun />, desc: "Sunny" },
@@ -1166,6 +1062,45 @@ const WidgetsRow = React.memo(() => {
     [],
   );
   const [activeCity, setActiveCity] = useState(0);
+
+  // Live Currency EndPoints
+const RATES_API_URL = "https://open.er-api.com/v6/latest/INR"
+   const fetchRates = useCallback(() => {
+    setRatesStatus("loading");
+    const controller = new AbortController();
+    fetch(RATES_API_URL, { signal: controller.signal })
+      .then((res) => {
+        if (!res.ok) throw new Error(`Rates API error: ${res.status}`);
+        return res.json();
+      })
+      .then((data) => {
+        if (data?.result !== "success" || !data?.rates) {
+          throw new Error("Unexpected rates response shape");
+        }
+        // Exclude INR itself since it's the base currency (rate = 1, converting to it is a no-op here)
+        const codes = Object.keys(data.rates)
+          .filter((c) => c !== "INR")
+          .sort();
+
+        setRates(data.rates);
+        setCurrencyList(codes);
+        setToCurrency((prev) => (codes.includes(prev) ? prev : codes[0] || "USD"));
+        setLastUpdated(data.time_last_update_utc || null);
+        setRatesStatus("live");
+      })
+      .catch((e) => {
+        if (e.name !== "AbortError") {
+          console.error("Currency rates fetch failed:", e);
+          setRatesStatus("error");
+        }
+      });
+    return controller;
+  }, []);
+
+  useEffect(() => {
+    const controller = fetchRates();
+    return () => controller.abort();
+  }, [fetchRates]);
 
   useEffect(() => {
     const t = setInterval(
@@ -1311,29 +1246,30 @@ const WidgetsRow = React.memo(() => {
               />
             </div>
             <select
-              value={toCurrency}
-              onChange={(e) => setToCurrency(e.target.value)}
-              style={{
-                background: "rgba(255,255,255,0.2)",
-                border: "none",
-                borderRadius: 10,
-                color: "white",
-                padding: "8px 12px",
-                fontFamily: "Outfit",
-                cursor: "pointer",
-                fontSize: "0.9rem",
-              }}
-            >
-              {Object.keys(rates).map((c) => (
-                <option
-                  key={c}
-                  value={c}
-                  style={{ background: "var(--saffron-dark)", color: "white" }}
-                >
-                  {c}
-                </option>
-              ))}
-            </select>
+  value={toCurrency}
+  onChange={(e) => setToCurrency(e.target.value)}
+  style={{
+    background: "rgba(255,255,255,0.2)",
+    border: "none",
+    borderRadius: 10,
+    color: "white",
+    padding: "8px 12px",
+    fontFamily: "Outfit",
+    cursor: "pointer",
+    fontSize: "0.9rem",
+    maxWidth: 100,
+  }}
+>
+  {currencyList.map((c) => (
+    <option
+      key={c}
+      value={c}
+      style={{ background: "var(--saffron-dark)", color: "white" }}
+    >
+      {c}
+    </option>
+  ))}
+</select>
           </div>
           <button
             onClick={convert}
@@ -1422,7 +1358,6 @@ const WidgetsRow = React.memo(() => {
   );
 });
 
-// ─── New: "Make Your Tour Memorable" Intro Section ────────────
 const IntroSection = React.memo(({ onBookNow }) => (
   <section className="intro-section">
     <Reveal className="intro-img-wrap">
@@ -1479,7 +1414,6 @@ const IntroSection = React.memo(({ onBookNow }) => (
   </section>
 ));
 
-// ─── New: Best Place Destination Grid ─────────────────────────
 const BestPlaceSection = React.memo(() => {
   const places = useMemo(
     () => [
@@ -1531,7 +1465,6 @@ const BestPlaceSection = React.memo(() => {
   );
 });
 
-// ─── New: Tourist Feedback Section ────────────────────────────
 const FeedbackSection = React.memo(() => {
   const feedbacks = useMemo(
     () => [
@@ -1584,7 +1517,6 @@ const FeedbackSection = React.memo(() => {
   const [activeDot, setActiveDot] = useState(0);
   const scrollRef = useRef(null);
 
-  // ─── Auto-scroll the feedback row every 1.5s ────────────────
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
@@ -1761,7 +1693,6 @@ const TourCard = React.memo(
   ),
 );
 
-// ─── Wishlist Drawer ──────────────────────────────────────────
 const WishlistDrawer = React.memo(({ open, onClose, wishlist, items }) => {
   const savedItems = useMemo(
     () => items.filter((item) => wishlist.includes(item._id)),
@@ -1927,29 +1858,29 @@ const WishlistDrawer = React.memo(({ open, onClose, wishlist, items }) => {
 });
 
 // ─── Itinerary Overlay ─────────────────────────────────────────
-const ItineraryOverlay = ({ itinerary, onPlanAgain }) => (
-  <div className="itinerary-overlay">
-    <div className="itinerary-overlay-inner">
-      <div className="itinerary-topbar">
-        <button className="itinerary-topbar-back" onClick={onPlanAgain}>
-          ← Plan Another Trip
-        </button>
-        <div
-          style={{
-            fontFamily: "Cormorant Garamond, serif",
-            fontSize: "1.1rem",
-            fontWeight: 700,
-            color: "var(--ink)",
-          }}
-        >
-          Your AI Itinerary ✨
-        </div>
-      </div>
-      <ItineraryResult itinerary={itinerary} onPlanAgain={onPlanAgain} />
-      {/* <ItineraryTimeline itinerary={itinerary}  /> */}
-    </div>
-  </div>
-);
+// const ItineraryOverlay = ({ itinerary, onPlanAgain }) => (
+//   <div className="itinerary-overlay">
+//     <div className="itinerary-overlay-inner">
+//       <div className="itinerary-topbar">
+//         <button className="itinerary-topbar-back" onClick={onPlanAgain}>
+//           ← Plan Another Trip
+//         </button>
+//         <div
+//           style={{
+//             fontFamily: "Cormorant Garamond, serif",
+//             fontSize: "1.1rem",
+//             fontWeight: 700,
+//             color: "var(--ink)",
+//           }}
+//         >
+//           Your AI Itinerary ✨
+//         </div>
+//       </div>
+//       <ItineraryResult itinerary={itinerary} onPlanAgain={onPlanAgain} />
+//       {/* <ItineraryTimeline itinerary={itinerary}  /> */}
+//     </div>
+//   </div>
+// );
 
 // ─── About Section ─────────────────────────────────────────────
 const AboutSection = React.memo(({ onBookNow }) => {
@@ -2321,7 +2252,6 @@ const AboutSection = React.memo(({ onBookNow }) => {
   );
 });
 
-// ─── Main Start Component ─────────────────────────────────────
 function HomePage() {
   const { user } = useContext(AuthContext);
   const [showBooking, setShowBooking] = useState(false);
@@ -2332,86 +2262,26 @@ function HomePage() {
   const [wishlist, setWishlist] = useState([]);
   const [ratings, setRatings] = useState({});
 
-  // ─── FIX 1: All data in one parallel fetch ──────────────────
   const [tourCards, setTourCards] = useState([]);
-  const [domesticData, setDomesticData] = useState({
-    animation: [],
-    states: [],
-  });
-  const [intlData, setIntlData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const [isVisible, setIsVisible] = useState(false);
   const aboutRef = useRef(null);
-  const domesticRef = useRef(null);
   const intlRef = useRef(null);
   const northRef = useRef(null);
   const location = useLocation();
   const fetchDone = useRef(false);
 
-  // ─── FIX 3: Intersection observer for each section ──────────
-  const domesticVisible = useIsVisible(domesticRef);
-  const intlVisible = useIsVisible(intlRef);
-  const northVisible = useIsVisible(northRef);
-
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const handler = () => setIsVisible(window.scrollY > 400);
-    window.addEventListener("scroll", handler, { passive: true });
-    return () => window.removeEventListener("scroll", handler);
-  }, []);
-
-  useEffect(() => {
-    const state = location.state;
-    if (!state) return;
-
-    // Clear state immediately so it doesn't re-trigger
-    navigate(location.pathname, { replace: true, state: {} });
-
-    if (state.scrollToAbout) {
-      setTimeout(
-        () => aboutRef.current?.scrollIntoView({ behavior: "smooth" }),
-        300,
-      );
-    }
-
-    if (state.scrollToDomestic) {
-      setTimeout(
-        () => domesticRef.current?.scrollIntoView({ behavior: "smooth" }),
-        300,
-      );
-    }
-
-    if (state.scrollToInternational) {
-      setTimeout(
-        () => intlRef.current?.scrollIntoView({ behavior: "smooth" }),
-        300,
-      );
-    }
-  }, [location]);
-
-  // ─── FIX 1: Single Promise.all for all critical data ────────
   useEffect(() => {
     if (fetchDone.current) return;
     const controller = new AbortController();
     const sig = { signal: controller.signal };
 
-    Promise.all([
-      api.get("/favourites/getCards", sig),
-      api.get("/maharashtra-domestic/getallAnimation", sig),
-      api.get("/maharashtra-domestic/getstates", sig),
-      api.get("/International/getallInternational", sig),
-    ])
+    Promise.all([api.get("/favourites/getCards", sig)])
       .then(([cards, anim, states, intl]) => {
         setTourCards(cards.data || []);
-        setDomesticData({
-          animation: anim.data || [],
-          states: Array.isArray(states.data)
-            ? states.data
-            : states.data?.data || [],
-        });
-        setIntlData(Array.isArray(intl.data) ? intl.data : []);
         fetchDone.current = true;
       })
       .catch((e) => {
@@ -2468,26 +2338,6 @@ function HomePage() {
     [user],
   );
 
-  const responsive = useMemo(
-    () => ({
-      desktop: {
-        breakpoint: { max: 3000, min: 1024 },
-        items: 3,
-        slidesToSlide: 1,
-      },
-      tablet: {
-        breakpoint: { max: 1024, min: 640 },
-        items: 2,
-        slidesToSlide: 1,
-      },
-      mobile: { breakpoint: { max: 640, min: 0 }, items: 1, slidesToSlide: 1 },
-    }),
-    [],
-  );
-
-  // ─── New: 6 static tour destination cards with local images ─────
-  // Fully static — does not depend on API data, so images/content
-  // never change regardless of backend response.
   const sixTourCards = useMemo(
     () => [
       {
@@ -2602,14 +2452,10 @@ function HomePage() {
       <HeroSection onBookNow={handleBookNow} onSearch={() => {}} />
       <StatsBar />
       <WidgetsRow />
-
-      {/* New: Make Your Tour Memorable and Safe With Us */}
       <IntroSection onBookNow={handleBookNow} />
-
-      {/* New: Best Place Destination */}
       <BestPlaceSection />
 
-      {/* Tour Destination — 6 cards, same layout */}
+      {/* Tour Destination — 6 cards */}
       <section className="td-section">
         <Reveal
           style={{
@@ -2665,37 +2511,7 @@ function HomePage() {
       </section>
       <NewsletterSubscribe />
 
-      {/* FIX 3: Sections mount only when scrolled near them */}
-      {/* <div ref={domesticRef} id="domestic">
-        <Suspense fallback={<SectionSkeleton />}>
-          {domesticVisible && (
-            <Domestic
-              wishlist={wishlist}
-              setWishlist={setWishlist}
-              prefetchedData={domesticData}
-            />
-          )}
-        </Suspense>
-      </div> */}
-
-      {/* <div ref={intlRef} id="international" style={{ minHeight: intlVisible ? 'auto' : '1px' }}>
-        <Suspense fallback={<SectionSkeleton />}>
-          {intlVisible && (
-            <International
-              wishlist={wishlist}
-              setWishlist={setWishlist}
-              prefetchedData={intlData}
-            />
-          )}
-        </Suspense>
-      </div> */}
-
-      <div ref={northRef}>
-        <Suspense fallback={<SectionSkeleton />}>
-          {/* {northVisible && <NorthIndiaSection />} */}
-        </Suspense>
-      </div>
-
+      {/* Testimonial */}
       <FeedbackSection />
 
       <div ref={aboutRef} id="about-us">
@@ -2717,9 +2533,9 @@ function HomePage() {
         onItinerary={handleItinerary}
       />
 
-      {itinerary && (
+      {/* {itinerary && (
         <ItineraryOverlay itinerary={itinerary} onPlanAgain={handlePlanAgain} />
-      )}
+      )} */}
 
       <WishlistDrawer
         open={showWishlist}
