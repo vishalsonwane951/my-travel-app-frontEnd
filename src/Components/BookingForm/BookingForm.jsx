@@ -84,8 +84,7 @@ const BookingForm = ({
 *Message:* ${formData.message || "No special requests"}
   `;
 
-    const phone = "919876543210"; // Replace with actual business number
-    window.open(
+    const phone = "917888251550"; 
       `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
       "_blank"
     );
