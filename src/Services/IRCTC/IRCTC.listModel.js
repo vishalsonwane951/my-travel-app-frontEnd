@@ -1,5 +1,4 @@
 // services/trainService.js
-<<<<<<< HEAD
 //
 // Routes through our own backend now (Backend/Controllers/IRCTC/Controller/liveStationController.js)
 // instead of calling RapidAPI directly from the browser with an exposed key.
@@ -9,27 +8,13 @@ const BACKEND_BASE_URL = "http://localhost:5000/api/irctc";
 
 export async function fetchLiveStation(fromStationCode, toStationCode, hours) {
   const url = new URL(`${BACKEND_BASE_URL}/live-station`);
-=======
-const RAPIDAPI_KEY = import.meta.env.VITE_RAPIDAPI_KEY; // Vite convention — adjust if using CRA (process.env.REACT_APP_RAPIDAPI_KEY)
-
-export async function fetchLiveStation(fromStationCode, toStationCode, hours) {
-  const url = new URL('https://irctc1.p.rapidapi.com/api/v3/getLiveStation');
->>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
   url.searchParams.append('fromStationCode', fromStationCode);
   url.searchParams.append('toStationCode', toStationCode);
   url.searchParams.append('hours', hours);
 
   const response = await fetch(url.toString(), {
     method: 'GET',
-<<<<<<< HEAD
-    headers: { 'Content-Type': 'application/json' },
-=======
-    headers: {
-      'x-rapidapi-host': 'irctc1.p.rapidapi.com',
-      'x-rapidapi-key': RAPIDAPI_KEY,
-      'Content-Type': 'application/json'
-    }
->>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
+    headers: { 'Content-Type': 'application/json' }
   });
 
   if (!response.ok) {

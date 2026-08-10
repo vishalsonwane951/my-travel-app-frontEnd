@@ -84,16 +84,13 @@ const BookingForm = ({
 *Message:* ${formData.message || "No special requests"}
   `;
 
-<<<<<<< HEAD
-    const phone = "919876543210"; // Replace with actual business number
-    window.open(
-=======
-    const phone = "917888251550"; 
->>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
-      `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
-      "_blank"
-    );
-  };
+const phone = "917888251550";
+
+window.open(
+  `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
+  "_blank"
+);
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();

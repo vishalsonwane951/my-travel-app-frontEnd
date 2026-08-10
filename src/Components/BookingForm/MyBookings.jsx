@@ -572,9 +572,9 @@ const BookingUI = () => {
     }
 
 
-    /* =============================================
+    /* ===
    PRINT STYLES - HEADER SECTION & PAGE BREAKS
-============================================= */
+=== */
 @media print {
   /* ===== PAGE SETUP ===== */
   @page {

@@ -798,15 +798,12 @@ const Header = () => {
             >
               Contact
             </button>
-<<<<<<< HEAD
 
             {user?.isAdmin && (
               <Link to="/admin" className="h-nav-link">
                 Admin
               </Link>
             )}
-=======
->>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
           </nav>
 
           {/* Right Controls */}

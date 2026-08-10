@@ -2553,9 +2553,9 @@ Please change the parent <Route path="${N}"> to <Route path="${N==="/"?"*":`${N}
     }
 
 
-    /* =============================================
+    /* ===
    PRINT STYLES - HEADER SECTION & PAGE BREAKS
-============================================= */
+=== */
 @media print {
   /* ===== PAGE SETUP ===== */
   @page {
@@ -6782,13 +6782,13 @@ Please change the parent <Route path="${N}"> to <Route path="${N==="/"?"*":`${N}
         .book-btn { width: 100%; }
       }
 
-      /* ==================================================================
+      /* ===
          HOTEL DETAILS PAGE (HotelDetailsPage.jsx)
          Reuses the shared tokens and rules above (.notice, .pill,
          .tag-skeleton-block, .tag-skeleton-line, .filter-pill, etc.)
          rather than redefining them, so this page stays visually
          consistent with the search results page.
-      ================================================================== */
+      === */
 
       .app { max-width: 1200px; margin: 0 auto; padding: 0 24px 60px; color: var(--color-text-primary); }
 

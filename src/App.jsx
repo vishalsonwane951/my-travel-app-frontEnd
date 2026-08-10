@@ -1,9 +1,5 @@
 import React, { Suspense, lazy } from "react";
-<<<<<<< HEAD
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-=======
-import { Routes, Route, Navigate } from "react-router-dom";
->>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
 import "./App.css";
 
 import Services from "./Pages/Services.jsx";
@@ -18,6 +14,7 @@ import ItineraryPage from "./Pages/ItineraryPage.jsx";
 
 // import Login from "./Pages/Login.jsx";
 import { PackageProvider } from "./Context/PackageContext.jsx";
+import { AdminAuthProvider } from "./Context/AdminAuthContext.jsx";
 import Profile, {
   BookingsTab,
   EnquiriesTab,
@@ -39,7 +36,6 @@ import SearchPage from "./Pages/Hotel/Staysearch.jsx";
 import StayListPage from "./Pages/Hotel/Staylistpage.jsx";
 import HotelDetailsPage from "./Pages/Hotel/Hoteldetailspage.jsx";
 import BookingPage from "./Pages/Hotel/Booking.jsx";
-<<<<<<< HEAD
 
 /* Admin Panel */
 import AdminLogin from "./Pages/Admin/Login/AdminLogin.jsx";
@@ -71,251 +67,241 @@ const BlogPost = lazy(() => import("./Pages/Blog/BlogPost.jsx"));
 const AgentPortal = lazy(() => import("./Pages/AgentPortal/AgentPortal.jsx"));
 const LoyaltyPage = lazy(() => import("./Pages/Loyalty/LoyaltyPage.jsx"));
 const GiftCardPurchase = lazy(() => import("./Pages/GiftCards/GiftCardPurchase.jsx"));
-=======
->>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
 /* Lazy Pages */
 const HomePage = lazy(() => import("./Pages/HomePage.jsx"));
 const Maharashtra = lazy(() => import("./Pages/Domestic/Maharashtra"));
 
 const App = () => {
-<<<<<<< HEAD
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith("/admin");
-
-=======
->>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
   return (
     <>
       {/* <Header /> */}
 
       <PackageProvider>
-        <Suspense fallback={<div className="loading">Loading...</div>}>
-          <Routes>
-            {/* Landing */}
-            <Route path="/" element={<HomePage />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/tourcard/:type" element={<BaseTourPage />} />
+        <AdminAuthProvider>
+          <Suspense fallback={<div className="loading">Loading...</div>}>
+            <Routes>
+              {/* Landing */}
+              <Route path="/" element={<HomePage />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/tourcard/:type" element={<BaseTourPage />} />
 
-            {/* Package Details */}
-            <Route
-              path="/package/:type/:location"
-              element={<ItineraryPage />}
-            />
+              {/* Package Details */}
+              <Route
+                path="/package/:type/:location"
+                element={<ItineraryPage />}
+              />
 
-            {/* Legacy redirect */}
-            <Route
-              path="/package/:location"
-              element={<Navigate to="/services" replace />}
-            />
+              {/* Legacy redirect */}
+              <Route
+                path="/package/:location"
+                element={<Navigate to="/services" replace />}
+              />
 
-            {/* Booking */}
-            <Route path="/booking/:packageId" element={<BookingForm />} />
-            <Route path="/my-bookings" element={<MyBookings />} />
-            <Route path="/my-profile" element={<UserProfilePopup />} />
+              {/* Booking */}
+              <Route path="/booking/:packageId" element={<BookingForm />} />
+              <Route path="/my-bookings" element={<MyBookings />} />
+              <Route path="/my-profile" element={<UserProfilePopup />} />
 
-            {/* Admin Upload */}
-            {/* <Route path="/update" element={<UploadImagesByTitle />} /> */}
+              {/* Admin Upload */}
+              {/* <Route path="/update" element={<UploadImagesByTitle />} /> */}
 
-            {/* State Pages */}
-            <Route path="/maharashtra" element={<Maharashtra />} />
+              {/* State Pages */}
+              <Route path="/maharashtra" element={<Maharashtra />} />
 
-            {/* Maharashtra */}
-            <Route path="/Goa" element={<Goa />} />
-            <Route path="/profile" element={<Profile />} />
-            {/* Goa */}
-            <Route path="/stay" element={<GoaStay />} />
-            <Route path="/beach-shacks" element={<GoaBeachShacks />} />
-            <Route path="/water-sports" element={<GoaWaterSports />} />
-            <Route path="/villas-homestays" element={<GoaVillasHomestays />} />
+              {/* Maharashtra */}
+              <Route path="/Goa" element={<Goa />} />
+              <Route path="/profile" element={<Profile />} />
+              {/* Goa */}
+              <Route path="/stay" element={<GoaStay />} />
+              <Route path="/beach-shacks" element={<GoaBeachShacks />} />
+              <Route path="/water-sports" element={<GoaWaterSports />} />
+              <Route path="/villas-homestays" element={<GoaVillasHomestays />} />
 
-            <Route path="/locations/:id" element={<LocationDetail />} />
+              <Route path="/locations/:id" element={<LocationDetail />} />
 
-            {/* <Route path="/overview" element={<OverviewTab />} /> */}
-            <Route path="/bookings" element={<BookingsTab />} />
-            <Route path="/enquiries" element={<EnquiriesTab />} />
-            <Route path="/saved" element={<SavedTab />} />
-            <Route path="/settings" element={<SettingsTab />} />
+              {/* <Route path="/overview" element={<OverviewTab />} /> */}
+              <Route path="/bookings" element={<BookingsTab />} />
+              <Route path="/enquiries" element={<EnquiriesTab />} />
+              <Route path="/saved" element={<SavedTab />} />
+              <Route path="/settings" element={<SettingsTab />} />
 
-            {/*   IRCTC */}
+              {/*   IRCTC */}
 
-            <Route path="/trains" element={<Trainsearch />} />
-            <Route path="/hotel" element={<SearchPage />} />
-            <Route path="/stays" element={<StayListPage />} />
-            <Route
-              path="/stays/hotel/:property_id"
-              element={<HotelDetailsPage />}
-            />
-            <Route path="/booking" element={<BookingPage />} />
-<<<<<<< HEAD
-            <Route path="/checkout/:packageId" element={<Checkout />} />
-            <Route path="/my-trip/:bookingId" element={<TripWallet />} />
-            <Route path="/blog" element={<BlogList />} />
-            <Route path="/blog/:slug" element={<BlogPost />} />
-            <Route path="/agent" element={<AgentPortal />} />
-            <Route path="/loyalty" element={<LoyaltyPage />} />
-            <Route path="/gift-cards" element={<GiftCardPurchase />} />
+              <Route path="/trains" element={<Trainsearch />} />
+              <Route path="/hotel" element={<SearchPage />} />
+              <Route path="/stays" element={<StayListPage />} />
+              <Route
+                path="/stays/hotel/:property_id"
+                element={<HotelDetailsPage />}
+              />
+              <Route path="/booking" element={<BookingPage />} />
+              <Route path="/checkout/:packageId" element={<Checkout />} />
+              <Route path="/my-trip/:bookingId" element={<TripWallet />} />
+              <Route path="/blog" element={<BlogList />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/agent" element={<AgentPortal />} />
+              <Route path="/loyalty" element={<LoyaltyPage />} />
+              <Route path="/gift-cards" element={<GiftCardPurchase />} />
 
-            {/* Admin Panel */}
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route
-              path="/admin"
-              element={
-                <ProtectedAdminRoute>
-                  <AdminLayout />
-                </ProtectedAdminRoute>
-              }
-            >
-              <Route index element={<Navigate to="/admin/dashboard" replace />} />
-              <Route path="dashboard" element={<Dashboard />} />
+              {/* Admin Panel */}
+              <Route path="/admin/login" element={<AdminLogin />} />
               <Route
-                path="team"
+                path="/admin"
                 element={
-                  <ProtectedAdminRoute roles={["superadmin"]}>
-                    <Team />
+                  <ProtectedAdminRoute>
+                    <AdminLayout />
                   </ProtectedAdminRoute>
                 }
-              />
-              <Route
-                path="enquiries"
-                element={
-                  <ProtectedAdminRoute roles={["operations", "sales"]}>
-                    <Enquiries />
-                  </ProtectedAdminRoute>
-                }
-              />
-              <Route
-                path="finance"
-                element={
-                  <ProtectedAdminRoute roles={["finance"]}>
-                    <Finance />
-                  </ProtectedAdminRoute>
-                }
-              />
-              <Route
-                path="packages"
-                element={
-                  <ProtectedAdminRoute roles={["content", "operations"]}>
-                    <PackagesCms />
-                  </ProtectedAdminRoute>
-                }
-              />
-              <Route
-                path="domestic-content"
-                element={
-                  <ProtectedAdminRoute roles={["content", "operations"]}>
-                    <DomesticContent />
-                  </ProtectedAdminRoute>
-                }
-              />
-              <Route
-                path="hotels"
-                element={
-                  <ProtectedAdminRoute roles={["operations"]}>
-                    <Hotels />
-                  </ProtectedAdminRoute>
-                }
-              />
-              <Route
-                path="irctc"
-                element={
-                  <ProtectedAdminRoute roles={["operations", "support"]}>
-                    <IrctcOversight />
-                  </ProtectedAdminRoute>
-                }
-              />
-              <Route
-                path="moderation"
-                element={
-                  <ProtectedAdminRoute roles={["content", "support"]}>
-                    <Moderation />
-                  </ProtectedAdminRoute>
-                }
-              />
-              <Route
-                path="customers"
-                element={
-                  <ProtectedAdminRoute roles={["operations", "sales", "support"]}>
-                    <Customers />
-                  </ProtectedAdminRoute>
-                }
-              />
-              <Route
-                path="marketing"
-                element={
-                  <ProtectedAdminRoute roles={["sales", "content"]}>
-                    <Marketing />
-                  </ProtectedAdminRoute>
-                }
-              />
-              <Route
-                path="reports"
-                element={
-                  <ProtectedAdminRoute roles={["operations", "finance", "sales"]}>
-                    <Reports />
-                  </ProtectedAdminRoute>
-                }
-              />
-              <Route
-                path="blog"
-                element={
-                  <ProtectedAdminRoute roles={["content"]}>
-                    <Blog />
-                  </ProtectedAdminRoute>
-                }
-              />
-              <Route
-                path="notifications"
-                element={
-                  <ProtectedAdminRoute roles={["sales", "support"]}>
-                    <Notifications />
-                  </ProtectedAdminRoute>
-                }
-              />
-              <Route
-                path="support"
-                element={
-                  <ProtectedAdminRoute roles={["support", "operations"]}>
-                    <Support />
-                  </ProtectedAdminRoute>
-                }
-              />
-              <Route
-                path="ai-trips"
-                element={
-                  <ProtectedAdminRoute roles={["operations", "content"]}>
-                    <AiTripConsole />
-                  </ProtectedAdminRoute>
-                }
-              />
-              <Route
-                path="audit-log"
-                element={
-                  <ProtectedAdminRoute roles={["superadmin"]}>
-                    <AuditLog />
-                  </ProtectedAdminRoute>
-                }
-              />
-              <Route
-                path="settings"
-                element={
-                  <ProtectedAdminRoute roles={["superadmin"]}>
-                    <AdminSettings />
-                  </ProtectedAdminRoute>
-                }
-              />
-            </Route>
-=======
->>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
+              >
+                <Route index element={<Navigate to="/admin/dashboard" replace />} />
+                <Route path="dashboard" element={<Dashboard />} />
+                <Route
+                  path="team"
+                  element={
+                    <ProtectedAdminRoute roles={["superadmin"]}>
+                      <Team />
+                    </ProtectedAdminRoute>
+                  }
+                />
+                <Route
+                  path="enquiries"
+                  element={
+                    <ProtectedAdminRoute roles={["operations", "sales"]}>
+                      <Enquiries />
+                    </ProtectedAdminRoute>
+                  }
+                />
+                <Route
+                  path="finance"
+                  element={
+                    <ProtectedAdminRoute roles={["finance"]}>
+                      <Finance />
+                    </ProtectedAdminRoute>
+                  }
+                />
+                <Route
+                  path="packages"
+                  element={
+                    <ProtectedAdminRoute roles={["content", "operations"]}>
+                      <PackagesCms />
+                    </ProtectedAdminRoute>
+                  }
+                />
+                <Route
+                  path="domestic-content"
+                  element={
+                    <ProtectedAdminRoute roles={["content", "operations"]}>
+                      <DomesticContent />
+                    </ProtectedAdminRoute>
+                  }
+                />
+                <Route
+                  path="hotels"
+                  element={
+                    <ProtectedAdminRoute roles={["operations"]}>
+                      <Hotels />
+                    </ProtectedAdminRoute>
+                  }
+                />
+                <Route
+                  path="irctc"
+                  element={
+                    <ProtectedAdminRoute roles={["operations", "support"]}>
+                      <IrctcOversight />
+                    </ProtectedAdminRoute>
+                  }
+                />
+                <Route
+                  path="moderation"
+                  element={
+                    <ProtectedAdminRoute roles={["content", "support"]}>
+                      <Moderation />
+                    </ProtectedAdminRoute>
+                  }
+                />
+                <Route
+                  path="customers"
+                  element={
+                    <ProtectedAdminRoute roles={["operations", "sales", "support"]}>
+                      <Customers />
+                    </ProtectedAdminRoute>
+                  }
+                />
+                <Route
+                  path="marketing"
+                  element={
+                    <ProtectedAdminRoute roles={["sales", "content"]}>
+                      <Marketing />
+                    </ProtectedAdminRoute>
+                  }
+                />
+                <Route
+                  path="reports"
+                  element={
+                    <ProtectedAdminRoute roles={["operations", "finance", "sales"]}>
+                      <Reports />
+                    </ProtectedAdminRoute>
+                  }
+                />
+                <Route
+                  path="blog"
+                  element={
+                    <ProtectedAdminRoute roles={["content"]}>
+                      <Blog />
+                    </ProtectedAdminRoute>
+                  }
+                />
+                <Route
+                  path="notifications"
+                  element={
+                    <ProtectedAdminRoute roles={["sales", "support"]}>
+                      <Notifications />
+                    </ProtectedAdminRoute>
+                  }
+                />
+                <Route
+                  path="support"
+                  element={
+                    <ProtectedAdminRoute roles={["support", "operations"]}>
+                      <Support />
+                    </ProtectedAdminRoute>
+                  }
+                />
+                <Route
+                  path="ai-trips"
+                  element={
+                    <ProtectedAdminRoute roles={["operations", "content"]}>
+                      <AiTripConsole />
+                    </ProtectedAdminRoute>
+                  }
+                />
+                <Route
+                  path="audit-log"
+                  element={
+                    <ProtectedAdminRoute roles={["superadmin"]}>
+                      <AuditLog />
+                    </ProtectedAdminRoute>
+                  }
+                />
+                <Route
+                  path="settings"
+                  element={
+                    <ProtectedAdminRoute roles={["superadmin"]}>
+                      <AdminSettings />
+                    </ProtectedAdminRoute>
+                  }
+                />
+              </Route>
 
-            {/* 404 */}
-            <Route path="*" element={<PageNotFound />} />
-          </Routes>
-        </Suspense>
+              {/* 404 */}
+              <Route path="*" element={<PageNotFound />} />
+            </Routes>
+          </Suspense>
+        </AdminAuthProvider>
       </PackageProvider>
-<<<<<<< HEAD
       {!isAdminRoute && <WhatsAppButton />}
-=======
->>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
     </>
   );
 };

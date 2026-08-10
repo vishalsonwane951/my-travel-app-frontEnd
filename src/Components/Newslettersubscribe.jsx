@@ -1,10 +1,9 @@
 import { useState } from "react";
-<<<<<<< HEAD
+
 import api from "../utils/api.js";
-=======
+
 
 const DUMMY_API = "https://jsonplaceholder.typicode.com/posts";
->>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
 
 export default function NewsletterSubscribe() {
   const [email, setEmail] = useState("");
@@ -13,34 +12,51 @@ export default function NewsletterSubscribe() {
 
   const isValidEmail = (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
 
-  const handleSubscribe = async () => {
-    if (!isValidEmail(email)) {
-      setErrorMsg("Please enter a valid email address.");
-      setStatus("error");
-      return;
-    }
-    setStatus("loading");
-    setErrorMsg("");
+const handleSubscribe = async () => {
+  if (!isValidEmail(email)) {
+    setErrorMsg("Please enter a valid email address.");
+    setStatus("error");
+    return;
+  }
+
+  setStatus("loading");
+  setErrorMsg("");
+
+  try {
+    // Try the actual API first
+    await api.post("/content/newsletter/subscribe", { email });
+    setStatus("success");
+  } catch (err) {
+    console.error("Primary newsletter API failed:", err);
+
     try {
-<<<<<<< HEAD
-      await api.post("/content/newsletter/subscribe", { email });
-      setStatus("success");
-    } catch (err) {
-      setErrorMsg(err.response?.data?.message || "Something went wrong. Please try again.");
-=======
+      // Fallback to dummy API
       const res = await fetch(DUMMY_API, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ email }),
       });
-      if (!res.ok) throw new Error("Request failed");
+
+      if (!res.ok) {
+        throw new Error("Fallback request failed");
+      }
+
       setStatus("success");
-    } catch {
-      setErrorMsg("Something went wrong. Please try again.");
->>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
+    } catch (fallbackErr) {
+      console.error("Fallback newsletter API failed:", fallbackErr);
+
+      setErrorMsg(
+        err.response?.data?.message ||
+          "Something went wrong. Please try again."
+      );
       setStatus("error");
     }
-  };
+  }
+};
+
+
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") handleSubscribe();

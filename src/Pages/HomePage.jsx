@@ -1332,11 +1332,10 @@ const RATES_API_URL = "https://open.er-api.com/v6/latest/INR"
             Talk to Our Travel Experts
           </div>
           {[
-<<<<<<< HEAD
+
             { icon: <FaPhone />, label: "+91 98765 43210" },
-=======
+
             { icon: <FaPhone />, label: "+91 788825150" },
->>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
             { icon: <FaWhatsapp />, label: "WhatsApp Us" },
             { icon: <FaEnvelope />, label: "info@desivdesi.com" },
           ].map((c, i) => (
@@ -2228,11 +2227,10 @@ const AboutSection = React.memo(({ onBookNow }) => {
                 Book Your Tour Now →
               </button>
               <a
-<<<<<<< HEAD
+
                 href="tel:+919876543210"
-=======
+
                 href="tel:+917888251550"
->>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
                 style={{
                   display: "flex",
                   alignItems: "center",
