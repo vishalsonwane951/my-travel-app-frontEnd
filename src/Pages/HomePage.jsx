@@ -62,7 +62,7 @@ import {
   FaChartLine,
   FaTrophy,
 } from "react-icons/fa";
-import TourPackageCard from "../Components/TourPackageCard.jsx";
+// import TourPackageCard from "../Components/TourPackageCard.jsx";
 import TripPlannerModal from "../Pages/AITrip Planner/TripPlannerModal.jsx";
 import ItineraryResult from "../Components/ItineraryResult.jsx";
 import NewsletterSubscribe from "../Components/Newslettersubscribe.jsx";

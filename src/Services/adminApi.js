@@ -2,7 +2,7 @@ import axios from "axios";
 
 const adminApi = axios.create({
   // baseURL: "http://localhost:5000/api/admin",
-    baseURL:'https://my-travel-app-backend-6.onrender.com/admin',
+    baseURL:'https://my-travel-app-backend-6.onrender.com/api/admin',
 
   withCredentials: true,
 });

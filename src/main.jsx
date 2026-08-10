@@ -9,22 +9,18 @@ import { CurrencyProvider } from './Context/CurrencyContext.jsx'
 import { LanguageProvider } from './Context/LanguageContext.jsx'
 import './index.css'
 import App from './App.jsx'
-// import StayRoutes from './Pages/Hotel/Stayroutes.jsx';
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
         <AdminAuthProvider>
-        <CurrencyProvider>
-        <LanguageProvider>
-        {/* <StayRoutes/> */}
-        <App />
-        </LanguageProvider>
-        </CurrencyProvider>
+          <CurrencyProvider>
+            <LanguageProvider>
+              <App />
+            </LanguageProvider>
+          </CurrencyProvider>
         </AdminAuthProvider>
-        {/* <StayRoutes/> */}
-        <App />
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>
