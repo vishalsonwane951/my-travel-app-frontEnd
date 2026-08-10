@@ -1050,7 +1050,7 @@ const WidgetsRow = React.memo(() => {
   const [toCurrency, setToCurrency] = useState("USD");
   const [rates, setRates] = useState(null);
   const [currencyList, setCurrencyList] = useState([]);
-  const [ratesStatus,setRatesStatus] = useState('loading');
+  const [ratesStatus, setRatesStatus] = useState("loading");
   const [lastUpdated, setLastUpdated] = useState(null);
 
   const weatherData = useMemo(
@@ -1064,8 +1064,8 @@ const WidgetsRow = React.memo(() => {
   const [activeCity, setActiveCity] = useState(0);
 
   // Live Currency EndPoints
-const RATES_API_URL = "https://open.er-api.com/v6/latest/INR"
-   const fetchRates = useCallback(() => {
+  const RATES_API_URL = "https://open.er-api.com/v6/latest/INR";
+  const fetchRates = useCallback(() => {
     setRatesStatus("loading");
     const controller = new AbortController();
     fetch(RATES_API_URL, { signal: controller.signal })
@@ -1084,7 +1084,9 @@ const RATES_API_URL = "https://open.er-api.com/v6/latest/INR"
 
         setRates(data.rates);
         setCurrencyList(codes);
-        setToCurrency((prev) => (codes.includes(prev) ? prev : codes[0] || "USD"));
+        setToCurrency((prev) =>
+          codes.includes(prev) ? prev : codes[0] || "USD",
+        );
         setLastUpdated(data.time_last_update_utc || null);
         setRatesStatus("live");
       })
@@ -1246,30 +1248,30 @@ const RATES_API_URL = "https://open.er-api.com/v6/latest/INR"
               />
             </div>
             <select
-  value={toCurrency}
-  onChange={(e) => setToCurrency(e.target.value)}
-  style={{
-    background: "rgba(255,255,255,0.2)",
-    border: "none",
-    borderRadius: 10,
-    color: "white",
-    padding: "8px 12px",
-    fontFamily: "Outfit",
-    cursor: "pointer",
-    fontSize: "0.9rem",
-    maxWidth: 100,
-  }}
->
-  {currencyList.map((c) => (
-    <option
-      key={c}
-      value={c}
-      style={{ background: "var(--saffron-dark)", color: "white" }}
-    >
-      {c}
-    </option>
-  ))}
-</select>
+              value={toCurrency}
+              onChange={(e) => setToCurrency(e.target.value)}
+              style={{
+                background: "rgba(255,255,255,0.2)",
+                border: "none",
+                borderRadius: 10,
+                color: "white",
+                padding: "8px 12px",
+                fontFamily: "Outfit",
+                cursor: "pointer",
+                fontSize: "0.9rem",
+                maxWidth: 100,
+              }}
+            >
+              {currencyList.map((c) => (
+                <option
+                  key={c}
+                  value={c}
+                  style={{ background: "var(--saffron-dark)", color: "white" }}
+                >
+                  {c}
+                </option>
+              ))}
+            </select>
           </div>
           <button
             onClick={convert}
@@ -1332,7 +1334,6 @@ const RATES_API_URL = "https://open.er-api.com/v6/latest/INR"
             Talk to Our Travel Experts
           </div>
           {[
-
             { icon: <FaPhone />, label: "+91 98765 43210" },
 
             { icon: <FaPhone />, label: "+91 788825150" },
@@ -2227,9 +2228,7 @@ const AboutSection = React.memo(({ onBookNow }) => {
                 Book Your Tour Now →
               </button>
               <a
-
                 href="tel:+919876543210"
-
                 href="tel:+917888251550"
                 style={{
                   display: "flex",
@@ -2253,6 +2252,129 @@ const AboutSection = React.memo(({ onBookNow }) => {
             </div>
           </Reveal>
         </div>
+      </div>
+    </section>
+  );
+});
+
+const OffersSection = React.memo(() => {
+  const [coupons, setCoupons] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [copiedCode, setCopiedCode] = useState(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    api
+      .get("/content/coupons/active", { signal: controller.signal })
+      .then((res) => setCoupons(res.data?.coupons || []))
+      .catch((err) => {
+        if (err.name !== "CanceledError")
+          console.error("Failed to load offers", err);
+      })
+      .finally(() => setLoading(false));
+    return () => controller.abort();
+  }, []);
+
+  const copyCode = (code) => {
+    navigator.clipboard?.writeText(code).then(() => {
+      setCopiedCode(code);
+      setTimeout(() => setCopiedCode(null), 2000);
+    });
+  };
+
+  if (loading || coupons.length === 0) return null; // no fake/placeholder offers — only real, currently-valid coupons
+
+  return (
+    <section
+      className="td-section"
+      id="offers"
+      style={{ background: "#fff8e6" }}
+    >
+      <Reveal style={{ textAlign: "center", marginBottom: 40 }}>
+        <div className="section-eyebrow" style={{ marginBottom: 10 }}>
+          Limited Time
+        </div>
+        <h2 className="section-title">
+          Current <em style={{ color: "var(--saffron)" }}>Offers</em>
+        </h2>
+      </Reveal>
+
+      <div
+        style={{
+          display: "flex",
+          gap: 20,
+          flexWrap: "wrap",
+          justifyContent: "center",
+          maxWidth: 1100,
+          margin: "0 auto",
+          marginBottom: -110,
+        }}
+      >
+        {coupons.map((c, i) => (
+          <Reveal
+            key={c._id || c.code}
+            delay={i * 80}
+            style={{
+              background: "#fff",
+              border: "2px dashed #f0a500",
+              borderRadius: 14,
+              padding: "20px 26px",
+              minWidth: 260,
+              flex: "1 1 280px",
+              maxWidth: 340,
+              display: "flex",
+              flexDirection: "column",
+              gap: 8,
+              boxShadow: "0 4px 14px rgba(0,0,0,0.06)",
+            }}
+          >
+            <div style={{ fontSize: 22, fontWeight: 800, color: "#d97706" }}>
+              {c.discountType === "percent"
+                ? `${c.discountValue}% OFF`
+                : `₹${c.discountValue} OFF`}
+            </div>
+            {c.description && (
+              <div style={{ color: "#555", fontSize: 14 }}>{c.description}</div>
+            )}
+            {c.minBookingAmount > 0 && (
+              <div style={{ color: "#888", fontSize: 12.5 }}>
+                On bookings above ₹{c.minBookingAmount.toLocaleString("en-IN")}
+              </div>
+            )}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginTop: 8,
+                background: "#f7f8fb",
+                borderRadius: 8,
+                padding: "8px 12px",
+              }}
+            >
+              <code style={{ fontWeight: 700, letterSpacing: 1 }}>
+                {c.code}
+              </code>
+              <button
+                onClick={() => copyCode(c.code)}
+                style={{
+                  background: "var(--saffron)",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: 6,
+                  padding: "5px 12px",
+                  fontSize: 12.5,
+                  cursor: "pointer",
+                }}
+              >
+                {copiedCode === c.code ? "Copied!" : "Copy"}
+              </button>
+            </div>
+            <div style={{ color: "#aaa", fontSize: 11.5 }}>
+              Valid till {new Date(c.validTill).toLocaleDateString("en-IN")}
+            </div>
+          </Reveal>
+        ))}
       </div>
     </section>
   );
@@ -2458,6 +2580,8 @@ function HomePage() {
       <HeroSection onBookNow={handleBookNow} onSearch={() => {}} />
       <StatsBar />
       <WidgetsRow />
+      <OffersSection />
+
       <IntroSection onBookNow={handleBookNow} />
       <BestPlaceSection />
 

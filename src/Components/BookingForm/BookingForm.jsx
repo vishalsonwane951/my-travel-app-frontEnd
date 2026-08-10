@@ -40,6 +40,7 @@ const BookingForm = ({
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
 
   const totalTravelers = (formData.adults || 0) + (formData.children || 0) + (formData.seniors || 0);
 
@@ -84,13 +85,12 @@ const BookingForm = ({
 *Message:* ${formData.message || "No special requests"}
   `;
 
-const phone = "917888251550";
-
-window.open(
-  `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
-  "_blank"
-);
-};
+    const phone = "919876543210"; // Replace with actual business number
+    window.open(
+      `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
+      "_blank"
+    );
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -111,10 +111,9 @@ window.open(
       });
 
       onSuccess?.();
-      alert("✨ Inquiry Submitted Successfully! Our team will contact you shortly.");
-      onClose();
+      setSuccess(true);
     } catch (err) {
-      setError("Failed to submit inquiry. Please try again.");
+      setError(err.response?.data?.message || "Failed to submit inquiry. Please check your details and try again.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -122,6 +121,34 @@ window.open(
   };
 
   if (!isOpen) return null;
+
+  if (success) {
+    return (
+      <div className="modal-overlay" onClick={onClose}>
+        <div className="modal-content" onClick={e => e.stopPropagation()} style={{ textAlign: "center", padding: "48px 32px" }}>
+          <button className="modal-close" onClick={onClose}>
+            <FaTimes />
+          </button>
+          <FaCheckCircle size={56} style={{ color: "#2ecc71", marginBottom: 16 }} />
+          <h2 className="modal-title" style={{ marginBottom: 8 }}>Enquiry Submitted!</h2>
+          <p style={{ color: "#555", marginBottom: 4 }}>
+            Thanks, {formData.name.split(" ")[0] || "there"} — we've received your enquiry for{" "}
+            <strong>{packageData?.title}</strong>.
+          </p>
+          <p style={{ color: "#888", fontSize: 14, marginBottom: 24 }}>
+            A confirmation has been sent to <strong>{formData.email}</strong>. Our team will reach out within 24 hours.
+          </p>
+          <button
+            className="modal-close-btn"
+            onClick={onClose}
+            style={{ background: "#2ecc71", color: "#fff", border: "none", padding: "10px 28px", borderRadius: 8, cursor: "pointer", fontWeight: 600 }}
+          >
+            Done
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="modal-overlay" onClick={onClose}>
