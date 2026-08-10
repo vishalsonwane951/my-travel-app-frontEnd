@@ -1,0 +1,1608 @@
+[
+  {
+    "title": "Himalayan Adventure Trek",
+    "location": "Manali, Himachal Pradesh",
+    "type": "adventure-tour",
+    "destination": "Manali",
+    "rating": 4.8,
+    "price": 18999,
+    "strikePrice": 24999,
+    "durations": "7 Days / 6 Nights",
+    "groupSize": "8-15",
+    "description": "Embark on an exhilarating trek through the majestic Himalayan ranges. Experience snow-capped peaks, glacial rivers, and breathtaking valleys. This package includes guided trekking, river crossing, and camping under the stars.",
+    "images": "https://res.cloudinary.com/demo/image/upload/manali_adventure.jpg",
+    "imagePublicId": "manali_adventure",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/manali_1.jpg", "caption": "Snow-capped peaks", "publicId": "manali_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/manali_2.jpg", "caption": "River crossing", "publicId": "manali_2" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/manali_3.jpg", "caption": "Base camp", "publicId": "manali_3" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrival in Manali", "description": "Check-in, acclimatization walk around Old Manali village.", "meals": "Dinner" },
+      { "day": 2, "title": "Solang Valley Trek", "description": "Trek to Solang Valley, snow activities, return by evening.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 3, "title": "Beas Kund Base Camp", "description": "Trek to Beas Kund, glacier views and overnight camping.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 4, "title": "River Rafting & Zip Line", "description": "Adventure sports on Beas River, zip line at Solang.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 5, "title": "Rohtang Pass Excursion", "description": "Visit Rohtang Pass, snow sports, scenic photography.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 6, "title": "Paragliding at Dobhi", "description": "Paragliding session, leisure time, bonfire at campsite.", "meals": "Breakfast, Dinner" },
+      { "day": 7, "title": "Departure", "description": "Check-out and transfer to Chandigarh airport.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Accommodation in camps/hotels", "All meals as mentioned", "Trekking guide", "River rafting", "Paragliding", "All permits and entry fees", "First aid kit"],
+      "exclusions": ["Travel to/from Manali", "Personal expenses", "Travel insurance", "Any activities not mentioned", "Tips and gratuities"]
+    },
+    "highlights": ["Beas Kund trek", "Rohtang Pass", "River rafting on Beas", "Paragliding at Dobhi", "Camping under stars"],
+    "tags": ["adventure", "trekking", "himalayas", "camping", "rafting"],
+    "featured": true,
+    "active": true
+  },
+  {
+    "title": "Rishikesh Thrill Seekers Package",
+    "location": "Rishikesh, Uttarakhand",
+    "type": "adventure-tour",
+    "destination": "Rishikesh",
+    "rating": 4.7,
+    "price": 12999,
+    "strikePrice": 16999,
+    "durations": "4 Days / 3 Nights",
+    "groupSize": "6-12",
+    "description": "Rishikesh, the adventure capital of India, offers unmatched thrills. From white-water rafting on the Ganges to bungee jumping and cliff jumping, this package packs maximum adventure into four unforgettable days.",
+    "images": "https://res.cloudinary.com/demo/image/upload/rishikesh_adventure.jpg",
+    "imagePublicId": "rishikesh_adventure",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/rishikesh_1.jpg", "caption": "White-water rafting", "publicId": "rishikesh_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/rishikesh_2.jpg", "caption": "Bungee jump", "publicId": "rishikesh_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrival & Camp Setup", "description": "Arrive, set up camp by Ganges, introductory session.", "meals": "Dinner" },
+      { "day": 2, "title": "White Water Rafting", "description": "16 km rafting stretch from Shivpuri to Laxman Jhula, grade 3-4 rapids.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 3, "title": "Bungee & Flying Fox", "description": "Bungee jumping (83m), flying fox, giant swing at Jumping Heights.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 4, "title": "Cliff Jumping & Departure", "description": "Cliff jumping at Ganga Ghats, yoga session, check-out.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Riverside camp accommodation", "All mentioned meals", "Rafting with safety gear", "Bungee jumping", "Flying fox", "Certified instructors"],
+      "exclusions": ["Transport to Rishikesh", "Personal gear", "Insurance", "Extra activities"]
+    },
+    "highlights": ["16km white-water rafting", "83m bungee jump", "Ganges riverside camping", "Cliff jumping", "Morning yoga"],
+    "tags": ["adventure", "rafting", "bungee", "rishikesh", "ganges"],
+    "featured": true,
+    "active": true
+  },
+  {
+    "title": "Coorg Coffee Trail Adventure",
+    "location": "Coorg, Karnataka",
+    "type": "adventure-tour",
+    "destination": "Coorg",
+    "rating": 4.6,
+    "price": 14999,
+    "strikePrice": 19999,
+    "durations": "5 Days / 4 Nights",
+    "groupSize": "5-10",
+    "description": "Discover the wild side of the Scotland of India. Trek through dense coffee estates, zip-line over gorges, explore hidden waterfalls, and camp amid misty mountains in the lush Western Ghats.",
+    "images": "https://res.cloudinary.com/demo/image/upload/coorg_adventure.jpg",
+    "imagePublicId": "coorg_adventure",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/coorg_1.jpg", "caption": "Coffee estate trek", "publicId": "coorg_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/coorg_2.jpg", "caption": "Abbey Falls", "publicId": "coorg_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrival in Madikeri", "description": "Check-in at jungle camp, evening walk around Madikeri town.", "meals": "Dinner" },
+      { "day": 2, "title": "Tadiandamol Trek", "description": "Trek to Coorg's highest peak (1748m), panoramic views.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 3, "title": "Zip-line & Waterfall Rappelling", "description": "Zip-line over Cauvery gorge, rappelling at Iruppu Falls.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 4, "title": "Coffee Estate Walk & Cycling", "description": "Guided cycling through coffee and spice plantations.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 5, "title": "Departure", "description": "Visit Namdroling Monastery, transfer to Mysore/Bangalore.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Jungle camp stay", "All meals", "Tadiandamol trek guide", "Zip-line & rappelling", "Cycling gear", "Coffee estate tour"],
+      "exclusions": ["Travel to Madikeri", "Entry fees to monastery", "Personal expenses"]
+    },
+    "highlights": ["Tadiandamol peak trek", "Zip-line over Cauvery gorge", "Waterfall rappelling", "Coffee estate cycling", "Iruppu Falls"],
+    "tags": ["adventure", "trekking", "coorg", "western ghats", "cycling"],
+    "featured": false,
+    "active": true
+  },
+  {
+    "title": "Spiti Valley Bike Expedition",
+    "location": "Spiti Valley, Himachal Pradesh",
+    "type": "adventure-tour",
+    "destination": "Spiti Valley",
+    "rating": 4.9,
+    "price": 28999,
+    "strikePrice": 35999,
+    "durations": "9 Days / 8 Nights",
+    "groupSize": "6-10",
+    "description": "Ride through one of the world's highest motorable roads on this epic Spiti Valley motorcycle expedition. Cross high-altitude passes, visit ancient monasteries, and experience the raw beauty of the trans-Himalayan landscape.",
+    "images": "https://res.cloudinary.com/demo/image/upload/spiti_bike.jpg",
+    "imagePublicId": "spiti_bike",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/spiti_1.jpg", "caption": "Kunzum Pass", "publicId": "spiti_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/spiti_2.jpg", "caption": "Key Monastery", "publicId": "spiti_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Shimla – Narkanda", "description": "Start ride from Shimla, ascend to Narkanda (2700m).", "meals": "Dinner" },
+      { "day": 2, "title": "Narkanda – Sarahan", "description": "Ride via Rampur to Sarahan, visit Bhimakali Temple.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Sarahan – Sangla Valley", "description": "Scenic ride to Sangla, explore Chitkul village.", "meals": "Breakfast, Dinner" },
+      { "day": 4, "title": "Sangla – Kalpa", "description": "Ride to Kalpa, views of Kinner Kailash range.", "meals": "Breakfast, Dinner" },
+      { "day": 5, "title": "Kalpa – Tabo", "description": "Enter Spiti Valley, visit Tabo monastery (996 AD).", "meals": "Breakfast, Dinner" },
+      { "day": 6, "title": "Tabo – Kaza", "description": "Explore Dhankar, Pin Valley, arrive at Kaza.", "meals": "Breakfast, Dinner" },
+      { "day": 7, "title": "Kaza – Kibber – Key", "description": "Visit Key monastery and world's highest village Kibber.", "meals": "Breakfast, Dinner" },
+      { "day": 8, "title": "Kaza – Kunzum Pass – Manali", "description": "Cross Kunzum Pass (4551m), descend to Manali via Rohtang.", "meals": "Breakfast, Dinner" },
+      { "day": 9, "title": "Departure from Manali", "description": "Transfer to airport/bus stand, tour ends.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Royal Enfield Himalayan/Thunderbird bike rental", "Fuel charges", "Accommodation in guesthouses/camps", "Breakfast and dinner", "Mechanic support vehicle", "Experienced ride leader"],
+      "exclusions": ["Flight/train to Shimla", "Lunch", "Personal riding gear", "Insurance", "Monasteries entry fees"]
+    },
+    "highlights": ["Kunzum Pass (4551m)", "Tabo monastery", "Kibber village", "Key Gompa", "Chitkul – last Indian village"],
+    "tags": ["adventure", "biking", "spiti", "himalayas", "motorcycle"],
+    "featured": true,
+    "active": true
+  },
+  {
+    "title": "Andaman Scuba & Island Trek",
+    "location": "Andaman & Nicobar Islands",
+    "type": "adventure-tour",
+    "destination": "Port Blair",
+    "rating": 4.7,
+    "price": 32999,
+    "strikePrice": 42999,
+    "durations": "6 Days / 5 Nights",
+    "groupSize": "4-8",
+    "description": "Explore the underwater paradise of the Andaman Islands with certified scuba diving, sea-walking, kayaking through mangroves, and trekking in Chidiya Tapu's dense forests.",
+    "images": "https://res.cloudinary.com/demo/image/upload/andaman_adventure.jpg",
+    "imagePublicId": "andaman_adventure",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/andaman_1.jpg", "caption": "Scuba diving", "publicId": "andaman_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/andaman_2.jpg", "caption": "Radhanagar Beach", "publicId": "andaman_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Port Blair Arrival", "description": "Cellular Jail visit, light show, check-in.", "meals": "Dinner" },
+      { "day": 2, "title": "Havelock Island", "description": "Ferry to Havelock, check-in, Radhanagar Beach.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Scuba Diving", "description": "Beginner or advanced scuba at Elephant Beach, snorkelling.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 4, "title": "Kayaking & Mangrove Trek", "description": "Sea kayaking, mangrove forest trek, Neil Island visit.", "meals": "Breakfast, Dinner" },
+      { "day": 5, "title": "Sea Walking & Chidiya Tapu", "description": "Sea walking in Port Blair, sunset trek at Chidiya Tapu.", "meals": "Breakfast, Dinner" },
+      { "day": 6, "title": "Departure", "description": "Shopping at Aberdeen Bazaar, transfer to airport.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Beach resort accommodation", "All meals as mentioned", "Ferry tickets", "Scuba diving (1 session)", "Sea walking", "Kayaking", "Trekking guide"],
+      "exclusions": ["Flight to Port Blair", "Extra dive sessions", "Cellular Jail entry", "Personal expenses"]
+    },
+    "highlights": ["Scuba diving at Elephant Beach", "Sea walking", "Radhanagar Beach", "Mangrove kayaking", "Cellular Jail"],
+    "tags": ["adventure", "scuba", "andaman", "island", "kayaking"],
+    "featured": false,
+    "active": true
+  },
+  {
+    "title": "Meghalaya Caving & Living Root Bridge",
+    "location": "Shillong, Meghalaya",
+    "type": "adventure-tour",
+    "destination": "Meghalaya",
+    "rating": 4.8,
+    "price": 21999,
+    "strikePrice": 27999,
+    "durations": "6 Days / 5 Nights",
+    "groupSize": "5-12",
+    "description": "Explore the wettest place on Earth — ancient caves, living root bridges, crystal-clear rivers, and dramatic cliffs. Meghalaya delivers adventure unlike anywhere else in India.",
+    "images": "https://res.cloudinary.com/demo/image/upload/meghalaya_adventure.jpg",
+    "imagePublicId": "meghalaya_adventure",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/meghalaya_1.jpg", "caption": "Living root bridge", "publicId": "meghalaya_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/meghalaya_2.jpg", "caption": "Arwah Cave", "publicId": "meghalaya_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrival in Shillong", "description": "Explore Shillong city, Ward's Lake, Police Bazaar.", "meals": "Dinner" },
+      { "day": 2, "title": "Cherrapunji Day Trip", "description": "Seven Sisters Falls, Nohkalikai Falls, Mawsmai Cave.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 3, "title": "Double Decker Root Bridge", "description": "Trek to Nongriat village, double-decker living root bridge, Rainbow Falls.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 4, "title": "Dawki River", "description": "Boating on crystal-clear Umngot River, Indo-Bangladesh border.", "meals": "Breakfast, Dinner" },
+      { "day": 5, "title": "Krem Liat Prah Cave", "description": "Explore one of Asia's longest caves with professional guide.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 6, "title": "Departure", "description": "Visit Don Bosco Museum, transfer to Guwahati.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Accommodation", "All meals", "Local transport", "Cave guide", "Root bridge trek guide", "Boat at Dawki"],
+      "exclusions": ["Flight to Shillong/Guwahati", "Entry fees", "Personal expenses", "Caving equipment rental"]
+    },
+    "highlights": ["Double-decker living root bridge", "Nohkalikai Falls", "Krem Liat Prah cave", "Dawki crystal river", "Rainbow Falls"],
+    "tags": ["adventure", "caving", "northeast", "meghalaya", "trekking"],
+    "featured": false,
+    "active": true
+  },
+
+  {
+    "title": "Rajasthan Royal Family Tour",
+    "location": "Jaipur, Rajasthan",
+    "type": "family-tour",
+    "destination": "Rajasthan",
+    "rating": 4.7,
+    "price": 26999,
+    "strikePrice": 34999,
+    "durations": "8 Days / 7 Nights",
+    "groupSize": "2-6",
+    "description": "Take your family on a magical journey through the Land of Kings. Explore magnificent forts, colorful bazaars, camel rides, and folk performances that bring Rajasthan's rich heritage to life for all ages.",
+    "images": "https://res.cloudinary.com/demo/image/upload/rajasthan_family.jpg",
+    "imagePublicId": "rajasthan_family",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/raj_fam_1.jpg", "caption": "Amber Fort", "publicId": "raj_fam_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/raj_fam_2.jpg", "caption": "Camel ride in Jaisalmer", "publicId": "raj_fam_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrival in Jaipur", "description": "Welcome with traditional tilak, check-in to heritage hotel.", "meals": "Dinner" },
+      { "day": 2, "title": "Jaipur Exploration", "description": "Amber Fort elephant ride, City Palace, Jantar Mantar, bazaar shopping.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Jaipur to Jodhpur", "description": "Drive to Jodhpur, check-in, evening at Ghanta Ghar market.", "meals": "Breakfast, Dinner" },
+      { "day": 4, "title": "Blue City Tour", "description": "Mehrangarh Fort, Jaswant Thada, folk dance show at fort.", "meals": "Breakfast, Dinner" },
+      { "day": 5, "title": "Jodhpur to Jaisalmer", "description": "Drive through Thar Desert, camel cart ride at Sam dunes.", "meals": "Breakfast, Dinner" },
+      { "day": 6, "title": "Desert Camp & Dunes", "description": "Camel safari, sunset on dunes, bonfire, Kalbeliya dance.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 7, "title": "Jaisalmer Fort & Drive to Jodhpur", "description": "Sonar Fort tour, Patwon Ki Haveli, drive to Jodhpur.", "meals": "Breakfast, Dinner" },
+      { "day": 8, "title": "Departure from Jodhpur", "description": "Transfer to airport/station, end of tour.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Heritage hotel accommodation", "All meals as mentioned", "AC transport throughout", "Amber Fort elephant ride", "Camel safari", "Folk dance show", "Guided tours"],
+      "exclusions": ["Flights", "Camera fees at monuments", "Personal shopping", "Tips"]
+    },
+    "highlights": ["Amber Fort elephant ride", "Mehrangarh Fort", "Sam sand dunes camel safari", "Jaisalmer golden fort", "Bonfire & folk dance"],
+    "tags": ["family", "rajasthan", "heritage", "desert", "forts"],
+    "featured": true,
+    "active": true
+  },
+  {
+    "title": "Kerala Backwaters Family Escape",
+    "location": "Alleppey, Kerala",
+    "type": "family-tour",
+    "destination": "Kerala",
+    "rating": 4.8,
+    "price": 23999,
+    "strikePrice": 29999,
+    "durations": "6 Days / 5 Nights",
+    "groupSize": "2-8",
+    "description": "Kerala offers an ideal family holiday – glide through serene backwaters on a houseboat, visit elephant sanctuaries, play in Munnar's tea gardens, and enjoy the magic of Kathakali dance.",
+    "images": "https://res.cloudinary.com/demo/image/upload/kerala_family.jpg",
+    "imagePublicId": "kerala_family",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/kerala_fam_1.jpg", "caption": "Houseboat in Alleppey", "publicId": "kerala_fam_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/kerala_fam_2.jpg", "caption": "Elephant at Periyar", "publicId": "kerala_fam_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrival in Cochin", "description": "Chinese fishing nets, Fort Kochi walk, Kathakali show.", "meals": "Dinner" },
+      { "day": 2, "title": "Cochin to Munnar", "description": "Drive to Munnar, tea museum, sprawling tea gardens.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Munnar Sightseeing", "description": "Eravikulam National Park, Mattupetty Dam, elephant interaction.", "meals": "Breakfast, Dinner" },
+      { "day": 4, "title": "Munnar to Alleppey", "description": "Drive to Alleppey, board houseboat on backwaters.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 5, "title": "Backwater Cruise to Kumarakom", "description": "Cruise through canals, bird watching, village walk.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 6, "title": "Departure", "description": "Transfer to Cochin airport, end of tour.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Houseboat accommodation (1 night)", "Resort accommodation (4 nights)", "All meals as mentioned", "AC transport", "Kathakali show", "Tea museum entry", "Eravikulam entry"],
+      "exclusions": ["Flights to Cochin", "Personal expenses", "Ayurvedic treatments"]
+    },
+    "highlights": ["Alleppey houseboat cruise", "Munnar tea gardens", "Eravikulam NP Nilgiri Tahr", "Kathakali performance", "Elephant interaction"],
+    "tags": ["family", "kerala", "houseboat", "backwaters", "munnar"],
+    "featured": true,
+    "active": true
+  },
+  {
+    "title": "Ooty & Kodaikanal Family Hills Tour",
+    "location": "Ooty, Tamil Nadu",
+    "type": "family-tour",
+    "destination": "Nilgiris",
+    "rating": 4.5,
+    "price": 16999,
+    "strikePrice": 21999,
+    "durations": "5 Days / 4 Nights",
+    "groupSize": "2-8",
+    "description": "The Nilgiri Hills are perfect for families – toy train rides, rose gardens, Pykara waterfalls, boat rides, and the cool climate of Kodaikanal. A refreshing summer escape for all generations.",
+    "images": "https://res.cloudinary.com/demo/image/upload/ooty_family.jpg",
+    "imagePublicId": "ooty_family",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/ooty_1.jpg", "caption": "Nilgiri toy train", "publicId": "ooty_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/ooty_2.jpg", "caption": "Kodaikanal Lake", "publicId": "ooty_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrival in Ooty", "description": "Nilgiri toy train from Mettupalayam, check-in at resort.", "meals": "Dinner" },
+      { "day": 2, "title": "Ooty Sightseeing", "description": "Botanical Gardens, Rose Garden, Ooty Lake boating, Doddabetta Peak.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Pykara & Mudumalai", "description": "Pykara Falls, Pykara Lake boat ride, Mudumalai wildlife safari.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 4, "title": "Ooty to Kodaikanal", "description": "Drive to Kodaikanal, Kodai Lake, Bryant Park, Coakers Walk.", "meals": "Breakfast, Dinner" },
+      { "day": 5, "title": "Kodaikanal & Departure", "description": "Pillar Rocks, Silver Cascade Falls, depart to Madurai/Coimbatore.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Hill resort accommodation", "Meals as mentioned", "Toy train ticket", "AC transport", "Boat rides", "Mudumalai safari"],
+      "exclusions": ["Flights", "Entry to gardens/museums", "Personal shopping"]
+    },
+    "highlights": ["Nilgiri toy train (UNESCO)", "Mudumalai wildlife safari", "Kodaikanal Lake", "Doddabetta Peak", "Pykara Falls"],
+    "tags": ["family", "hill station", "ooty", "kodaikanal", "toy train"],
+    "featured": false,
+    "active": true
+  },
+  {
+    "title": "Goa Beach Family Vacation",
+    "location": "North Goa",
+    "type": "family-tour",
+    "destination": "Goa",
+    "rating": 4.6,
+    "price": 19999,
+    "strikePrice": 25999,
+    "durations": "5 Days / 4 Nights",
+    "groupSize": "2-8",
+    "description": "Sun, sand, and sea – Goa's iconic beaches, water sports, spice plantations, and Portuguese heritage churches make it an ideal family destination. Kids love the dolphin spotting cruise!",
+    "images": "https://res.cloudinary.com/demo/image/upload/goa_family.jpg",
+    "imagePublicId": "goa_family",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/goa_fam_1.jpg", "caption": "Calangute Beach", "publicId": "goa_fam_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/goa_fam_2.jpg", "caption": "Dolphin cruise", "publicId": "goa_fam_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrival in Goa", "description": "Transfer to resort, evening at Calangute Beach.", "meals": "Dinner" },
+      { "day": 2, "title": "North Goa Beaches", "description": "Baga, Anjuna flea market, water sports – banana boat, jet ski.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Dolphin Cruise & Spice Farm", "description": "Morning dolphin spotting cruise, afternoon Old Goa churches, spice farm lunch.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 4, "title": "South Goa", "description": "Colva Beach, Cabo de Rama Fort, Palolem Beach walk.", "meals": "Breakfast, Dinner" },
+      { "day": 5, "title": "Departure", "description": "Morning at leisure, transfer to airport.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Beach resort accommodation", "Meals as mentioned", "Airport transfers", "Dolphin cruise", "Spice farm visit with lunch", "Water sports (basic)"],
+      "exclusions": ["Flights", "Extra water sports", "Personal expenses", "Church entry fees"]
+    },
+    "highlights": ["Dolphin spotting cruise", "Water sports at Baga", "Old Goa churches", "Spice plantation visit", "Palolem Beach"],
+    "tags": ["family", "goa", "beach", "water sports", "dolphin"],
+    "featured": false,
+    "active": true
+  },
+  {
+    "title": "Himachal Family Snow Holiday",
+    "location": "Shimla & Manali, Himachal Pradesh",
+    "type": "family-tour",
+    "destination": "Himachal Pradesh",
+    "rating": 4.7,
+    "price": 22999,
+    "strikePrice": 28999,
+    "durations": "7 Days / 6 Nights",
+    "groupSize": "2-8",
+    "description": "Watch your children's eyes light up at their first snowfall! Shimla's Mall Road, Kufri snow point, and Manali's Rohtang Pass combine colonial charm with Himalayan winter wonder for an unforgettable family holiday.",
+    "images": "https://res.cloudinary.com/demo/image/upload/himachal_family.jpg",
+    "imagePublicId": "himachal_family",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/himfam_1.jpg", "caption": "Snow at Kufri", "publicId": "himfam_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/himfam_2.jpg", "caption": "Mall Road Shimla", "publicId": "himfam_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrival in Shimla", "description": "Toy train from Kalka, Mall Road, Christ Church, Scandal Point.", "meals": "Dinner" },
+      { "day": 2, "title": "Kufri Snow Day", "description": "Snow activities at Kufri, horse riding, Himalayan Wildlife Zoo.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Shimla to Manali", "description": "Scenic drive via Kullu Valley, Pandoh Dam, riverside check-in.", "meals": "Breakfast, Dinner" },
+      { "day": 4, "title": "Rohtang Pass / Solang Valley", "description": "Snow point visit (subject to permit), snow slides, cable car.", "meals": "Breakfast, Dinner" },
+      { "day": 5, "title": "Manali Local", "description": "Hadimba Temple, Old Manali, Vashisht hot springs.", "meals": "Breakfast, Dinner" },
+      { "day": 6, "title": "Kullu Rafting & Market", "description": "Mild family rafting on Beas, shawl & apple market.", "meals": "Breakfast, Dinner" },
+      { "day": 7, "title": "Departure from Manali", "description": "Transfer to Chandigarh airport/bus stand.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Hotel accommodation", "Meals as mentioned", "Kalka-Shimla toy train", "AC transport", "Rohtang permit", "Cable car at Solang", "Family rafting"],
+      "exclusions": ["Flights", "Personal expenses", "Horse riding charges", "Extra snow activities"]
+    },
+    "highlights": ["Kalka-Shimla toy train", "Kufri snowfall & activities", "Rohtang Pass snow point", "Solang Valley cable car", "Hadimba Temple"],
+    "tags": ["family", "snow", "shimla", "manali", "himalaya"],
+    "featured": true,
+    "active": true
+  },
+  {
+    "title": "Agra & Delhi Family Heritage Tour",
+    "location": "New Delhi",
+    "type": "family-tour",
+    "destination": "Golden Triangle",
+    "rating": 4.5,
+    "price": 14999,
+    "strikePrice": 19999,
+    "durations": "4 Days / 3 Nights",
+    "groupSize": "2-10",
+    "description": "India's most iconic sights in one family-friendly package. See the Taj Mahal at sunrise, explore Delhi's Red Fort and India Gate, and experience the street food, history, and culture that define North India.",
+    "images": "https://res.cloudinary.com/demo/image/upload/delhi_agra_family.jpg",
+    "imagePublicId": "delhi_agra_family",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/taj_1.jpg", "caption": "Taj Mahal at sunrise", "publicId": "taj_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/delhi_1.jpg", "caption": "Red Fort Delhi", "publicId": "delhi_1" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrival in Delhi", "description": "India Gate, Qutub Minar, dinner at Paranthe Wali Gali.", "meals": "Dinner" },
+      { "day": 2, "title": "Delhi Sightseeing", "description": "Red Fort, Jama Masjid, Chandni Chowk rickshaw ride, Humayun's Tomb.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Agra – Taj Mahal", "description": "Sunrise Taj Mahal visit, Agra Fort, Mehtab Bagh sunset view.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 4, "title": "Agra to Delhi & Departure", "description": "Fatehpur Sikri en route, transfer to Delhi airport.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["3-star hotel accommodation", "Meals as mentioned", "AC transport", "Guided tours", "Taj Mahal entry", "Rickshaw at Chandni Chowk"],
+      "exclusions": ["Flights", "Other monument fees", "Personal shopping", "Camera fees"]
+    },
+    "highlights": ["Taj Mahal sunrise visit", "Red Fort & Jama Masjid", "Chandni Chowk rickshaw", "Agra Fort", "Fatehpur Sikri"],
+    "tags": ["family", "heritage", "delhi", "agra", "taj mahal"],
+    "featured": false,
+    "active": true
+  },
+
+  {
+    "title": "Mumbai City Explorer",
+    "location": "Mumbai, Maharashtra",
+    "type": "city-tour",
+    "destination": "Mumbai",
+    "rating": 4.5,
+    "price": 8999,
+    "strikePrice": 11999,
+    "durations": "3 Days / 2 Nights",
+    "groupSize": "2-15",
+    "description": "Maximum city, maximum experience. From the colonial grandeur of the CST railway station to the buzz of Dharavi, the calm of Marine Drive at sunset to the lights of Bollywood — this is Mumbai in three days.",
+    "images": "https://res.cloudinary.com/demo/image/upload/mumbai_city.jpg",
+    "imagePublicId": "mumbai_city",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/mumbai_1.jpg", "caption": "Gateway of India", "publicId": "mumbai_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/mumbai_2.jpg", "caption": "Marine Drive", "publicId": "mumbai_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "South Mumbai Heritage", "description": "Gateway of India, Elephanta Caves ferry, CST station, Marine Drive sunset.", "meals": "Dinner" },
+      { "day": 2, "title": "Bollywood & Dharavi", "description": "Film City tour, Dharavi slum tour, Bandra Bandstand, Linking Road.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Local Train & Departure", "description": "Local train experience, Chhatrapati Shivaji Maharaj Vastu Sangrahalaya, departure.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["3-star hotel accommodation", "Meals as mentioned", "Elephanta Caves ferry", "Dharavi tour", "Film City entry", "Local guides"],
+      "exclusions": ["Flights/trains to Mumbai", "Museum entry", "Personal shopping", "Local train ticket"]
+    },
+    "highlights": ["Gateway of India & Elephanta Caves", "Film City Bollywood tour", "Dharavi experience", "Marine Drive Queen's Necklace", "CST Victorian architecture"],
+    "tags": ["city-tour", "mumbai", "bollywood", "heritage", "urban"],
+    "featured": false,
+    "active": true
+  },
+  {
+    "title": "Delhi Heritage & Street Food Trail",
+    "location": "New Delhi",
+    "type": "city-tour",
+    "destination": "Delhi",
+    "rating": 4.6,
+    "price": 7999,
+    "strikePrice": 10999,
+    "durations": "3 Days / 2 Nights",
+    "groupSize": "2-12",
+    "description": "Delhi is a city of layers – Mughal, British, and modern India coexist in a dizzying sensory feast. Explore 1000 years of history by day and dive into legendary street food by night.",
+    "images": "https://res.cloudinary.com/demo/image/upload/delhi_city.jpg",
+    "imagePublicId": "delhi_city",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/delhi_city_1.jpg", "caption": "Qutub Minar", "publicId": "delhi_city_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/delhi_city_2.jpg", "caption": "Paranthe Wali Gali", "publicId": "delhi_city_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Old Delhi", "description": "Jama Masjid, Red Fort, Chandni Chowk food walk – chaat, jalebi, paranthe.", "meals": "Dinner" },
+      { "day": 2, "title": "New Delhi Landmarks", "description": "India Gate, Rashtrapati Bhavan, Humayun's Tomb, Lodi Garden, Khan Market.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Qutub & Departure", "description": "Qutub Minar complex, Mehrauli village walk, airport transfer.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Hotel accommodation", "Meals as mentioned", "Guided heritage walks", "Chandni Chowk food walk", "All local transport"],
+      "exclusions": ["Flights", "Monument entry fees", "Personal shopping"]
+    },
+    "highlights": ["Chandni Chowk food walk", "Humayun's Tomb & Lodi Garden", "Qutub Minar", "Red Fort", "Jama Masjid"],
+    "tags": ["city-tour", "delhi", "heritage", "street food", "mughal"],
+    "featured": false,
+    "active": true
+  },
+  {
+    "title": "Kolkata Cultural City Tour",
+    "location": "Kolkata, West Bengal",
+    "type": "city-tour",
+    "destination": "Kolkata",
+    "rating": 4.7,
+    "price": 9499,
+    "strikePrice": 12999,
+    "durations": "3 Days / 2 Nights",
+    "groupSize": "2-10",
+    "description": "The City of Joy is India's cultural soul. Victorian monuments, world-famous museums, the Howrah Bridge, Durga Puja pandals, Rabindranath's Jorasanko, and fish curry at para dhaba – Kolkata is utterly unique.",
+    "images": "https://res.cloudinary.com/demo/image/upload/kolkata_city.jpg",
+    "imagePublicId": "kolkata_city",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/kolkata_1.jpg", "caption": "Victoria Memorial", "publicId": "kolkata_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/kolkata_2.jpg", "caption": "Howrah Bridge", "publicId": "kolkata_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Colonial Kolkata", "description": "Victoria Memorial, Maidan, St. Paul's Cathedral, evening boat ride to Howrah Bridge.", "meals": "Dinner" },
+      { "day": 2, "title": "Heritage & Culture", "description": "Indian Museum, Jorasanko Thakurbari (Tagore's house), Marble Palace, Kumartuli potters.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Food Trail & Departure", "description": "Aaheli breakfast, New Market, Kalighat Temple, street food tour.", "meals": "Breakfast, Lunch" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Hotel in central Kolkata", "Meals as mentioned", "Howrah Bridge boat ride", "All guided walks", "Food trail"],
+      "exclusions": ["Flights", "Museum entry fees", "Temple offerings", "Personal shopping"]
+    },
+    "highlights": ["Victoria Memorial", "Howrah Bridge boat ride", "Tagore's Jorasanko house", "Kumartuli idol-making street", "New Market food trail"],
+    "tags": ["city-tour", "kolkata", "heritage", "culture", "food"],
+    "featured": false,
+    "active": true
+  },
+  {
+    "title": "Bengaluru Silicon City Tour",
+    "location": "Bengaluru, Karnataka",
+    "type": "city-tour",
+    "destination": "Bengaluru",
+    "rating": 4.4,
+    "price": 6999,
+    "strikePrice": 8999,
+    "durations": "2 Days / 1 Night",
+    "groupSize": "2-12",
+    "description": "India's startup capital blends IT campuses, Tipu Sultan's palace, Cubbon Park, microbreweries, and the iconic Vidhana Soudha. A whistle-stop city tour that captures Bengaluru's dual identity.",
+    "images": "https://res.cloudinary.com/demo/image/upload/bengaluru_city.jpg",
+    "imagePublicId": "bengaluru_city",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/blr_1.jpg", "caption": "Vidhana Soudha", "publicId": "blr_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/blr_2.jpg", "caption": "Lalbagh Botanical Garden", "publicId": "blr_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Bengaluru Heritage", "description": "Tipu Sultan's Palace, Bangalore Palace, Vidhana Soudha, Cubbon Park, evening craft brewery.", "meals": "Dinner" },
+      { "day": 2, "title": "Gardens & Departure", "description": "Lalbagh Botanical Garden, ISKCON Temple, Commercial Street shopping, departure.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Hotel accommodation", "Meals as mentioned", "AC city transport", "Guided tours", "Botanical garden entry"],
+      "exclusions": ["Flights", "Palace entry fees", "Brewery tab", "Shopping"]
+    },
+    "highlights": ["Vidhana Soudha & Cubbon Park", "Lalbagh Botanical Garden", "Tipu Sultan's Palace", "Craft brewery experience", "Commercial Street"],
+    "tags": ["city-tour", "bengaluru", "heritage", "garden", "modern"],
+    "featured": false,
+    "active": true
+  },
+  {
+    "title": "Hyderabad Pearl & Biryani City Tour",
+    "location": "Hyderabad, Telangana",
+    "type": "city-tour",
+    "destination": "Hyderabad",
+    "rating": 4.6,
+    "price": 8499,
+    "strikePrice": 10999,
+    "durations": "3 Days / 2 Nights",
+    "groupSize": "2-12",
+    "description": "The City of Nizams enchants with its majestic Charminar, bustling Laad Bazaar pearl market, the legendary Golconda Fort's sound-and-light show, and the world-famous Hyderabadi dum biryani.",
+    "images": "https://res.cloudinary.com/demo/image/upload/hyderabad_city.jpg",
+    "imagePublicId": "hyderabad_city",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/hyd_1.jpg", "caption": "Charminar", "publicId": "hyd_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/hyd_2.jpg", "caption": "Golconda Fort", "publicId": "hyd_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Old City Hyderabad", "description": "Charminar, Laad Bazaar pearl shopping, Salar Jung Museum, Mecca Masjid.", "meals": "Dinner" },
+      { "day": 2, "title": "Golconda Fort & Ramoji", "description": "Golconda Fort tour, evening sound-and-light show, Hussain Sagar lake.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Ramoji Film City & Departure", "description": "Half-day at Asia's largest film studio, biryani lunch at Paradise, departure.", "meals": "Breakfast, Lunch" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Hotel accommodation", "Meals as mentioned", "AC transport", "Golconda sound & light show", "Ramoji Film City entry", "Pearl market guided walk"],
+      "exclusions": ["Flights", "Museum entry fees", "Personal shopping"]
+    },
+    "highlights": ["Charminar & Laad Bazaar", "Golconda Fort sound-and-light", "Salar Jung Museum", "Hussain Sagar Lake", "Ramoji Film City"],
+    "tags": ["city-tour", "hyderabad", "nizams", "biryani", "pearls"],
+    "featured": true,
+    "active": true
+  },
+  {
+    "title": "Ahmedabad Heritage Walk & Textile Tour",
+    "location": "Ahmedabad, Gujarat",
+    "type": "city-tour",
+    "destination": "Ahmedabad",
+    "rating": 4.5,
+    "price": 7499,
+    "strikePrice": 9999,
+    "durations": "2 Days / 1 Night",
+    "groupSize": "2-10",
+    "description": "India's first UNESCO World Heritage City offers a mesmerising heritage walk through 600-year-old pol neighbourhoods, Gandhi's Sabarmati Ashram, intricate stepwells, and Gujarat's famous textile markets.",
+    "images": "https://res.cloudinary.com/demo/image/upload/ahmedabad_city.jpg",
+    "imagePublicId": "ahmedabad_city",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/ahm_1.jpg", "caption": "Heritage pol walk", "publicId": "ahm_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/ahm_2.jpg", "caption": "Adalaj Stepwell", "publicId": "ahm_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Old City Heritage Walk", "description": "Guided pol walk, Jama Masjid, Sidi Saiyyed Mosque (iconic jali), Dhal ni Pol, street food.", "meals": "Dinner" },
+      { "day": 2, "title": "Sabarmati & Stepwell", "description": "Gandhi's Sabarmati Ashram, Adalaj Stepwell, Law Garden textile market, departure.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Heritage hotel accommodation", "Meals as mentioned", "Guided pol walk", "Sabarmati Ashram entry", "Local transport"],
+      "exclusions": ["Flights", "Stepwell entry", "Personal shopping", "Textile purchases"]
+    },
+    "highlights": ["UNESCO Heritage pol walk", "Sidi Saiyyed Mosque jali", "Sabarmati Ashram", "Adalaj Stepwell", "Law Garden textile market"],
+    "tags": ["city-tour", "ahmedabad", "heritage", "gujarat", "gandhi"],
+    "featured": false,
+    "active": true
+  },
+
+  {
+    "title": "Coorg & Chikmagalur Weekend",
+    "location": "Coorg, Karnataka",
+    "type": "weekend-getaway",
+    "destination": "Coorg",
+    "rating": 4.7,
+    "price": 8999,
+    "strikePrice": 11999,
+    "durations": "2 Days / 1 Night",
+    "groupSize": "2-6",
+    "description": "Perfect for a quick escape from Bengaluru or Mysore — misty coffee hills, waterfall hikes, Tibetan monastery, and a cosy plantation homestay. Recharge completely in 48 hours.",
+    "images": "https://res.cloudinary.com/demo/image/upload/coorg_weekend.jpg",
+    "imagePublicId": "coorg_weekend",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/coorg_wknd_1.jpg", "caption": "Coffee plantation", "publicId": "coorg_wknd_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/coorg_wknd_2.jpg", "caption": "Abbey Falls", "publicId": "coorg_wknd_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrive & Explore", "description": "Check-in at plantation homestay, Raja's Seat sunset, Madikeri Fort, local Coorg dinner.", "meals": "Dinner" },
+      { "day": 2, "title": "Falls & Monastery", "description": "Abbey Falls, Namdroling Monastery (Golden Temple), coffee estate guided walk, departure.", "meals": "Breakfast, Lunch" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Plantation homestay", "Meals as mentioned", "Coffee estate walk", "Local transport"],
+      "exclusions": ["Travel from your city", "Entry fees", "Personal expenses"]
+    },
+    "highlights": ["Plantation homestay", "Abbey Falls", "Namdroling Golden Temple", "Raja's Seat sunset", "Coffee estate walk"],
+    "tags": ["weekend-getaway", "coorg", "plantation", "waterfalls", "quick escape"],
+    "featured": true,
+    "active": true
+  },
+  {
+    "title": "Lonavala & Khandala Quick Escape",
+    "location": "Lonavala, Maharashtra",
+    "type": "weekend-getaway",
+    "destination": "Lonavala",
+    "rating": 4.4,
+    "price": 6499,
+    "strikePrice": 8499,
+    "durations": "2 Days / 1 Night",
+    "groupSize": "2-8",
+    "description": "Mumbai and Pune's favourite weekend hill station comes alive in the monsoon. Waterfalls, dramatic cliff viewpoints, Karla Caves, fudge shopping, and a misty resort – the perfect short break.",
+    "images": "https://res.cloudinary.com/demo/image/upload/lonavala_weekend.jpg",
+    "imagePublicId": "lonavala_weekend",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/lonavala_1.jpg", "caption": "Tiger's Leap", "publicId": "lonavala_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/lonavala_2.jpg", "caption": "Bhushi Dam", "publicId": "lonavala_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Lonavala Arrival", "description": "Check-in at resort, Tiger's Leap viewpoint, Bhushi Dam, evening fudge tasting.", "meals": "Dinner" },
+      { "day": 2, "title": "Caves & Departure", "description": "Karla Caves, Lohagad Fort trail, Shooting Point, depart.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Resort accommodation", "Meals as mentioned", "Local guided transport"],
+      "exclusions": ["Travel from city", "Karla Caves entry", "Personal shopping"]
+    },
+    "highlights": ["Tiger's Leap viewpoint", "Bhushi Dam", "Karla Caves", "Lohagad Fort", "Lonavala fudge"],
+    "tags": ["weekend-getaway", "lonavala", "hill station", "caves", "maharashtra"],
+    "featured": false,
+    "active": true
+  },
+  {
+    "title": "Pondicherry French Quarter Retreat",
+    "location": "Pondicherry",
+    "type": "weekend-getaway",
+    "destination": "Pondicherry",
+    "rating": 4.8,
+    "price": 9999,
+    "strikePrice": 13999,
+    "durations": "2 Days / 1 Night",
+    "groupSize": "2-6",
+    "description": "Bonjour, Pondicherry! Cobblestone streets painted in pastel yellow, French cafes, the Sri Aurobindo Ashram, serene Auroville, and pristine beaches – this Union Territory is Europe in India.",
+    "images": "https://res.cloudinary.com/demo/image/upload/pondy_weekend.jpg",
+    "imagePublicId": "pondy_weekend",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/pondy_1.jpg", "caption": "French Quarter", "publicId": "pondy_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/pondy_2.jpg", "caption": "Auroville Matrimandir", "publicId": "pondy_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "French Quarter", "description": "Heritage cycling tour, Promenade Beach, Sri Aurobindo Ashram, French restaurants.", "meals": "Dinner" },
+      { "day": 2, "title": "Auroville & Beach", "description": "Auroville Matrimandir meditation, Paradise Beach boat ride, departure.", "meals": "Breakfast, Lunch" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Boutique French Quarter hotel", "Meals as mentioned", "Heritage cycling tour", "Auroville entry", "Paradise Beach boat"],
+      "exclusions": ["Travel to Pondy", "Ashram activities", "Personal shopping"]
+    },
+    "highlights": ["Heritage cycling in French Quarter", "Auroville Matrimandir", "Promenade Beach", "Sri Aurobindo Ashram", "Paradise Beach"],
+    "tags": ["weekend-getaway", "pondicherry", "french", "beach", "spiritual"],
+    "featured": true,
+    "active": true
+  },
+  {
+    "title": "Nainital Lake & Hills Retreat",
+    "location": "Nainital, Uttarakhand",
+    "type": "weekend-getaway",
+    "destination": "Nainital",
+    "rating": 4.5,
+    "price": 7499,
+    "strikePrice": 9999,
+    "durations": "2 Days / 1 Night",
+    "groupSize": "2-6",
+    "description": "The jewel of the Kumaon hills offers a classic weekend escape — rowing on the Naini Lake, ropeway to Snow View Point, colonial Mall Road, and Corbett proximity. Perfect from Delhi in 6 hours.",
+    "images": "https://res.cloudinary.com/demo/image/upload/nainital_weekend.jpg",
+    "imagePublicId": "nainital_weekend",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/nainital_1.jpg", "caption": "Naini Lake boating", "publicId": "nainital_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/nainital_2.jpg", "caption": "Snow View Point", "publicId": "nainital_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrival & Lake", "description": "Check-in, boating on Naini Lake, Naina Devi Temple, Mall Road evening.", "meals": "Dinner" },
+      { "day": 2, "title": "Snow View & Departure", "description": "Snow View Point ropeway, Tiffin Top nature walk, eco cave gardens, departure.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Lakeside hotel", "Meals as mentioned", "Ropeway ticket", "Boating", "Local sightseeing"],
+      "exclusions": ["Travel to Nainital", "Entry fees", "Personal expenses"]
+    },
+    "highlights": ["Naini Lake boating", "Snow View ropeway", "Tiffin Top nature walk", "Naina Devi Temple", "Mall Road"],
+    "tags": ["weekend-getaway", "nainital", "lake", "hills", "uttarakhand"],
+    "featured": false,
+    "active": true
+  },
+  {
+    "title": "Hampi Ruins Weekend",
+    "location": "Hampi, Karnataka",
+    "type": "weekend-getaway",
+    "destination": "Hampi",
+    "rating": 4.8,
+    "price": 8499,
+    "strikePrice": 10999,
+    "durations": "2 Days / 1 Night",
+    "groupSize": "2-8",
+    "description": "Hampi's surreal boulder landscape and Vijayanagara ruins are unlike anywhere on Earth. Cycle through ancient temples, watch sunrise at Matanga Hill, and float on a coracle on the Tungabhadra.",
+    "images": "https://res.cloudinary.com/demo/image/upload/hampi_weekend.jpg",
+    "imagePublicId": "hampi_weekend",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/hampi_1.jpg", "caption": "Virupaksha Temple", "publicId": "hampi_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/hampi_2.jpg", "caption": "Boulder cycling", "publicId": "hampi_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrival & Royal Enclosure", "description": "Virupaksha Temple, Vittala Temple (stone chariot), Royal Enclosure, sunset on boulder.", "meals": "Dinner" },
+      { "day": 2, "title": "Sunrise & Coracle", "description": "Matanga Hill sunrise, Hazara Rama Temple, coracle ride on Tungabhadra, cycle tour, departure.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Guesthouse accommodation", "Meals as mentioned", "Cycle rental", "Coracle ride", "Guided temple walk"],
+      "exclusions": ["Travel to Hampi", "ASI monument entry", "Personal expenses"]
+    },
+    "highlights": ["Vittala Temple stone chariot", "Matanga Hill sunrise", "Coracle on Tungabhadra", "Royal Enclosure", "Boulder cycling trails"],
+    "tags": ["weekend-getaway", "hampi", "heritage", "ruins", "cycling"],
+    "featured": true,
+    "active": true
+  },
+  {
+    "title": "Kasauli Colonial Weekend",
+    "location": "Kasauli, Himachal Pradesh",
+    "type": "weekend-getaway",
+    "destination": "Kasauli",
+    "rating": 4.6,
+    "price": 7999,
+    "strikePrice": 10499,
+    "durations": "2 Days / 1 Night",
+    "groupSize": "2-6",
+    "description": "Hidden in the Shivalik hills, Kasauli is an unspoilt colonial hill station with oak-lined Mall Road, Christ Church, a Monkey Point hilltop, and the legendary Kasauli Brewery. Tranquility guaranteed.",
+    "images": "https://res.cloudinary.com/demo/image/upload/kasauli_weekend.jpg",
+    "imagePublicId": "kasauli_weekend",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/kasauli_1.jpg", "caption": "Kasauli Mall Road", "publicId": "kasauli_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/kasauli_2.jpg", "caption": "Monkey Point", "publicId": "kasauli_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrival & Mall Road", "description": "Check-in at heritage hotel, Mall Road colonial walk, Christ Church, Kasauli Brewery tour.", "meals": "Dinner" },
+      { "day": 2, "title": "Monkey Point & Dagshai", "description": "Monkey Point hilltop (IAF), sunrise views, Dagshai cantonment museum, departure.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Heritage hotel accommodation", "Meals as mentioned", "Brewery tour", "Mall Road heritage walk"],
+      "exclusions": ["Travel to Kasauli", "Entry fees", "Personal expenses"]
+    },
+    "highlights": ["Kasauli Brewery tour", "Monkey Point panorama", "Christ Church", "Colonial Mall Road", "Dagshai Cantonment"],
+    "tags": ["weekend-getaway", "kasauli", "colonial", "hills", "brewery"],
+    "featured": false,
+    "active": true
+  },
+
+  {
+    "title": "Char Dham Yatra – Uttarakhand",
+    "location": "Haridwar, Uttarakhand",
+    "type": "pilgrimage-tour",
+    "destination": "Uttarakhand",
+    "rating": 4.9,
+    "price": 34999,
+    "strikePrice": 44999,
+    "durations": "12 Days / 11 Nights",
+    "groupSize": "10-30",
+    "description": "Undertake one of Hinduism's most sacred journeys — the Char Dham Yatra covering Yamunotri, Gangotri, Kedarnath, and Badrinath. A spiritually transformative journey through the divine Himalayas.",
+    "images": "https://res.cloudinary.com/demo/image/upload/char_dham.jpg",
+    "imagePublicId": "char_dham",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/kedarnath_1.jpg", "caption": "Kedarnath Temple", "publicId": "kedarnath_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/badrinath_1.jpg", "caption": "Badrinath Temple", "publicId": "badrinath_1" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Haridwar Arrival", "description": "Ganga Aarti at Har Ki Pauri, check-in, blessings.", "meals": "Dinner" },
+      { "day": 2, "title": "Haridwar to Barkot", "description": "Drive to Barkot via Mussoorie, check-in.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Yamunotri Dham", "description": "Trek to Yamunotri Temple, holy dip in Yamuna, return to Barkot.", "meals": "Breakfast, Dinner" },
+      { "day": 4, "title": "Barkot to Uttarkashi", "description": "Drive to Uttarkashi, Vishwanath Temple darshan.", "meals": "Breakfast, Dinner" },
+      { "day": 5, "title": "Gangotri Dham", "description": "Gangotri Temple darshan, Ganga Snan, Surya Kund.", "meals": "Breakfast, Dinner" },
+      { "day": 6, "title": "Uttarkashi to Guptkashi", "description": "Drive via Tehri, arrive Guptkashi, Ardh Narishwar Temple.", "meals": "Breakfast, Dinner" },
+      { "day": 7, "title": "Kedarnath", "description": "Helicopter/trek to Kedarnath, special puja, overnight at Kedarnath.", "meals": "Breakfast, Dinner" },
+      { "day": 8, "title": "Kedarnath to Badrinath", "description": "Return, drive to Badrinath via Joshimath.", "meals": "Breakfast, Dinner" },
+      { "day": 9, "title": "Badrinath Dham", "description": "Badrinath Temple darshan, Mana Village, Bhim Pul, Vyas Cave.", "meals": "Breakfast, Dinner" },
+      { "day": 10, "title": "Badrinath to Rudraprayag", "description": "Scenic drive, Rudraprayag confluence of Alaknanda and Mandakini.", "meals": "Breakfast, Dinner" },
+      { "day": 11, "title": "Rudraprayag to Rishikesh", "description": "Devprayag Sangam, Rishikesh Ganga Aarti.", "meals": "Breakfast, Dinner" },
+      { "day": 12, "title": "Haridwar & Departure", "description": "Haridwar sightseeing, departure.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Accommodation in dharamshalas/guesthouses", "Vegetarian meals (breakfast & dinner)", "AC transport", "Kedarnath helicopter (one way)", "Pujari for special puja", "Guide"],
+      "exclusions": ["Personal expenses", "Puja samagri", "Palanquin/horse charges", "Travel insurance", "Flights to Haridwar"]
+    },
+    "highlights": ["Yamunotri Temple", "Gangotri & Surya Kund", "Kedarnath darshan", "Badrinath Temple", "Mana Village – last Indian village", "Ganga Aarti at Har Ki Pauri"],
+    "tags": ["pilgrimage", "char dham", "kedarnath", "badrinath", "yatra"],
+    "featured": true,
+    "active": true
+  },
+  {
+    "title": "Varanasi Spiritual Journey",
+    "location": "Varanasi, Uttar Pradesh",
+    "type": "pilgrimage-tour",
+    "destination": "Varanasi",
+    "rating": 4.8,
+    "price": 12999,
+    "strikePrice": 17999,
+    "durations": "4 Days / 3 Nights",
+    "groupSize": "2-15",
+    "description": "Experience the city where Shiva himself is said to reside. The Ganga Aarti, Kashi Vishwanath darshan, Sarnath Buddha stupa, boat ride at dawn — Varanasi transcends time and touches the soul.",
+    "images": "https://res.cloudinary.com/demo/image/upload/varanasi_pilgrimage.jpg",
+    "imagePublicId": "varanasi_pilgrimage",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/var_1.jpg", "caption": "Dashashwamedh Ghat Aarti", "publicId": "var_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/var_2.jpg", "caption": "Ganges boat ride", "publicId": "var_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrival in Varanasi", "description": "Check-in at ghats hotel, evening Dashashwamedh Ghat Ganga Aarti.", "meals": "Dinner" },
+      { "day": 2, "title": "Kashi Darshan", "description": "Sunrise boat ride on Ganges, Kashi Vishwanath Temple, Annapoorna Temple, Banaras Hindu University.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Sarnath", "description": "Sarnath – where Buddha gave first sermon, Dhamek Stupa, Sarnath Museum.", "meals": "Breakfast, Dinner" },
+      { "day": 4, "title": "Ghats Walk & Departure", "description": "Manikarnika Ghat, Tulsi Manas Temple, Ramnagar Fort, departure.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Ghat-facing hotel", "Meals as mentioned", "Sunrise boat ride", "Guided ghats walk", "Kashi Vishwanath special darshan", "Transport"],
+      "exclusions": ["Flights", "Puja items", "Personal offerings", "Photography fees at temples"]
+    },
+    "highlights": ["Dashashwamedh Ganga Aarti", "Sunrise Ganges boat ride", "Kashi Vishwanath darshan", "Sarnath Dhamek Stupa", "Manikarnika Ghat"],
+    "tags": ["pilgrimage", "varanasi", "ganges", "kashi", "spiritual"],
+    "featured": true,
+    "active": true
+  },
+  {
+    "title": "Tirupati & Shirdi Pilgrimage",
+    "location": "Tirupati, Andhra Pradesh",
+    "type": "pilgrimage-tour",
+    "destination": "Tirupati & Shirdi",
+    "rating": 4.7,
+    "price": 16999,
+    "strikePrice": 21999,
+    "durations": "5 Days / 4 Nights",
+    "groupSize": "5-20",
+    "description": "Two of India's most visited religious destinations in one package. Seek blessings of Lord Venkateswara in Tirupati and Sai Baba in Shirdi — a deeply devotional journey of faith and gratitude.",
+    "images": "https://res.cloudinary.com/demo/image/upload/tirupati_shirdi.jpg",
+    "imagePublicId": "tirupati_shirdi",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/tirupati_1.jpg", "caption": "Tirumala hills", "publicId": "tirupati_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/shirdi_1.jpg", "caption": "Sai Baba Temple", "publicId": "shirdi_1" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrive Tirupati", "description": "Check-in, Kapila Theertham, Govindaraja Swamy Temple, darshan queue booking.", "meals": "Dinner" },
+      { "day": 2, "title": "Tirumala Darshan", "description": "Lord Venkateswara darshan, Brahmotsavam halls, Akasa Ganga.", "meals": "Breakfast, Prasadam, Dinner" },
+      { "day": 3, "title": "Fly to Shirdi", "description": "Flight to Mumbai/Pune, transfer to Shirdi, check-in.", "meals": "Breakfast, Dinner" },
+      { "day": 4, "title": "Sai Baba Darshan", "description": "Morning Kakad Aarti, Sai Baba Temple darshan, Dwarkamai, Chavadi.", "meals": "Breakfast, Dinner" },
+      { "day": 5, "title": "Shani Shingnapur & Departure", "description": "Shani Shingnapur Temple, Nashik if time permits, departure.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Accommodation", "Meals as mentioned", "Tirumala special darshan token", "All transport including inter-city", "Guide"],
+      "exclusions": ["Flights between cities", "Puja items", "Personal offerings", "Temple donation box"]
+    },
+    "highlights": ["Lord Venkateswara darshan", "Tirupati prasadam", "Sai Baba Temple all aartis", "Dwarkamai", "Shani Shingnapur"],
+    "tags": ["pilgrimage", "tirupati", "shirdi", "south india", "devotional"],
+    "featured": false,
+    "active": true
+  },
+  {
+    "title": "Amarnath Yatra Pilgrimage",
+    "location": "Pahalgam, Jammu & Kashmir",
+    "type": "pilgrimage-tour",
+    "destination": "Amarnath",
+    "rating": 4.9,
+    "price": 22999,
+    "strikePrice": 29999,
+    "durations": "6 Days / 5 Nights",
+    "groupSize": "5-20",
+    "description": "One of Hinduism's most challenging and sacred yatras — the journey to Lord Shiva's ice lingam at Amarnath Cave (3,888m). A profound test of devotion and endurance in the pristine Kashmir Himalayas.",
+    "images": "https://res.cloudinary.com/demo/image/upload/amarnath_yatra.jpg",
+    "imagePublicId": "amarnath_yatra",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/amarnath_1.jpg", "caption": "Ice lingam", "publicId": "amarnath_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/amarnath_2.jpg", "caption": "Pahalgam valley", "publicId": "amarnath_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrive Jammu", "description": "Raghunath Temple, Ranbireshwar Temple, check-in, medical check.", "meals": "Dinner" },
+      { "day": 2, "title": "Jammu to Pahalgam", "description": "Drive to scenic Pahalgam, acclimatisation, Aru Valley walk.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Pahalgam to Chandanwari", "description": "Drive to Chandanwari (base camp, 2900m), acclimatise.", "meals": "Breakfast, Dinner" },
+      { "day": 4, "title": "Chandanwari to Panchtarni", "description": "Trek via Sheshnag Lake (3590m), overnight at Panchtarni (3657m).", "meals": "Breakfast, Dinner" },
+      { "day": 5, "title": "Amarnath Cave Darshan", "description": "Trek to Amarnath Cave (3888m), ice lingam darshan, return to Pahalgam.", "meals": "Breakfast, Dinner" },
+      { "day": 6, "title": "Return & Departure", "description": "Drive Pahalgam to Srinagar, Dal Lake shikara ride, departure.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Accommodation in hotels/tents", "Meals as mentioned", "Pony charges on trek", "Medical certificate assistance", "Yatra registration assistance", "Guide"],
+      "exclusions": ["Flights to Jammu", "Personal puja items", "Travel insurance (mandatory)", "Porter charges", "Personal medical kit"]
+    },
+    "highlights": ["Amarnath ice lingam darshan", "Sheshnag Lake", "Chandanwari glacier", "Dal Lake shikara", "Pahalgam valley"],
+    "tags": ["pilgrimage", "amarnath", "kashmir", "shiva", "yatra"],
+    "featured": true,
+    "active": true
+  },
+  {
+    "title": "Vrindavan & Mathura Krishna Yatra",
+    "location": "Mathura, Uttar Pradesh",
+    "type": "pilgrimage-tour",
+    "destination": "Mathura & Vrindavan",
+    "rating": 4.7,
+    "price": 9999,
+    "strikePrice": 13999,
+    "durations": "3 Days / 2 Nights",
+    "groupSize": "5-25",
+    "description": "Walk in the footsteps of Lord Krishna in his birthplace. Mathura's Sri Krishna Janmabhoomi, Vrindavan's 5000+ temples, Govardhan Parikrama, and the divine Yamuna Aarti – pure devotion.",
+    "images": "https://res.cloudinary.com/demo/image/upload/mathura_vrindavan.jpg",
+    "imagePublicId": "mathura_vrindavan",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/mathura_1.jpg", "caption": "Banke Bihari Temple", "publicId": "mathura_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/mathura_2.jpg", "caption": "Yamuna Aarti", "publicId": "mathura_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrival in Mathura", "description": "Sri Krishna Janmabhoomi, Dwarkadhish Temple, evening Yamuna Aarti at Vishram Ghat.", "meals": "Dinner" },
+      { "day": 2, "title": "Vrindavan", "description": "Banke Bihari Temple, ISKCON, Radha Raman, Nidhivan, Govardhan Parikrama.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Barsana & Departure", "description": "Barsana – Radha's birthplace, Nandgaon, transfer to Agra/Delhi.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Dharamshala/guesthouse", "Vegetarian meals", "All transport", "Govardhan Parikrama vehicle", "Guide"],
+      "exclusions": ["Flights/trains", "Puja items", "ISKCON premium darshan fees"]
+    },
+    "highlights": ["Sri Krishna Janmabhoomi", "Banke Bihari Temple", "Govardhan Parikrama", "Yamuna Aarti", "Barsana – Radha Rani Temple"],
+    "tags": ["pilgrimage", "krishna", "mathura", "vrindavan", "holi"],
+    "featured": false,
+    "active": true
+  },
+  {
+    "title": "Golden Temple & Hemkund Sahib Yatra",
+    "location": "Amritsar, Punjab",
+    "type": "pilgrimage-tour",
+    "destination": "Punjab & Uttarakhand",
+    "rating": 4.8,
+    "price": 18999,
+    "strikePrice": 24999,
+    "durations": "6 Days / 5 Nights",
+    "groupSize": "5-20",
+    "description": "Two of Sikhism's holiest sites in one yatra. The Golden Temple's transcendent langar and kirtan, and the glacial Hemkund Sahib at 4329m surrounded by seven Himalayan peaks – a journey of serenity and faith.",
+    "images": "https://res.cloudinary.com/demo/image/upload/golden_temple_hemkund.jpg",
+    "imagePublicId": "golden_temple_hemkund",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/golden_t_1.jpg", "caption": "Golden Temple at night", "publicId": "golden_t_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/hemkund_1.jpg", "caption": "Hemkund Sahib Gurudwara", "publicId": "hemkund_1" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrive Amritsar", "description": "Golden Temple darshan, Langar, Wagah Border ceremony.", "meals": "Dinner + Langar" },
+      { "day": 2, "title": "Amritsar to Rishikesh", "description": "Jallianwala Bagh, fly/drive to Rishikesh, evening Ganga Aarti.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Rishikesh to Govindghat", "description": "Drive to Govindghat base, check-in at Gurudwara.", "meals": "Breakfast, Langar" },
+      { "day": 4, "title": "Trek to Ghangaria", "description": "Trek 14km to Ghangaria (3050m), overnight.", "meals": "Breakfast, Langar" },
+      { "day": 5, "title": "Hemkund Sahib Darshan", "description": "Trek to Hemkund Sahib (4329m), Valley of Flowers walk, return.", "meals": "Breakfast, Langar" },
+      { "day": 6, "title": "Return & Departure", "description": "Trek down to Govindghat, drive to Rishikesh/Haridwar, departure.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Hotel & Gurudwara accommodation", "Meals & Langar", "Transport", "Trek guide", "Helicopter booking assistance (optional)"],
+      "exclusions": ["Flights", "Helicopter charges", "Personal items", "Porter charges"]
+    },
+    "highlights": ["Golden Temple darshan & langar", "Wagah Border ceremony", "Hemkund Sahib at 4329m", "Valley of Flowers", "Ganga Aarti Rishikesh"],
+    "tags": ["pilgrimage", "golden temple", "hemkund", "sikh", "uttarakhand"],
+    "featured": false,
+    "active": true
+  },
+
+  {
+    "title": "Rajasthan Cultural Group Tour",
+    "location": "Jaipur, Rajasthan",
+    "type": "group-tour",
+    "destination": "Rajasthan",
+    "rating": 4.6,
+    "price": 21999,
+    "strikePrice": 27999,
+    "durations": "8 Days / 7 Nights",
+    "groupSize": "15-30",
+    "description": "Join a lively group and travel across the Golden Triangle and Rajasthan's royal cities. Meet like-minded travellers, share experiences, and discover the pageantry of India's most colourful state.",
+    "images": "https://res.cloudinary.com/demo/image/upload/rajasthan_group.jpg",
+    "imagePublicId": "rajasthan_group",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/raj_grp_1.jpg", "caption": "Holi in Rajasthan", "publicId": "raj_grp_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/raj_grp_2.jpg", "caption": "Group at Amber Fort", "publicId": "raj_grp_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Delhi Group Assembly", "description": "Meet fellow travellers, Delhi orientation, departure for Agra.", "meals": "Dinner" },
+      { "day": 2, "title": "Agra – Taj Mahal", "description": "Taj Mahal, Agra Fort, drive to Jaipur.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Jaipur Pink City", "description": "Amber Fort, City Palace, Hawa Mahal, Jantar Mantar.", "meals": "Breakfast, Dinner" },
+      { "day": 4, "title": "Jaipur to Pushkar", "description": "Pushkar sacred lake, Brahma Temple, camel fair ground.", "meals": "Breakfast, Dinner" },
+      { "day": 5, "title": "Pushkar to Jodhpur", "description": "Drive to Jodhpur, Mehrangarh Fort, blue city walk.", "meals": "Breakfast, Dinner" },
+      { "day": 6, "title": "Jodhpur to Udaipur", "description": "Ranakpur Jain Temples, arrive Udaipur.", "meals": "Breakfast, Dinner" },
+      { "day": 7, "title": "Udaipur Lake City", "description": "City Palace, Lake Pichola boat ride, Saheliyon ki Bari.", "meals": "Breakfast, Dinner" },
+      { "day": 8, "title": "Udaipur & Departure", "description": "Bagore ki Haveli, Fateh Sagar Lake, departure.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["AC coach throughout", "Hotel accommodation", "Meals as mentioned", "All sightseeing", "Expert group leader", "Monument entries as mentioned"],
+      "exclusions": ["Flights to Delhi", "Personal expenses", "Tips", "Lunch", "Individual shopping"]
+    },
+    "highlights": ["Taj Mahal at dawn", "Amber Fort elephant ride", "Pushkar sacred lake", "Ranakpur Jain Temples", "Udaipur Lake Pichola boat"],
+    "tags": ["group-tour", "rajasthan", "social", "heritage", "golden triangle"],
+    "featured": true,
+    "active": true
+  },
+  {
+    "title": "South India Temple Group Circuit",
+    "location": "Chennai, Tamil Nadu",
+    "type": "group-tour",
+    "destination": "South India",
+    "rating": 4.7,
+    "price": 24999,
+    "strikePrice": 31999,
+    "durations": "9 Days / 8 Nights",
+    "groupSize": "15-25",
+    "description": "Explore South India's magnificent Dravidian temple architecture in one grand group circuit — Madurai, Rameshwaram, Kanyakumari, Tirunelveli, Thanjavur, and Mahabalipuram.",
+    "images": "https://res.cloudinary.com/demo/image/upload/south_india_group.jpg",
+    "imagePublicId": "south_india_group",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/meenakshi_1.jpg", "caption": "Meenakshi Amman Temple", "publicId": "meenakshi_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/kanyakumari_1.jpg", "caption": "Kanyakumari sunrise", "publicId": "kanyakumari_1" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Chennai Arrival", "description": "Marina Beach, Kapaleeshwarar Temple, group welcome dinner.", "meals": "Dinner" },
+      { "day": 2, "title": "Mahabalipuram", "description": "Shore Temple, Pancha Rathas, Arjuna's Penance rock carving.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Thanjavur", "description": "Brihadeeswarar Temple (UNESCO), Royal Palace and Museum.", "meals": "Breakfast, Dinner" },
+      { "day": 4, "title": "Madurai", "description": "Meenakshi Amman Temple, Thirumalai Nayakkar Mahal, float festival ground.", "meals": "Breakfast, Dinner" },
+      { "day": 5, "title": "Rameshwaram", "description": "Ramanathaswamy Temple's 1212-pillar corridor, Dhanushkodi ruins.", "meals": "Breakfast, Dinner" },
+      { "day": 6, "title": "Kanyakumari", "description": "Sunrise at the tip of India, Vivekananda Rock, Thiruvalluvar statue.", "meals": "Breakfast, Dinner" },
+      { "day": 7, "title": "Tirunelveli", "description": "Nellaiappar Temple, Krishnapuram Palace, Halwa tasting.", "meals": "Breakfast, Dinner" },
+      { "day": 8, "title": "Coimbatore", "description": "Marudamalai Murugan Temple, VOC Park, departure preparations.", "meals": "Breakfast, Dinner" },
+      { "day": 9, "title": "Departure", "description": "Fly/train from Coimbatore, end of tour.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["AC coach", "Hotel accommodation", "Meals as mentioned", "Temple guides", "All monument entries", "Group leader"],
+      "exclusions": ["Flights to Chennai/from Coimbatore", "Personal expenses", "Camera fees at temples"]
+    },
+    "highlights": ["Meenakshi Temple midnight puja", "Brihadeeswarar (UNESCO)", "Ramanathaswamy 1212-pillar corridor", "Kanyakumari sunrise", "Dhanushkodi ruins"],
+    "tags": ["group-tour", "south india", "temples", "dravidian", "pilgrimage circuit"],
+    "featured": true,
+    "active": true
+  },
+  {
+    "title": "Northeast India Discovery Group Tour",
+    "location": "Guwahati, Assam",
+    "type": "group-tour",
+    "destination": "Northeast India",
+    "rating": 4.8,
+    "price": 29999,
+    "strikePrice": 38999,
+    "durations": "10 Days / 9 Nights",
+    "groupSize": "10-18",
+    "description": "One of India's most underexplored regions – Kaziranga's rhinos, Majuli's river island, Shillong's waterfalls, Cherrapunji, Dzukou Valley, and the Hornbill Festival. A bucket-list group adventure.",
+    "images": "https://res.cloudinary.com/demo/image/upload/northeast_group.jpg",
+    "imagePublicId": "northeast_group",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/kaziranga_1.jpg", "caption": "One-horned rhino", "publicId": "kaziranga_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/hornbill_1.jpg", "caption": "Hornbill Festival", "publicId": "hornbill_1" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrive Guwahati", "description": "Kamakhya Temple, evening on Brahmaputra cruise.", "meals": "Dinner" },
+      { "day": 2, "title": "Kaziranga National Park", "description": "Morning & afternoon jeep safaris, one-horned rhino sighting.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 3, "title": "Majuli Island", "description": "World's largest river island, Satras (Vaishnavite monasteries).", "meals": "Breakfast, Dinner" },
+      { "day": 4, "title": "Dimapur & Kohima", "description": "Drive to Nagaland, WWII cemetery, Kohima village.", "meals": "Breakfast, Dinner" },
+      { "day": 5, "title": "Hornbill Festival", "description": "Kisama Heritage Village, Hornbill tribal festival, cultural performances.", "meals": "Breakfast, Dinner" },
+      { "day": 6, "title": "Dzukou Valley Trek", "description": "Trek into the Valley of Flowers of the Northeast.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 7, "title": "Shillong", "description": "Drive to Meghalaya, Shillong city, Ward's Lake.", "meals": "Breakfast, Dinner" },
+      { "day": 8, "title": "Cherrapunji", "description": "Nohkalikai Falls, Mawsmai Cave, Eco Park.", "meals": "Breakfast, Dinner" },
+      { "day": 9, "title": "Dawki & Mawlynnong", "description": "Dawki crystal river, Asia's cleanest village Mawlynnong.", "meals": "Breakfast, Dinner" },
+      { "day": 10, "title": "Guwahati & Departure", "description": "Return to Guwahati, departure.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["AC transport", "Accommodation", "Meals as mentioned", "Kaziranga safari fees", "Hornbill Festival entry", "Dzukou trek guide", "Brahmaputra cruise"],
+      "exclusions": ["Flights to Guwahati", "Personal expenses", "Puja at Kamakhya", "Tips"]
+    },
+    "highlights": ["Kaziranga rhino safari", "Hornbill tribal festival", "Dzukou Valley trek", "Dawki crystal river", "Majuli river island"],
+    "tags": ["group-tour", "northeast", "wildlife", "tribal", "hornbill"],
+    "featured": true,
+    "active": true
+  },
+  {
+    "title": "Himalayan Backpacker Group Tour",
+    "location": "Leh, Ladakh",
+    "type": "group-tour",
+    "destination": "Ladakh",
+    "rating": 4.9,
+    "price": 27999,
+    "strikePrice": 35999,
+    "durations": "9 Days / 8 Nights",
+    "groupSize": "8-16",
+    "description": "Travel Ladakh the right way — with a small passionate group. Pangong Lake sunrise, Nubra Valley sand dunes, Magnetic Hill, ancient Thiksey Monastery, and Khardung La — the world's highest motorable road.",
+    "images": "https://res.cloudinary.com/demo/image/upload/ladakh_group.jpg",
+    "imagePublicId": "ladakh_group",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/pangong_1.jpg", "caption": "Pangong Tso Lake", "publicId": "pangong_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/nubra_1.jpg", "caption": "Nubra Valley camels", "publicId": "nubra_1" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrive Leh (3500m)", "description": "Rest day for acclimatisation, Shanti Stupa sunset.", "meals": "Dinner" },
+      { "day": 2, "title": "Leh Local", "description": "Leh Palace, Thiksey Monastery, Hall of Fame Museum.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Magnetic Hill & Confluence", "description": "Gurudwara Pathar Sahib, Magnetic Hill, Zanskar-Indus confluence.", "meals": "Breakfast, Dinner" },
+      { "day": 4, "title": "Khardung La & Nubra", "description": "Cross Khardung La (5359m), descend to Nubra Valley.", "meals": "Breakfast, Dinner" },
+      { "day": 5, "title": "Nubra Valley", "description": "Diskit Monastery, Maitreya Buddha, double-humped Bactrian camel ride at Hunder.", "meals": "Breakfast, Dinner" },
+      { "day": 6, "title": "Pangong Tso Lake", "description": "Drive to Pangong (4350m), overnight by the lake.", "meals": "Breakfast, Dinner" },
+      { "day": 7, "title": "Pangong Sunrise & Hemis", "description": "Sunrise at Pangong, return to Leh, Hemis Monastery.", "meals": "Breakfast, Dinner" },
+      { "day": 8, "title": "Alchi & Stok", "description": "Alchi monastery frescoes, Stok Palace Museum.", "meals": "Breakfast, Dinner" },
+      { "day": 9, "title": "Departure from Leh", "description": "Transfer to airport, end of group tour.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Guesthouse/camp accommodation", "Meals as mentioned", "Private group vehicle", "Khardung La inner line permit", "Pangong overnight camp", "Experienced guide"],
+      "exclusions": ["Flights to Leh", "Personal gear", "Oxygen cylinder (available on request)", "Tips"]
+    },
+    "highlights": ["Pangong Tso sunrise", "Khardung La (5359m)", "Nubra Valley Bactrian camel ride", "Thiksey Monastery", "Zanskar-Indus confluence"],
+    "tags": ["group-tour", "ladakh", "pangong", "himalaya", "high altitude"],
+    "featured": true,
+    "active": true
+  },
+  {
+    "title": "Goa All-Inclusive Group Vacation",
+    "location": "North & South Goa",
+    "type": "group-tour",
+    "destination": "Goa",
+    "rating": 4.5,
+    "price": 14999,
+    "strikePrice": 19999,
+    "durations": "5 Days / 4 Nights",
+    "groupSize": "12-25",
+    "description": "Goa with your squad — beach parties, water sports, casino night, spice farm BBQ, nightlife in Baga, heritage churches, and an unforgettable sunset cruise. All inclusive.",
+    "images": "https://res.cloudinary.com/demo/image/upload/goa_group.jpg",
+    "imagePublicId": "goa_group",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/goa_grp_1.jpg", "caption": "Baga Beach party", "publicId": "goa_grp_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/goa_grp_2.jpg", "caption": "Sunset cruise", "publicId": "goa_grp_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrival & Beach Party", "description": "Check-in, North Goa beach party, Calangute shack dinner.", "meals": "Dinner" },
+      { "day": 2, "title": "Water Sports Day", "description": "Jet skiing, parasailing, banana boat, afternoon casino night.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Cruise & Old Goa", "description": "Morning Old Goa churches, evening Mandovi River sunset cruise.", "meals": "Breakfast, Cruise Dinner" },
+      { "day": 4, "title": "South Goa & Spice Farm", "description": "Colva & Palolem beaches, afternoon spice farm with BBQ lunch.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 5, "title": "Departure", "description": "Leisure morning, transfer to airport.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Beach resort accommodation", "Meals as mentioned", "Water sports (6 activities)", "Sunset cruise with dinner", "Old Goa guided tour", "Spice farm BBQ", "Casino entry"],
+      "exclusions": ["Flights", "Personal alcohol tab", "Extra water sports", "Shopping"]
+    },
+    "highlights": ["Water sports package", "Mandovi River sunset cruise", "Casino evening", "Spice farm BBQ", "Palolem Beach"],
+    "tags": ["group-tour", "goa", "beach party", "water sports", "fun"],
+    "featured": false,
+    "active": true
+  },
+  {
+    "title": "Kerala Backwaters Group Tour",
+    "location": "Kochi, Kerala",
+    "type": "group-tour",
+    "destination": "Kerala",
+    "rating": 4.7,
+    "price": 19999,
+    "strikePrice": 25999,
+    "durations": "7 Days / 6 Nights",
+    "groupSize": "10-20",
+    "description": "Discover God's Own Country with a fun group — Cochin heritage, Munnar tea hills, Thekkady wildlife, and a luxurious houseboat cruise through the Alleppey backwaters. Pure Kerala.",
+    "images": "https://res.cloudinary.com/demo/image/upload/kerala_group.jpg",
+    "imagePublicId": "kerala_group",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/kerala_grp_1.jpg", "caption": "Houseboat group cruise", "publicId": "kerala_grp_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/kerala_grp_2.jpg", "caption": "Thekkady boat safari", "publicId": "kerala_grp_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrive Kochi", "description": "Chinese fishing nets, Fort Kochi heritage walk, Kathakali show.", "meals": "Dinner" },
+      { "day": 2, "title": "Munnar", "description": "Drive to Munnar, tea museum, Eravikulam National Park.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Munnar Activities", "description": "Mattupetty Dam, Echo Point, spice plantation walk.", "meals": "Breakfast, Dinner" },
+      { "day": 4, "title": "Thekkady", "description": "Periyar Lake boat safari, spice market, Kalaripayattu show.", "meals": "Breakfast, Dinner" },
+      { "day": 5, "title": "Alleppey Houseboat", "description": "Board group houseboat, cruise through canals, sunset on water.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 6, "title": "Kovalam", "description": "Kovalam Beach, lighthouse, Ayurvedic spa intro session.", "meals": "Breakfast, Dinner" },
+      { "day": 7, "title": "Trivandrum & Departure", "description": "Padmanabhaswamy Temple exterior, Napier Museum, departure.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["AC coach", "Accommodation", "Meals as mentioned", "Houseboat (shared)", "Thekkady boat safari", "Kathakali show", "Kalaripayattu show", "Tea museum"],
+      "exclusions": ["Flights", "Ayurvedic treatments", "Personal expenses", "Temple entry"]
+    },
+    "highlights": ["Group houseboat backwaters cruise", "Eravikulam NP Nilgiri Tahr", "Periyar boat safari", "Kathakali show", "Kovalam lighthouse beach"],
+    "tags": ["group-tour", "kerala", "houseboat", "wildlife", "backwaters"],
+    "featured": false,
+    "active": true
+  },
+
+  {
+    "title": "Maldives Honeymoon Paradise",
+    "location": "Male, Maldives",
+    "type": "honeymoon-tour",
+    "destination": "Maldives",
+    "rating": 4.9,
+    "price": 89999,
+    "strikePrice": 119999,
+    "durations": "6 Days / 5 Nights",
+    "groupSize": "2",
+    "description": "The quintessential honeymoon destination. Your private overwater bungalow sits above crystal-clear turquoise lagoons. Couples snorkelling, private sunset cruise, romantic beach dinners — pure paradise for two.",
+    "images": "https://res.cloudinary.com/demo/image/upload/maldives_honeymoon.jpg",
+    "imagePublicId": "maldives_honeymoon",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/maldives_1.jpg", "caption": "Overwater bungalow", "publicId": "maldives_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/maldives_2.jpg", "caption": "Private sunset cruise", "publicId": "maldives_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrival in Male", "description": "Seaplane transfer to resort, welcome mocktail, check-in overwater villa.", "meals": "Dinner" },
+      { "day": 2, "title": "Snorkelling & Relaxation", "description": "Couple snorkelling, house reef discovery, spa treatment, sundowner.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Dolphin Cruise & Bioluminescence", "description": "Evening dolphin watching cruise, night bioluminescent beach walk.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 4, "title": "Water Villa Day", "description": "Sleep in, private plunge pool, in-villa breakfast, kayaking, massage.", "meals": "Breakfast, Dinner" },
+      { "day": 5, "title": "Sandbank Picnic & Diving", "description": "Private sandbank picnic, intro scuba or manta ray snorkelling.", "meals": "Breakfast, Picnic Lunch, Dinner" },
+      { "day": 6, "title": "Departure", "description": "Farewell breakfast, seaplane back to Male, departure.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Overwater villa (5 nights)", "Seaplane transfers", "Daily breakfast & dinner", "Couple snorkelling with guide", "Sunset dolphin cruise", "Sandbank picnic", "1 couple spa session", "Flower bed decoration"],
+      "exclusions": ["Flights to Male", "Scuba diving", "Alcoholic beverages", "Extra spa sessions", "Personal shopping"]
+    },
+    "highlights": ["Overwater bungalow with private plunge pool", "Private sandbank picnic", "Bioluminescent beach", "Couple snorkelling at house reef", "Sunset dolphin cruise"],
+    "tags": ["honeymoon", "maldives", "overwater", "luxury", "romantic"],
+    "featured": true,
+    "active": true
+  },
+  {
+    "title": "Bali Romantic Honeymoon",
+    "location": "Ubud & Seminyak, Bali",
+    "type": "honeymoon-tour",
+    "destination": "Bali, Indonesia",
+    "rating": 4.8,
+    "price": 64999,
+    "strikePrice": 84999,
+    "durations": "7 Days / 6 Nights",
+    "groupSize": "2",
+    "description": "Bali is the island of love. Rice terrace walks in Ubud, private infinity pool villas, Uluwatu cliff temple at sunset, Tegallalang photo moments, and couples Balinese spa — romance in every breath.",
+    "images": "https://res.cloudinary.com/demo/image/upload/bali_honeymoon.jpg",
+    "imagePublicId": "bali_honeymoon",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/bali_1.jpg", "caption": "Tegallalang rice terraces", "publicId": "bali_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/bali_2.jpg", "caption": "Uluwatu sunset", "publicId": "bali_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrive Bali", "description": "Airport pick-up, check-in Ubud villa, rice terrace evening walk.", "meals": "Dinner" },
+      { "day": 2, "title": "Ubud Culture Day", "description": "Tegallalang Rice Terrace, Ubud Palace, traditional Kecak dance at Uluwatu.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Temple & Waterfall", "description": "Tanah Lot at sunrise, Gitgit Waterfall, Bedugul Floating Temple.", "meals": "Breakfast, Dinner" },
+      { "day": 4, "title": "Couples Spa & Seminyak", "description": "Full-day Balinese spa, transfer to Seminyak beach villa.", "meals": "Breakfast, Dinner" },
+      { "day": 5, "title": "Seminyak Beach Day", "description": "Seminyak Beach, beach club sunset, romantic private dinner setup.", "meals": "Breakfast, Dinner" },
+      { "day": 6, "title": "Nusa Penida Day Trip", "description": "Boat to Nusa Penida, Kelingking cliff, Angel's Billabong.", "meals": "Breakfast, Dinner" },
+      { "day": 7, "title": "Departure", "description": "Last morning at villa, airport transfer.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Private pool villa accommodation", "Daily breakfast", "Dinners as mentioned", "Private cab throughout", "Couples Balinese spa", "Nusa Penida day trip", "Kecak dance tickets", "Rose petal room decoration"],
+      "exclusions": ["Flights", "Lunch", "Personal expenses", "Alcoholic beverages"]
+    },
+    "highlights": ["Tegallalang Rice Terraces", "Uluwatu sunset Kecak dance", "Full-day Balinese couples spa", "Nusa Penida Kelingking cliff", "Private beach dinner"],
+    "tags": ["honeymoon", "bali", "romantic", "spa", "beach"],
+    "featured": true,
+    "active": true
+  },
+  {
+    "title": "Kashmir Honeymoon – Heaven on Earth",
+    "location": "Srinagar, Jammu & Kashmir",
+    "type": "honeymoon-tour",
+    "destination": "Kashmir",
+    "rating": 4.9,
+    "price": 44999,
+    "strikePrice": 59999,
+    "durations": "6 Days / 5 Nights",
+    "groupSize": "2",
+    "description": "Dal Lake houseboat, Gulmarg meadows, Pahalgam valley, Shikara rides at golden sunrise, and Mughal gardens in bloom — Kashmir is a timeless honeymoon classic, and rightfully so.",
+    "images": "https://res.cloudinary.com/demo/image/upload/kashmir_honeymoon.jpg",
+    "imagePublicId": "kashmir_honeymoon",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/kashmir_1.jpg", "caption": "Dal Lake houseboat", "publicId": "kashmir_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/gulmarg_1.jpg", "caption": "Gulmarg Gondola", "publicId": "gulmarg_1" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrive Srinagar", "description": "Shikara ride at sunset, check-in luxury houseboat on Dal Lake.", "meals": "Dinner" },
+      { "day": 2, "title": "Mughal Gardens", "description": "Shalimar Bagh, Nishat Bagh, Chashme Shahi, local floating market.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Gulmarg", "description": "Gulmarg Gondola Phase 1 & 2, snow activities (seasonal), meadow walk.", "meals": "Breakfast, Dinner" },
+      { "day": 4, "title": "Pahalgam", "description": "Pahalgam valley, Aru Valley, Betaab Valley, Lidder River walk.", "meals": "Breakfast, Dinner" },
+      { "day": 5, "title": "Doodhpathri", "description": "Doodhpathri meadows, nature walk, evening Shikara ride at golden hour.", "meals": "Breakfast, Dinner" },
+      { "day": 6, "title": "Departure", "description": "Last sunrise on Dal Lake, airport transfer.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Deluxe houseboat (2 nights) + hotel (3 nights)", "All meals as mentioned", "Private cab", "Shikara rides", "Gulmarg gondola", "Rose petal decoration"],
+      "exclusions": ["Flights to Srinagar", "Snow activities fees", "Personal shopping", "Pony charges"]
+    },
+    "highlights": ["Dal Lake deluxe houseboat", "Gulmarg Gondola", "Mughal gardens", "Pahalgam Betaab Valley", "Golden hour Shikara ride"],
+    "tags": ["honeymoon", "kashmir", "dal lake", "houseboat", "mountains"],
+    "featured": true,
+    "active": true
+  },
+  {
+    "title": "Andaman Islands Honeymoon Package",
+    "location": "Port Blair, Andaman",
+    "type": "honeymoon-tour",
+    "destination": "Andaman Islands",
+    "rating": 4.7,
+    "price": 49999,
+    "strikePrice": 64999,
+    "durations": "6 Days / 5 Nights",
+    "groupSize": "2",
+    "description": "Pristine beaches, emerald lagoons, and bioluminescent shores — the Andaman Islands offer honeymoon privacy that's hard to match in India. Havelock's Radhanagar Beach is one of Asia's finest.",
+    "images": "https://res.cloudinary.com/demo/image/upload/andaman_honeymoon.jpg",
+    "imagePublicId": "andaman_honeymoon",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/andaman_hm_1.jpg", "caption": "Radhanagar Beach", "publicId": "andaman_hm_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/andaman_hm_2.jpg", "caption": "Scuba diving", "publicId": "andaman_hm_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Port Blair Arrival", "description": "Cellular Jail light show, Ross Island, check-in.", "meals": "Dinner" },
+      { "day": 2, "title": "Havelock Island", "description": "Luxury resort check-in, Radhanagar Beach sunset, private beach dinner.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Scuba & Elephant Beach", "description": "Couple scuba diving at Elephant Beach, snorkelling, sea walk.", "meals": "Breakfast, Dinner" },
+      { "day": 4, "title": "Neil Island Day Trip", "description": "Neil Island – Natural Bridge, Bharatpur, Lakshmanpur Beaches.", "meals": "Breakfast, Dinner" },
+      { "day": 5, "title": "Kayaking & Bioluminescence", "description": "Mangrove kayaking, evening bioluminescent beach experience.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 6, "title": "Departure", "description": "Leisure at resort, transfer to Port Blair, fly out.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Beach resort accommodation", "Meals as mentioned", "Ferry tickets", "Scuba (1 session each)", "Sea walking", "Kayaking", "Bioluminescence tour", "Flower bed decoration"],
+      "exclusions": ["Flights to Port Blair", "Extra dive sessions", "Personal expenses"]
+    },
+    "highlights": ["Radhanagar Beach (Asia top 10)", "Couple scuba diving", "Bioluminescent beach night", "Neil Island natural arch", "Mangrove kayaking"],
+    "tags": ["honeymoon", "andaman", "beach", "scuba", "island"],
+    "featured": false,
+    "active": true
+  },
+  {
+    "title": "Udaipur Lake City Honeymoon",
+    "location": "Udaipur, Rajasthan",
+    "type": "honeymoon-tour",
+    "destination": "Udaipur",
+    "rating": 4.8,
+    "price": 38999,
+    "strikePrice": 49999,
+    "durations": "5 Days / 4 Nights",
+    "groupSize": "2",
+    "description": "The City of Lakes, palaces reflected in shimmering water, candlelit royal dinners, Lake Pichola boat rides at sunset — Udaipur is romance embodied. Stay at a heritage haveli and feel like royalty.",
+    "images": "https://res.cloudinary.com/demo/image/upload/udaipur_honeymoon.jpg",
+    "imagePublicId": "udaipur_honeymoon",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/udaipur_hm_1.jpg", "caption": "City Palace reflection", "publicId": "udaipur_hm_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/udaipur_hm_2.jpg", "caption": "Lake Pichola boat", "publicId": "udaipur_hm_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrive Udaipur", "description": "Heritage haveli check-in, welcome with rose petals, evening Lake Pichola boat.", "meals": "Dinner" },
+      { "day": 2, "title": "City Palace & Jagdish", "description": "City Palace museum, Jagdish Temple, Bagore ki Haveli cultural show.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Saheliyon ki Bari & Fateh Sagar", "description": "Garden of maidens, Fateh Sagar lake boat, Moti Magri, Royal Cenotaphs.", "meals": "Breakfast, Dinner" },
+      { "day": 4, "title": "Ranakpur Day Trip", "description": "Ranakpur Jain temples (80km), afternoon spa at haveli.", "meals": "Breakfast, Dinner" },
+      { "day": 5, "title": "Jag Mandir & Departure", "description": "Jag Mandir island breakfast, Ahar Cenotaphs, airport transfer.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Heritage haveli accommodation", "Meals as mentioned", "Lake Pichola sunset boat", "Ranakpur day trip", "Couples spa session", "Candle-lit dinner setup", "Flower decoration"],
+      "exclusions": ["Flights", "City Palace entry", "Personal shopping", "Photography fees"]
+    },
+    "highlights": ["Lake Pichola sunset boat", "Jag Mandir island", "Ranakpur Jain temple", "Heritage haveli stay", "Bagore ki Haveli show"],
+    "tags": ["honeymoon", "udaipur", "lake", "palace", "heritage"],
+    "featured": true,
+    "active": true
+  },
+  {
+    "title": "Munnar & Alleppey Romantic Escape",
+    "location": "Munnar, Kerala",
+    "type": "honeymoon-tour",
+    "destination": "Kerala",
+    "rating": 4.7,
+    "price": 29999,
+    "strikePrice": 39999,
+    "durations": "5 Days / 4 Nights",
+    "groupSize": "2",
+    "description": "Kerala's most romantic combination — mist-wrapped tea hills in Munnar followed by a luxury private houseboat drifting through Alleppey's backwaters. Add an Ayurvedic couples massage and it's perfection.",
+    "images": "https://res.cloudinary.com/demo/image/upload/munnar_alleppey_honeymoon.jpg",
+    "imagePublicId": "munnar_alleppey_honeymoon",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/munnar_hm_1.jpg", "caption": "Tea estate cottage", "publicId": "munnar_hm_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/alleppey_hm_1.jpg", "caption": "Luxury houseboat", "publicId": "alleppey_hm_1" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrive Munnar", "description": "Tea estate cottage check-in, evening walk through tea gardens.", "meals": "Dinner" },
+      { "day": 2, "title": "Munnar Romantic Day", "description": "Eravikulam NP, Attukal Waterfalls, couples Ayurvedic massage.", "meals": "Breakfast, Dinner" },
+      { "day": 3, "title": "Tea Estate & Drive", "description": "Tea factory tour, Mattupetty Dam, drive to Alleppey.", "meals": "Breakfast, Dinner" },
+      { "day": 4, "title": "Private Houseboat Day", "description": "All-day private houseboat cruise, freshwater fish lunch on boat.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 5, "title": "Kumarakom & Departure", "description": "Kumarakom bird sanctuary, Kottayam spice garden, departure to Kochi.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Tea estate cottage (2 nights)", "Private AC houseboat (1 night)", "All meals as mentioned", "Eravikulam entry", "Couples Ayurvedic massage", "Tea factory tour", "Candle-lit dinner on houseboat"],
+      "exclusions": ["Flights to Kochi", "Personal shopping", "Extra Ayurvedic sessions"]
+    },
+    "highlights": ["Private luxury houseboat", "Tea estate cottage stay", "Couples Ayurvedic massage", "Eravikulam Nilgiri Tahr", "Kumarakom bird sanctuary"],
+    "tags": ["honeymoon", "kerala", "munnar", "houseboat", "ayurveda"],
+    "featured": false,
+    "active": true
+  },
+
+  {
+    "title": "Luxury Ranthambore Tiger Safari",
+    "location": "Ranthambore, Rajasthan",
+    "type": "luxury-tour",
+    "destination": "Ranthambore",
+    "rating": 4.8,
+    "price": 74999,
+    "strikePrice": 99999,
+    "durations": "4 Days / 3 Nights",
+    "groupSize": "2-4",
+    "description": "India's finest tiger reserve presented in ultimate luxury. Stay in an award-winning jungle lodge, embark on exclusive private jeep safaris with top naturalists, enjoy al fresco dining under the stars, and wine with sommelier pairing.",
+    "images": "https://res.cloudinary.com/demo/image/upload/ranthambore_luxury.jpg",
+    "imagePublicId": "ranthambore_luxury",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/rant_lux_1.jpg", "caption": "Luxury lodge", "publicId": "rant_lux_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/rant_lux_2.jpg", "caption": "Tiger sighting", "publicId": "rant_lux_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrival by Private Car", "description": "From Jaipur/Delhi, welcome with organic welcome drink, luxury safari tent check-in, sundowner at lake.", "meals": "High tea, Dinner" },
+      { "day": 2, "title": "Morning & Afternoon Safaris", "description": "Zone 1-2 morning private jeep safari with master naturalist, spa afternoon, evening safari.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 3, "title": "Fort Safari & Cultural Evening", "description": "Morning safari near Ranthambore Fort ruins, cooking class, cultural performance evening.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 4, "title": "Final Safari & Departure", "description": "Dawn safari, organic farm breakfast, departure by private vehicle.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Luxury safari tents/lodge", "All meals, high teas & sundowners", "4 private jeep safaris with expert naturalist", "Spa session", "Photography workshop", "Private car from/to Jaipur/Delhi"],
+      "exclusions": ["Flights", "Alcohol (premium bar available)", "Personal items", "Gratuities"]
+    },
+    "highlights": ["Private tiger zone safaris", "Award-winning lodge", "Ranthambore Fort ruins", "Expert naturalist guide", "Al fresco dinners"],
+    "tags": ["luxury", "wildlife", "tiger safari", "ranthambore", "exclusive"],
+    "featured": true,
+    "active": true
+  },
+  {
+    "title": "Palace on Wheels – Royal Train Journey",
+    "location": "New Delhi",
+    "type": "luxury-tour",
+    "destination": "Rajasthan",
+    "rating": 5.0,
+    "price": 199999,
+    "strikePrice": 249999,
+    "durations": "8 Days / 7 Nights",
+    "groupSize": "2-4",
+    "description": "Travel like Maharajas aboard India's most legendary luxury train. The Palace on Wheels glides through Rajasthan, stopping at Jaipur, Jaisalmer, Jodhpur, Sawai Madhopur, and Udaipur. An experience beyond compare.",
+    "images": "https://res.cloudinary.com/demo/image/upload/palace_on_wheels.jpg",
+    "imagePublicId": "palace_on_wheels",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/pow_1.jpg", "caption": "Palace on Wheels exterior", "publicId": "pow_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/pow_2.jpg", "caption": "Luxury cabin interior", "publicId": "pow_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Departure from Delhi Safdarjung", "description": "Grand welcome, champagne boarding, dinner as train departs.", "meals": "Dinner" },
+      { "day": 2, "title": "Jaipur", "description": "Amber Fort, City Palace, traditional Rajasthani dinner in Pink City.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 3, "title": "Sawai Madhopur (Ranthambore)", "description": "Tiger safari in open Gypsy, Ranthambore Fort.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 4, "title": "Chittorgarh & Udaipur", "description": "Chittorgarh fort, arrive Udaipur, City Palace, Lake Pichola cruise.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 5, "title": "Jaisalmer", "description": "Sonar Fort, Patwon ki Haveli, camel safari at Sam Dunes, folk evening.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 6, "title": "Jodhpur", "description": "Mehrangarh Fort, blue city walk, traditional Rajasthani cuisine.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 7, "title": "Bharatpur & Agra", "description": "Keoladeo Ghana Bird Sanctuary, evening Taj Mahal by moonlight.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 8, "title": "Arrival Delhi", "description": "Morning arrival at Delhi Safdarjung, farewell breakfast.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Deluxe cabin on Palace on Wheels", "All meals & beverages (including alcohol)", "All excursions & sightseeing", "Ranthambore tiger safari", "Camel safari", "All transfers", "24-hr butler service"],
+      "exclusions": ["Personal shopping", "Camera fees at monuments", "Gratuities"]
+    },
+    "highlights": ["Palace on Wheels train stay", "Tiger safari at Ranthambore", "Taj Mahal by moonlight", "Jaisalmer dune camel safari", "Full-service butler on board"],
+    "tags": ["luxury", "train journey", "palace on wheels", "rajasthan", "maharaja"],
+    "featured": true,
+    "active": true
+  },
+  {
+    "title": "Kerala Luxury Ayurvedic Retreat",
+    "location": "Kumarakom, Kerala",
+    "type": "luxury-tour",
+    "destination": "Kerala",
+    "rating": 4.9,
+    "price": 84999,
+    "strikePrice": 109999,
+    "durations": "7 Days / 6 Nights",
+    "groupSize": "2-4",
+    "description": "An immersive Ayurvedic rejuvenation experience in a lake-facing luxury resort in Kumarakom. Expert Vaidyas design your personalised Panchakarma programme, combined with yoga, meditation, and backwater serenity.",
+    "images": "https://res.cloudinary.com/demo/image/upload/kerala_luxury_ayurveda.jpg",
+    "imagePublicId": "kerala_luxury_ayurveda",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/ker_lux_1.jpg", "caption": "Overwater villa", "publicId": "ker_lux_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/ker_lux_2.jpg", "caption": "Ayurvedic treatment", "publicId": "ker_lux_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrival & Consultation", "description": "Lakeside villa check-in, Vaidya health consultation, Dosha assessment, welcome dinner.", "meals": "Dinner" },
+      { "day": 2, "title": "Panchakarma Begins", "description": "Abhyangam, Shirodhara, personalised diet begins, evening meditation.", "meals": "Ayurvedic breakfast, Lunch, Dinner" },
+      { "day": 3, "title": "Deep Treatment Day", "description": "Elakizhi (herbal pouch massage), Nasyam, yoga nidra session.", "meals": "All Ayurvedic meals" },
+      { "day": 4, "title": "Backwater Morning", "description": "Private sunrise houseboat cruise, Pizhichil oil treatment, cooking class.", "meals": "All Ayurvedic meals" },
+      { "day": 5, "title": "Rejuvenation", "description": "Udvarthanam scrub, Netradhara eye treatment, Kuttis bird sanctuary walk.", "meals": "All Ayurvedic meals" },
+      { "day": 6, "title": "Rest & Reflect", "description": "Gentle yoga, pond swim, Vaidya exit consultation, final gala dinner.", "meals": "All Ayurvedic meals + Gala dinner" },
+      { "day": 7, "title": "Departure", "description": "Morning meditation, personalised take-home Ayurveda kit, transfer to Kochi.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Overwater lake villa", "All Ayurvedic meals", "Full Panchakarma programme", "Daily yoga & meditation", "Private sunrise houseboat", "Airport transfers", "Take-home Ayurveda kit"],
+      "exclusions": ["Flights to Kochi", "Alcohol", "Personal shopping", "Extra treatments beyond programme"]
+    },
+    "highlights": ["Personalised Panchakarma programme", "Overwater lake villa", "Shirodhara & Abhyangam", "Private sunrise backwater cruise", "Exit health consultation"],
+    "tags": ["luxury", "ayurveda", "wellness", "kerala", "panchakarma"],
+    "featured": true,
+    "active": true
+  },
+  {
+    "title": "Luxury Spiti & Lahaul Expedition",
+    "location": "Spiti Valley, Himachal Pradesh",
+    "type": "luxury-tour",
+    "destination": "Spiti Valley",
+    "rating": 4.8,
+    "price": 94999,
+    "strikePrice": 124999,
+    "durations": "8 Days / 7 Nights",
+    "groupSize": "2-6",
+    "description": "The raw beauty of Spiti Valley without roughing it. Luxury boutique camps, private 4WD with expert mountain guide, helicopter excursion option, stargazing with astronomer, and gourmet Himachali cuisine at altitude.",
+    "images": "https://res.cloudinary.com/demo/image/upload/spiti_luxury.jpg",
+    "imagePublicId": "spiti_luxury",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/spiti_lux_1.jpg", "caption": "Luxury mountain camp", "publicId": "spiti_lux_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/spiti_lux_2.jpg", "caption": "Chandratal Lake", "publicId": "spiti_lux_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrive Shimla / Fly to Kullu", "description": "Private transfer, boutique hotel check-in, evening briefing with guide.", "meals": "Dinner" },
+      { "day": 2, "title": "Drive into Spiti", "description": "Enter Spiti via Narkanda, dramatic gorge roads, Rampur, camp at Nako.", "meals": "Breakfast, Gourmet Picnic, Dinner" },
+      { "day": 3, "title": "Tabo & Pin Valley", "description": "Ancient Tabo monastery, Pin Valley Snow Leopard trek, luxury camp.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 4, "title": "Kaza & Key Monastery", "description": "Kaza market, Key Gompa, Kibber, private stargazing session.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 5, "title": "Chicham & Losar", "description": "Asia's highest bridge Chicham, Losar village, expert photographer session.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 6, "title": "Chandratal Lake", "description": "Drive to Chandratal (Moon Lake, 4250m), private camp, hike around lake.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 7, "title": "Rohtang & Manali", "description": "Cross Rohtang, arrive Manali, luxury resort, spa.", "meals": "Breakfast, Dinner" },
+      { "day": 8, "title": "Departure", "description": "Transfer to Bhuntar airport, end of expedition.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Luxury boutique camps & hotels", "All gourmet meals", "Private Toyota Land Cruiser", "Expert mountain guide", "Stargazing with astronomer", "Spa at Manali", "Photography session"],
+      "exclusions": ["Flights", "Helicopter upgrade", "Personal shopping", "Alcohol"]
+    },
+    "highlights": ["Chandratal Moon Lake", "Key Monastery", "Chicham bridge (Asia's highest)", "Snow Leopard country Pin Valley", "Stargazing at 4000m"],
+    "tags": ["luxury", "spiti", "expedition", "adventure", "himalaya"],
+    "featured": false,
+    "active": true
+  },
+  {
+    "title": "Goa Luxury Boutique Beach Escape",
+    "location": "South Goa",
+    "type": "luxury-tour",
+    "destination": "South Goa",
+    "rating": 4.7,
+    "price": 59999,
+    "strikePrice": 79999,
+    "durations": "5 Days / 4 Nights",
+    "groupSize": "2-4",
+    "description": "South Goa's untouched beaches meet 5-star indulgence. Pool villa at a boutique heritage resort, private yacht cruise, sommelier-guided cocktail hour, Goan spice wine tasting, and dawn yoga on the shore.",
+    "images": "https://res.cloudinary.com/demo/image/upload/goa_luxury.jpg",
+    "imagePublicId": "goa_luxury",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/goa_lux_1.jpg", "caption": "Private pool villa", "publicId": "goa_lux_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/goa_lux_2.jpg", "caption": "Yacht cruise", "publicId": "goa_lux_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrival", "description": "Private transfer, pool villa check-in, cocktail hour, fine dining dinner.", "meals": "Welcome cocktails, Dinner" },
+      { "day": 2, "title": "Private Yacht Day", "description": "All-day private yacht cruise – snorkelling, dolphin watching, seafood on board.", "meals": "Breakfast, Seafood lunch on yacht, Dinner" },
+      { "day": 3, "title": "Heritage Goa", "description": "Private Old Goa heritage tour, Goa Velha, afternoon Portuguese cuisine workshop.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 4, "title": "Spice Estate & Spa", "description": "Exclusive spice estate visit with plantation lunch, luxury spa afternoon.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 5, "title": "Beach Yoga & Departure", "description": "Sunrise beach yoga, final farm-to-table breakfast, private transfer.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Boutique pool villa", "Meals as mentioned", "Private yacht", "Heritage private tour", "Spa session", "Cooking workshop", "Airport transfers in luxury vehicle"],
+      "exclusions": ["Flights", "Personal alcohol over included package", "Shopping"]
+    },
+    "highlights": ["Private yacht cruise with snorkelling", "Portuguese cuisine workshop", "Old Goa heritage private tour", "Luxury spa", "Sunrise beach yoga"],
+    "tags": ["luxury", "goa", "yacht", "pool villa", "heritage"],
+    "featured": false,
+    "active": true
+  },
+  {
+    "title": "Jim Corbett Luxury Jungle Lodge",
+    "location": "Jim Corbett, Uttarakhand",
+    "type": "luxury-tour",
+    "destination": "Jim Corbett",
+    "rating": 4.8,
+    "price": 54999,
+    "strikePrice": 69999,
+    "durations": "3 Days / 2 Nights",
+    "groupSize": "2-4",
+    "description": "India's oldest national park in ultimate comfort. Stay at a heritage jungle lodge with pool, enjoy private jeep safaris in Dhikala zone, fine dining with organic produce, and nature walks with a Corbett expert.",
+    "images": "https://res.cloudinary.com/demo/image/upload/corbett_luxury.jpg",
+    "imagePublicId": "corbett_luxury",
+    "gallery": [
+      { "img": "https://res.cloudinary.com/demo/image/upload/corbett_lux_1.jpg", "caption": "Heritage jungle lodge", "publicId": "corbett_lux_1" },
+      { "img": "https://res.cloudinary.com/demo/image/upload/corbett_lux_2.jpg", "caption": "Tiger at Dhikala", "publicId": "corbett_lux_2" }
+    ],
+    "itinerary": [
+      { "day": 1, "title": "Arrival from Delhi/Dehradun", "description": "Private cab, heritage lodge check-in, sundowner by Ramganga river.", "meals": "High tea, Dinner" },
+      { "day": 2, "title": "Dhikala Zone Safari", "description": "Pre-dawn Dhikala zone jeep safari, tiger & elephant sightings, expert naturalist commentary, evening nature walk.", "meals": "Breakfast, Lunch, Dinner" },
+      { "day": 3, "title": "Morning Safari & Departure", "description": "Dawn zone safari, organic farm-to-table breakfast, spa session, departure.", "meals": "Breakfast" }
+    ],
+    "inclExcl": {
+      "inclusions": ["Heritage lodge accommodation", "All meals & high teas", "2 private jeep safaris with naturalist", "Evening nature walk", "Spa session", "Private transfers from Delhi"],
+      "exclusions": ["Flights", "Alcohol", "Gratuities", "Personal items"]
+    },
+    "highlights": ["Dhikala zone tiger safari", "Ramganga river sundowner", "Expert naturalist guide", "Farm-to-table organic dining", "Heritage lodge with pool"],
+    "tags": ["luxury", "wildlife", "jim corbett", "tiger", "jungle lodge"],
+    "featured": true,
+    "active": true
+  }
+]
