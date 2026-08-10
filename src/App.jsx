@@ -1,5 +1,9 @@
 import React, { Suspense, lazy } from "react";
+<<<<<<< HEAD
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+=======
+import { Routes, Route, Navigate } from "react-router-dom";
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
 import "./App.css";
 
 import Services from "./Pages/Services.jsx";
@@ -35,6 +39,7 @@ import SearchPage from "./Pages/Hotel/Staysearch.jsx";
 import StayListPage from "./Pages/Hotel/Staylistpage.jsx";
 import HotelDetailsPage from "./Pages/Hotel/Hoteldetailspage.jsx";
 import BookingPage from "./Pages/Hotel/Booking.jsx";
+<<<<<<< HEAD
 
 /* Admin Panel */
 import AdminLogin from "./Pages/Admin/Login/AdminLogin.jsx";
@@ -66,14 +71,19 @@ const BlogPost = lazy(() => import("./Pages/Blog/BlogPost.jsx"));
 const AgentPortal = lazy(() => import("./Pages/AgentPortal/AgentPortal.jsx"));
 const LoyaltyPage = lazy(() => import("./Pages/Loyalty/LoyaltyPage.jsx"));
 const GiftCardPurchase = lazy(() => import("./Pages/GiftCards/GiftCardPurchase.jsx"));
+=======
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
 /* Lazy Pages */
 const HomePage = lazy(() => import("./Pages/HomePage.jsx"));
 const Maharashtra = lazy(() => import("./Pages/Domestic/Maharashtra"));
 
 const App = () => {
+<<<<<<< HEAD
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith("/admin");
 
+=======
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
   return (
     <>
       {/* <Header /> */}
@@ -136,6 +146,7 @@ const App = () => {
               element={<HotelDetailsPage />}
             />
             <Route path="/booking" element={<BookingPage />} />
+<<<<<<< HEAD
             <Route path="/checkout/:packageId" element={<Checkout />} />
             <Route path="/my-trip/:bookingId" element={<TripWallet />} />
             <Route path="/blog" element={<BlogList />} />
@@ -293,13 +304,18 @@ const App = () => {
                 }
               />
             </Route>
+=======
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
 
             {/* 404 */}
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         </Suspense>
       </PackageProvider>
+<<<<<<< HEAD
       {!isAdminRoute && <WhatsAppButton />}
+=======
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
     </>
   );
 };

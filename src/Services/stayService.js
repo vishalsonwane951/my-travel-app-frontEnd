@@ -20,6 +20,7 @@
    x-rapidapi-key, Content-Type
 ------------------------------------------------------------------- */
 
+<<<<<<< HEAD
 /* ------------------------------------------------------------------
    STAY SERVICE
    Handles all API communication for stay/hotel search & booking flow.
@@ -39,6 +40,8 @@
    Hoteldetailspage.jsx, Booking.jsx, Staysearch.jsx) needed to change.
 ------------------------------------------------------------------- */
 
+=======
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
 export const getBestDeals = async () => {
   return {
     list: [],
@@ -52,12 +55,43 @@ export const getOffers = async () => {
 };
 
 /* ------------------------------------------------------------------
+<<<<<<< HEAD
    BACKEND PROXY CONFIG
 ------------------------------------------------------------------- */
 const BACKEND_BASE_URL = "http://localhost:5000/api/hotels";
 
 async function backendGet(path, params = {}) {
   const url = new URL(`${BACKEND_BASE_URL}${path}`);
+=======
+   PROVIDER CONFIG — Xeni's Wholesale Rate Hotel Booking (RapidAPI)
+------------------------------------------------------------------- */
+console.log('RAPIDAPI_KEY',import.meta.env.VITE_RAPIDAPI_KEY);
+
+// TODO: confirm exact value from the RapidAPI playground's code snippet /
+// x-rapidapi-host header. Placeholder follows this API's slug naming
+// convention but has NOT been confirmed against a real request yet.
+const RAPIDAPI_HOST = "xenis-wholesale-rate-hotel-booking.p.rapidapi.com";
+const RAPIDAPI_KEY = import.meta.env.VITE_RAPIDAPI_KEY;
+const BASE_URL = `https://${RAPIDAPI_HOST}`;
+const AUTOCOMPLETE_PATH = "/api/hotels/api/v2/autocomplete";
+
+const SEARCH_HOTELS_PATH = "/api/hotels/api/v2/properties";
+
+const CHECK_AVAILABILITY_PATH = "/api/hotels/api/v2/properties/availability";
+
+const PROPERTY_DETAILS_PATH = "/api/hotels/api/v2/property";
+
+const PRICE_CONFIRMATION_PATH = "/api/hotels/api/v2/properties/price";
+
+const CREATE_BOOKING_PATH = "/api/hotels/api/v2/bookings";
+
+const BOOKING_DETAIL_PATH = "/api/hotels/api/v2/bookings";
+
+  //  Internal fetch helpers
+async function apiGet(path, params = {}) {
+  const url = new URL(`${BASE_URL}${path}`);
+
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
   Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== "") {
       url.searchParams.set(key, value);
@@ -66,33 +100,72 @@ async function backendGet(path, params = {}) {
 
   const response = await fetch(url.toString(), {
     method: "GET",
+<<<<<<< HEAD
     headers: { "Content-Type": "application/json" },
   });
 
   if (!response.ok) {
     const body = await response.json().catch(() => ({}));
     throw new Error(body.message || `Request failed [${path}] with status ${response.status}`);
+=======
+    headers: {
+      "x-rapidapi-host": RAPIDAPI_HOST,
+      "x-rapidapi-key": RAPIDAPI_KEY,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Request failed [${path}] with status ${response.status}`);
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
   }
 
   return response.json();
 }
 
+<<<<<<< HEAD
 async function backendPost(path, body = {}) {
   const response = await fetch(`${BACKEND_BASE_URL}${path}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+=======
+async function apiPost(path, { params = {}, body = {} } = {}) {
+  const url = new URL(`${BASE_URL}${path}`);
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
+      url.searchParams.set(key, value);
+    }
+  });
+
+  const response = await fetch(url.toString(), {
+    method: "POST",
+    headers: {
+      "x-rapidapi-host": RAPIDAPI_HOST,
+      "x-rapidapi-key": RAPIDAPI_KEY,
+      "Content-Type": "application/json",
+    },
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
     body: JSON.stringify(body),
   });
 
   if (!response.ok) {
+<<<<<<< HEAD
     const errBody = await response.json().catch(() => ({}));
     throw new Error(errBody.message || `Request failed [${path}] with status ${response.status}`);
+=======
+    throw new Error(`Request failed [${path}] with status ${response.status}`);
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
   }
 
   return response.json();
 }
 
+<<<<<<< HEAD
   //  1. AUTOCOMPLETE
+=======
+  //  1. AUTOCOMPLETE  (path unconfirmed, see TODO above)
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
    
 const PLACE_TYPES = new Set([
   "State",
@@ -107,7 +180,11 @@ const PLACE_TYPES = new Set([
  * @returns {Promise<{ list: Array }>}
  */
 export async function searchRegions({ query }) {
+<<<<<<< HEAD
   const json = await backendGet("/autocomplete", { query });
+=======
+  const json = await apiGet(AUTOCOMPLETE_PATH, { key: query });
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
 
   const raw = json?.data || [];
 
@@ -130,7 +207,11 @@ export async function searchRegions({ query }) {
   return { list };
 }
 
+<<<<<<< HEAD
   //  2. SEARCH HOTELS
+=======
+  //  2. SEARCH HOTELS  (path CONFIRMED)
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
 /**
  * @param {{ placeId: string, checkIn: string, checkOut: string, adults?: number, children?: number, childrenAges?: number[], countryOfResidence?: string, page?: number, limit?: number }} params
  * @returns {Promise<{ list: Array, total: number }>}
@@ -146,6 +227,7 @@ export async function searchStays({
   page = 1,
   limit = 20,
 }) {
+<<<<<<< HEAD
   const json = await backendPost("/search", {
     placeId,
     checkIn,
@@ -156,6 +238,17 @@ export async function searchStays({
     countryOfResidence,
     page,
     limit,
+=======
+  const json = await apiPost(SEARCH_HOTELS_PATH, {
+    params: { page, limit },
+    body: {
+      place_id: placeId,
+      checkin_date: checkIn,
+      checkout_date: checkOut,
+      occupancy: [{ adults, children, childrenAges }],
+      country_of_residence: countryOfResidence,
+    },
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
   });
 
   return {
@@ -227,7 +320,11 @@ export function normalizeStayCard(p = {}) {
   };
 }
 
+<<<<<<< HEAD
   //  3. CHECK AVAILABILITY  (not cached — transactional)
+=======
+  //  3. CHECK AVAILABILITY  (path CONFIRMED)
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
 
 /**
  * @param {{ placeId: string, propertyId: string, checkIn: string, checkOut: string, adults?: number, children?: number, childrenAges?: number[], countryOfResidence?: string }} params
@@ -243,6 +340,7 @@ export async function getHotelRooms({
   childrenAges = [],
   countryOfResidence = "IN",
 }) {
+<<<<<<< HEAD
   const json = await backendPost("/availability", {
     placeId,
     propertyId,
@@ -252,6 +350,17 @@ export async function getHotelRooms({
     children,
     childrenAges,
     countryOfResidence,
+=======
+  const json = await apiPost(CHECK_AVAILABILITY_PATH, {
+    body: {
+      place_id: placeId,
+      property_id: propertyId,
+      checkin_date: checkIn,
+      checkout_date: checkOut,
+      occupancy: [{ adults, children, childrenAges }],
+      country_of_residence: countryOfResidence,
+    },
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
   });
 
   const rooms = json?.data || [];
@@ -401,7 +510,11 @@ export function normalizePropertyDetails(d = {}) {
  * @returns {Promise<{ details: Object }>}
  */
 export async function getPropertyDetails({ propertyId }) {
+<<<<<<< HEAD
   const json = await backendGet(`/property/${propertyId}`);
+=======
+  const json = await apiGet(`${PROPERTY_DETAILS_PATH}/${propertyId}`);
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
 
   return { details: normalizePropertyDetails(json?.data) };
 }
@@ -476,7 +589,13 @@ export function normalizePriceConfirmation(d = {}) {
  * @returns {Promise<{ confirmation: Object }>}
  */
 export async function getPriceConfirmation({ availabilityToken }) {
+<<<<<<< HEAD
   const json = await backendPost("/price-confirmation", { availabilityToken });
+=======
+  const json = await apiPost(PRICE_CONFIRMATION_PATH, {
+    body: { availability_token: availabilityToken },
+  });
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
 
   return { confirmation: normalizePriceConfirmation(json?.data) };
 }
@@ -503,11 +622,28 @@ function firstDefined(obj, keys) {
  * @returns {Promise<{ raw: Object, bookingId: string|undefined, status: string|undefined }>}
  */
 export async function createBooking({ pricingToken, email, phone, rooms }) {
+<<<<<<< HEAD
   const json = await backendPost("/bookings", {
     pricingToken,
     email,
     phone,
     rooms,
+=======
+  const json = await apiPost(CREATE_BOOKING_PATH, {
+    body: {
+      pricing_token: pricingToken,
+      email,
+      phone: {
+        country_code: phone?.countryCode,
+        number: phone?.number,
+      },
+      rooms: (rooms || []).map((r) => ({
+        title: r.title,
+        first_name: r.firstName,
+        last_name: r.lastName,
+      })),
+    },
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
   });
 
   const container = json?.data || json || {};
@@ -519,7 +655,11 @@ export async function createBooking({ pricingToken, email, phone, rooms }) {
   };
 }
 
+<<<<<<< HEAD
   //  7. GET BOOKING DETAIL
+=======
+  //  7. GET BOOKING DETAIL  (path NOT CONFIRMED — see BOOKING_DETAIL_PATH
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
 const BOOKING_DETAIL_STATUS_KEYS = ["status", "booking_status"];
 const BOOKING_DETAIL_CHECKIN_KEYS = ["checkin_date", "check_in_date"];
 const BOOKING_DETAIL_CHECKOUT_KEYS = ["checkout_date", "check_out_date"];
@@ -553,7 +693,11 @@ export function normalizeBookingDetail(json = {}) {
  * @returns {Promise<Object>} normalized booking detail (see normalizeBookingDetail)
  */
 export async function getBookingDetail({ bookingId }) {
+<<<<<<< HEAD
   const json = await backendGet(`/bookings/${bookingId}`);
+=======
+  const json = await apiGet(`${BOOKING_DETAIL_PATH}/${bookingId}`);
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
 
   return normalizeBookingDetail(json);
 }

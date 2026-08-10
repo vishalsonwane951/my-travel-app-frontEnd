@@ -1,5 +1,10 @@
 import { useState } from "react";
+<<<<<<< HEAD
 import api from "../utils/api.js";
+=======
+
+const DUMMY_API = "https://jsonplaceholder.typicode.com/posts";
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
 
 export default function NewsletterSubscribe() {
   const [email, setEmail] = useState("");
@@ -17,10 +22,22 @@ export default function NewsletterSubscribe() {
     setStatus("loading");
     setErrorMsg("");
     try {
+<<<<<<< HEAD
       await api.post("/content/newsletter/subscribe", { email });
       setStatus("success");
     } catch (err) {
       setErrorMsg(err.response?.data?.message || "Something went wrong. Please try again.");
+=======
+      const res = await fetch(DUMMY_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (!res.ok) throw new Error("Request failed");
+      setStatus("success");
+    } catch {
+      setErrorMsg("Something went wrong. Please try again.");
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
       setStatus("error");
     }
   };

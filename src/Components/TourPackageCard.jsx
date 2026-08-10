@@ -3,11 +3,16 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {
   FaMapMarkerAlt, FaClock, FaUsers, FaStar, FaHeart,
+<<<<<<< HEAD
   FaRegHeart, FaArrowRight, FaShieldAlt, FaUtensils,
+=======
+  FaRegHeart, FaArrowRight, FaBolt, FaShieldAlt, FaUtensils,
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
   FaRedoAlt, FaCreditCard
 } from 'react-icons/fa';
 
 // ── Simulated live data hooks ─────────────────────────────────────────────────
+<<<<<<< HEAD
 
 // Package.seatsLeft is now a real field returned by the backend
 // (Backend/Models/PackagesModel.js) and decremented on each confirmed
@@ -17,6 +22,58 @@ const useLiveSeats = (initialSeats) => {
   return typeof initialSeats === 'number' ? initialSeats : null;
 };
 
+=======
+const useWeatherSim = (location) => {
+  const [weather, setWeather] = useState(null);
+  useEffect(() => {
+    const weathers = [
+      { icon: '☀️', temp: Math.floor(22 + Math.random() * 15), desc: 'Sunny', color: '#FF9F1C' },
+      { icon: '⛅', temp: Math.floor(18 + Math.random() * 10), desc: 'Partly Cloudy', color: '#5BC0EB' },
+      { icon: '🌧️', temp: Math.floor(15 + Math.random() * 8), desc: 'Light Rain', color: '#7091E6' },
+      { icon: '❄️', temp: Math.floor(-2 + Math.random() * 12), desc: 'Snow', color: '#A8D8EA' },
+    ];
+    const seed = (location?.charCodeAt(0) || 0) % weathers.length;
+    setTimeout(() => setWeather(weathers[seed]), 600 + Math.random() * 400);
+  }, [location]);
+  return weather;
+};
+
+const useLiveSeats = (initialSeats) => {
+  const [seats, setSeats] = useState(initialSeats || Math.floor(5 + Math.random() * 20));
+  useEffect(() => {
+    if (seats <= 0) return;
+    const chance = Math.random();
+    if (chance > 0.7) {
+      const t = setTimeout(() => {
+        setSeats(s => Math.max(0, s - 1));
+      }, 15000 + Math.random() * 30000);
+      return () => clearTimeout(t);
+    }
+  }, [seats]);
+  return seats;
+};
+
+const useCountdownPrice = (basePrice) => {
+  const [timeLeft, setTimeLeft] = useState({ h: 4, m: 23, s: 41 });
+  const [isFlashing, setIsFlashing] = useState(false);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeLeft(prev => {
+        let { h, m, s } = prev;
+        s--;
+        if (s < 0) { s = 59; m--; }
+        if (m < 0) { m = 59; h--; }
+        if (h < 0) return { h: 23, m: 59, s: 59 };
+        if (s === 0 && m % 5 === 0) setIsFlashing(true);
+        setTimeout(() => setIsFlashing(false), 800);
+        return { h, m, s };
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+  return { timeLeft, isFlashing };
+};
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
 
 // ── Theme config ──────────────────────────────────────────────────────────────
 const THEMES = {
@@ -45,6 +102,7 @@ const TourPackageCard = ({ pkg, themeColor = 'default', index = 0, onWishlistCha
   const themeKey = tourType?.includes('-') ? tourType : `${tourType}-tour`;
   const theme = THEMES[themeKey] || THEMES[tourType] || THEMES.default;
 
+<<<<<<< HEAD
   const seatsLeft = useLiveSeats(pkg?.seatsLeft);
 
   const seatsKnown = typeof seatsLeft === 'number';
@@ -52,6 +110,16 @@ const TourPackageCard = ({ pkg, themeColor = 'default', index = 0, onWishlistCha
   const isLow = seatsKnown && seatsLeft <= 12 && seatsLeft > 5;
   const seatsColor = isUrgent ? '#E24B4A' : isLow ? '#EF9F27' : '#4CAF50';
   const seatsFill = seatsKnown ? Math.min(100, ((30 - seatsLeft) / 30) * 100) : 0;
+=======
+  const weather = useWeatherSim(pkg?.location);
+  const seatsLeft = useLiveSeats(pkg?.seatsLeft);
+  const { timeLeft, isFlashing } = useCountdownPrice(pkg?.price);
+
+  const isUrgent = seatsLeft <= 5;
+  const isLow = seatsLeft <= 12 && seatsLeft > 5;
+  const seatsColor = isUrgent ? '#E24B4A' : isLow ? '#EF9F27' : '#4CAF50';
+  const seatsFill = Math.min(100, ((30 - seatsLeft) / 30) * 100);
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
 
   const firstDuration = pkg?.durations?.[0] || {};
   const originalPrice = firstDuration.price || pkg?.price || 4999;
@@ -473,6 +541,17 @@ const TourPackageCard = ({ pkg, themeColor = 'default', index = 0, onWishlistCha
               <FaMapMarkerAlt size={11} />
               <span>{locationDisplay}</span>
             </div>
+<<<<<<< HEAD
+=======
+
+            {/* Bottom-right: weather */}
+            {weather && (
+              <div className="tc-weather show">
+                <span>{weather.icon}</span>
+                <span>{weather.temp}°C · {weather.desc}</span>
+              </div>
+            )}
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
           </div>
 
           {/* ── Body ── */}
@@ -508,8 +587,13 @@ const TourPackageCard = ({ pkg, themeColor = 'default', index = 0, onWishlistCha
 
             <hr className="tc-divider" />
 
+<<<<<<< HEAD
             {/* Seats bar — now driven by real Package.seatsLeft (Part C) */}
             {!pkg?.soldOut && seatsKnown && (
+=======
+            {/* Seats bar */}
+            {/* {!pkg?.soldOut && (
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
               <div className="tc-seats">
                 <div className="tc-seats-row">
                   <span className="tc-seats-label">
@@ -526,6 +610,20 @@ const TourPackageCard = ({ pkg, themeColor = 'default', index = 0, onWishlistCha
                   <div className="tc-fill" style={{ width: `${seatsFill}%`, background: seatsColor }} />
                 </div>
               </div>
+<<<<<<< HEAD
+=======
+            )} */}
+
+            {/* Countdown */}
+            {(isUrgent || discountPct) && (
+              <div className={`tc-timer ${isFlashing ? 'flash' : ''}`}>
+                <FaBolt size={11} className="tc-timer-icon" />
+                <span className="tc-timer-label">Price goes up in</span>
+                <span className="tc-timer-digits">
+                  {String(timeLeft.h).padStart(2,'0')}:{String(timeLeft.m).padStart(2,'0')}:{String(timeLeft.s).padStart(2,'0')}
+                </span>
+              </div>
+>>>>>>> 26735bd518f50108e31c192ffdf5dc9e20e7f788
             )}
 
             {/* Star rating row */}
