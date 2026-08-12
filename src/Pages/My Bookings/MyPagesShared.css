@@ -1,0 +1,59 @@
+.mp-page { max-width: 1000px; margin: 0 auto; padding: 40px 20px 80px; font-family: 'Segoe UI', Arial, sans-serif; }
+.mp-center { text-align: center; padding: 100px 20px; }
+.mp-center a { color: #4f7cff; font-weight: 600; }
+
+.mp-header { margin-bottom: 24px; }
+.mp-header h1 { margin: 0 0 6px; font-size: 30px; color: #1a1f36; }
+.mp-sub { color: #6b7280; margin: 0; }
+
+.mp-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+.mp-filter-chip {
+  padding: 7px 16px; border-radius: 20px; border: 1px solid #dcdfe8; background: #fff;
+  color: #555; font-size: 13.5px; cursor: pointer; transition: all .15s;
+}
+.mp-filter-chip:hover { border-color: #4f7cff; color: #4f7cff; }
+.mp-filter-chip.active { background: #4f7cff; border-color: #4f7cff; color: #fff; font-weight: 600; }
+
+.mp-loading, .mp-error { text-align: center; padding: 40px 20px; color: #888; }
+.mp-error { color: #a12626; }
+
+.mp-empty { text-align: center; padding: 60px 20px; background: #f9fafc; border-radius: 14px; }
+.mp-empty-icon { font-size: 44px; margin-bottom: 10px; }
+.mp-empty h3 { margin: 0 0 8px; color: #333; }
+.mp-empty p { color: #888; margin: 0 0 20px; }
+.mp-cta {
+  display: inline-block; background: #4f7cff; color: #fff; padding: 10px 26px;
+  border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px;
+}
+
+.mp-list { display: flex; flex-direction: column; gap: 14px; }
+.mp-card {
+  display: flex; justify-content: space-between; gap: 20px; background: #fff;
+  border: 1px solid #eee; border-radius: 14px; padding: 20px 24px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.mp-card-main { flex: 1; min-width: 0; }
+.mp-card-title-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.mp-card-title-row h3 { margin: 0; font-size: 18px; color: #1a1f36; }
+.mp-card-sub { color: #888; margin: 4px 0 10px; font-size: 14px; }
+.mp-card-meta { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: #666; }
+.mp-card-message { margin: 10px 0 0; font-style: italic; color: #777; font-size: 13.5px; }
+
+.mp-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+
+.mp-card-side { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 10px; flex-shrink: 0; }
+.mp-price { font-size: 20px; font-weight: 800; color: #1a1f36; }
+.mp-link-btn {
+  background: #4f7cff; color: #fff; padding: 7px 18px; border-radius: 8px;
+  text-decoration: none; font-size: 13px; font-weight: 600;
+}
+.mp-email-status { font-size: 11.5px; color: #999; }
+
+.mp-wishlist-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;
+}
+
+@media (max-width: 600px) {
+  .mp-card { flex-direction: column; align-items: flex-start; }
+  .mp-card-side { align-items: flex-start; flex-direction: row; width: 100%; justify-content: space-between; }
+}

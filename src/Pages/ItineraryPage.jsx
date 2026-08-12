@@ -852,6 +852,10 @@ export default function ItineraryPage() {
   const [enquiryLoading, setEnquiryLoading] = useState(false);
   const [enquiryDone, setEnquiryDone] = useState(false);
   const [enquiryError, setEnquiryError] = useState(null);
+  const [availableCoupons, setAvailableCoupons] = useState([]);
+  const [couponCode, setCouponCode] = useState("");
+  const [couponResult, setCouponResult] = useState(null); // { discount, code, message } | null
+  const [couponChecking, setCouponChecking] = useState(false);
   const [enquiryForm, setEnquiryForm] = useState({
     fullName: "",
     email: "",
@@ -1189,10 +1193,32 @@ export default function ItineraryPage() {
     }));
     setEnquiryDone(false);
     setEnquiryError(null);
+    setCouponCode("");
+    setCouponResult(null);
+    api.get("/content/coupons/active")
+      .then((res) => setAvailableCoupons(res.data?.coupons || []))
+      .catch(() => setAvailableCoupons([]));
     if (user) {
       setEnquiryOpen(true);
     }
   }, [user, navigate, travelDate, travelers, locationTitle]);
+
+  const checkCoupon = useCallback(async (codeToCheck) => {
+    const code = (codeToCheck || couponCode).trim().toUpperCase();
+    if (!code) return;
+    setCouponChecking(true);
+    setCouponResult(null);
+    try {
+      const bookingAmount = livePrice * (enquiryForm.adults || 1);
+      const { data } = await api.post("/content/coupons/validate", { code, bookingAmount });
+      setCouponResult({ code, discount: data.discount, message: null });
+      setCouponCode(code);
+    } catch (err) {
+      setCouponResult({ code, discount: 0, message: err?.response?.data?.message || "Invalid coupon code." });
+    } finally {
+      setCouponChecking(false);
+    }
+  }, [couponCode, livePrice, enquiryForm.adults]);
 
   const handleEnquirySubmit = useCallback(
     async (e) => {
@@ -1246,6 +1272,7 @@ export default function ItineraryPage() {
         },
         travelDate: enquiryForm.travelDate,
         notes: enquiryForm.notes,
+        couponCode: couponResult && !couponResult.message ? couponResult.code : undefined,
         enquiryDate: new Date().toISOString(),
         source: "ItineraryPage",
         pageUrl: window.location.href,
@@ -1281,6 +1308,7 @@ export default function ItineraryPage() {
       livePrice,
       user,
       groupSizeDisplay,
+      couponResult,
     ],
   );
 
@@ -3259,17 +3287,97 @@ export default function ItineraryPage() {
                           className="fw-bold"
                           style={{ fontSize: ".82rem", color: BRAND.bodyText }}
                         >
-                          Quoted Total
+                          {couponResult && !couponResult.message ? "Quoted Total (before discount)" : "Quoted Total"}
                         </span>
                         <span
                           className="font-serif fw-bold"
-                          style={{ fontSize: "1.45rem", color: BRAND.primary }}
+                          style={{
+                            fontSize: couponResult && !couponResult.message ? "1.1rem" : "1.45rem",
+                            color: couponResult && !couponResult.message ? BRAND.meta : BRAND.primary,
+                            textDecoration: couponResult && !couponResult.message ? "line-through" : "none",
+                          }}
                         >
                           ₹{(livePrice * enquiryForm.adults).toLocaleString()}
                         </span>
                       </div>
                     )}
+                    {couponResult && !couponResult.message && (
+                      <>
+                        <div className="d-flex justify-content-between align-items-center" style={{ fontSize: ".82rem", color: "#1a7a37" }}>
+                          <span>Coupon ({couponResult.code}) applied</span>
+                          <span className="fw-semibold">-₹{couponResult.discount.toLocaleString()}</span>
+                        </div>
+                        <div className="d-flex justify-content-between align-items-center pt-1">
+                          <span className="fw-bold" style={{ fontSize: ".82rem", color: BRAND.bodyText }}>Final Total</span>
+                          <span className="font-serif fw-bold" style={{ fontSize: "1.45rem", color: BRAND.primary }}>
+                            ₹{Math.max(0, livePrice * enquiryForm.adults - couponResult.discount).toLocaleString()}
+                          </span>
+                        </div>
+                      </>
+                    )}
                   </div>
+
+                  {/* ── Offers & Coupon Code ── */}
+                  <div
+                    className="rounded-3 p-3 mb-4"
+                    style={{ background: "#fff8e6", border: "1px solid #ffe4a1" }}
+                  >
+                    <div className="fw-bold mb-2" style={{ fontSize: ".92rem", color: BRAND.charcoal }}>
+                      🎟️ Offers & Coupons
+                    </div>
+
+                    {availableCoupons.length > 0 && (
+                      <div className="d-flex flex-wrap gap-2 mb-3">
+                        {availableCoupons.map((c) => (
+                          <button
+                            key={c._id || c.code}
+                            type="button"
+                            onClick={() => checkCoupon(c.code)}
+                            disabled={couponChecking}
+                            style={{
+                              border: `1.5px dashed ${couponResult?.code === c.code && !couponResult?.message ? "#1a7a37" : "#d97706"}`,
+                              background: couponResult?.code === c.code && !couponResult?.message ? "#eaffef" : "#fff",
+                              color: couponResult?.code === c.code && !couponResult?.message ? "#1a7a37" : "#d97706",
+                              borderRadius: 8,
+                              padding: "5px 10px",
+                              fontSize: ".76rem",
+                              fontWeight: 700,
+                              cursor: "pointer",
+                            }}
+                          >
+                            {c.code} — {c.discountType === "percent" ? `${c.discountValue}% OFF` : `₹${c.discountValue} OFF`}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="d-flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="Enter coupon code"
+                        value={couponCode}
+                        onChange={(e) => { setCouponCode(e.target.value.toUpperCase()); setCouponResult(null); }}
+                        className="form-control"
+                        style={{ fontSize: ".85rem" }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => checkCoupon()}
+                        disabled={!couponCode.trim() || couponChecking}
+                        style={{
+                          background: BRAND.primary, color: "#fff", border: "none",
+                          borderRadius: 8, padding: "0 18px", fontSize: ".82rem", fontWeight: 600,
+                          cursor: "pointer", whiteSpace: "nowrap",
+                        }}
+                      >
+                        {couponChecking ? "Checking…" : "Apply"}
+                      </button>
+                    </div>
+                    {couponResult?.message && (
+                      <div style={{ color: "#c62828", fontSize: ".78rem", marginTop: 6 }}>{couponResult.message}</div>
+                    )}
+                  </div>
+
                   {enquiryError && (
                     <div
                       className="rounded-3 p-3 mb-3"

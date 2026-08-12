@@ -159,6 +159,7 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  // console.log('user',user)
   const [token, setToken] = useState(localStorage.getItem("token") || null);
 
 
@@ -200,10 +201,13 @@ const updateUser = (updates) => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
   };
+      console.log('user',user)
 
   return (
     <AuthContext.Provider value={{ user, token, login, logout, updateUser }}>
       {children}
+      
     </AuthContext.Provider>
+    
   );
 };

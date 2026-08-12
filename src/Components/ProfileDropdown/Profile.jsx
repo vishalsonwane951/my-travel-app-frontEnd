@@ -335,7 +335,8 @@ export const OverviewTab = ({ user, stats, onTabChange }) => {
 /* ══════════════════════════════════════════════════════════════════════
    TAB: MY TRIPS
 ══════════════════════════════════════════════════════════════════════ */
-export const BookingsTab = ({ user, token }) => {
+export const BookingsTab = (user, token) => {
+  console.log('userr',user)
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState(null);
@@ -684,7 +685,9 @@ export const BookingsTab = ({ user, token }) => {
 /* ══════════════════════════════════════════════════════════════════════
    TAB: ENQUIRIES
 ══════════════════════════════════════════════════════════════════════ */
-export const EnquiriesTab = ({ user, token }) => {
+export const EnquiriesTab = ( ) => {
+    const { user, logout, token } = useContext(AuthContext);
+  console.log('userenq',user)
   const [enquiries, setEnquiries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState(null);
@@ -1462,10 +1465,10 @@ export const SavedTab = ({ user, token }) => {
     (async () => {
       try {
         const tk = token || localStorage.getItem("token");
-        const res = await api.get(`/favourites/${user._id}`, {
+        const res = await api.get(`/favourites/my-wishlist/packages`, {
           headers: { Authorization: `Bearer ${tk}` },
         });
-        setFavs(Array.isArray(res.data) ? res.data : []);
+        setFavs(Array.isArray(res.data?.packages) ? res.data.packages : []);
       } catch (e) {
         console.error(e);
         setFavs([]);
@@ -1478,7 +1481,10 @@ export const SavedTab = ({ user, token }) => {
   const handleRemove = async (id) => {
     try {
       const tk = token || localStorage.getItem("token");
-      await api.delete(`/favourites/remove/${id}`, {
+      // There's no separate "remove" endpoint — the same toggle endpoint the
+      // heart button uses handles both add and remove (it's already liked,
+      // so this call removes it).
+      await api.put(`/favourites/package/${id}/toggle`, {}, {
         headers: { Authorization: `Bearer ${tk}` },
       });
       setFavs((p) => p.filter((f) => f._id !== id && f.id !== id));
@@ -1584,9 +1590,9 @@ export const SavedTab = ({ user, token }) => {
             }
             onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
           >
-            {pkg.img ? (
+            {pkg.images ? (
               <img
-                src={pkg.img}
+                src={pkg.images}
                 alt={pkg.title}
                 style={{
                   width: 58,
@@ -1634,9 +1640,9 @@ export const SavedTab = ({ user, token }) => {
                   marginBottom: 5,
                 }}
               >
-                {pkg.category || "Travel Package"}
+                {pkg.type || "Travel Package"}
                 {pkg.rating ? ` · ⭐ ${pkg.rating}` : ""}
-                {pkg.duration ? ` · ${pkg.duration} days` : ""}
+                {pkg.durations?.[0] ? ` · ${pkg.durations[0]}` : ""}
               </div>
               <div
                 style={{
@@ -1980,10 +1986,9 @@ export const useStats = (user, token) => {
     const tk = token || localStorage.getItem("token");
     const headers = { Authorization: `Bearer ${tk}` };
     Promise.allSettled([
-      // api.get(user.isAdmin ? "/bookings/confirmed" : "/bookings/confirmed-user", { headers }),
-      // api.get(user.isAdmin ? "/bookings" : `/bookings/user/${user._id}`, { headers }),
-      api.get(`/favourites/${user._id}`, { headers }),
-      console.log("useeId", user._id),
+      api.get("/bookings/mine", { headers }),
+      api.get("/inquiry/mine", { headers }),
+      api.get("/favourites/my-wishlist/package-ids", { headers }),
     ]).then(([b, e, f]) => {
       setStats({
         bookings:
@@ -1992,11 +1997,11 @@ export const useStats = (user, token) => {
             : 0,
         enquiries:
           e.status === "fulfilled" && e.value.data.success
-            ? (e.value.data.bookings || []).length
+            ? (e.value.data.inquiries || []).length
             : 0,
         saved:
-          f.status === "fulfilled" && Array.isArray(f.value.data)
-            ? f.value.data.length
+          f.status === "fulfilled" && f.value.data.success
+            ? (f.value.data.ids || []).length
             : 0,
       });
     });
@@ -2030,6 +2035,9 @@ export const Profile = ({ onClose }) => {
 
   /* switch-based render guarantees React re-mounts on tab change */
   const renderTab = () => {
+      const { user, logout, token } = useContext(AuthContext);
+      console.log('userrenderTab',user)
+
     switch (activeTab) {
       case "bookings":
         return <BookingsTab user={user} token={token} />;

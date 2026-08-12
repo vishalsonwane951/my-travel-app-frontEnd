@@ -3,9 +3,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {
   FaMapMarkerAlt, FaClock, FaUsers, FaStar, FaHeart,
-  FaRegHeart, FaArrowRight, FaBolt, FaShieldAlt, FaUtensils,
+  FaRegHeart, FaArrowRight, FaShieldAlt, FaUtensils,
   FaRedoAlt, FaCreditCard
 } from 'react-icons/fa';
+import { useWishlist } from '../Context/WishlistContext.jsx';
 
 // ── Simulated live data hooks ─────────────────────────────────────────────────
 
@@ -17,41 +18,6 @@ const useLiveSeats = (initialSeats) => {
   return typeof initialSeats === 'number' ? initialSeats : null;
 };
 
-const useWeatherSim = (location) => {
-  const [weather, setWeather] = useState(null);
-  useEffect(() => {
-    const weathers = [
-      { icon: '☀️', temp: Math.floor(22 + Math.random() * 15), desc: 'Sunny', color: '#FF9F1C' },
-      { icon: '⛅', temp: Math.floor(18 + Math.random() * 10), desc: 'Partly Cloudy', color: '#5BC0EB' },
-      { icon: '🌧️', temp: Math.floor(15 + Math.random() * 8), desc: 'Light Rain', color: '#7091E6' },
-      { icon: '❄️', temp: Math.floor(-2 + Math.random() * 12), desc: 'Snow', color: '#A8D8EA' },
-    ];
-    const seed = (location?.charCodeAt(0) || 0) % weathers.length;
-    setTimeout(() => setWeather(weathers[seed]), 600 + Math.random() * 400);
-  }, [location]);
-  return weather;
-};
-
-const useCountdownPrice = (basePrice) => {
-  const [timeLeft, setTimeLeft] = useState({ h: 4, m: 23, s: 41 });
-  const [isFlashing, setIsFlashing] = useState(false);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeLeft(prev => {
-        let { h, m, s } = prev;
-        s--;
-        if (s < 0) { s = 59; m--; }
-        if (m < 0) { m = 59; h--; }
-        if (h < 0) return { h: 23, m: 59, s: 59 };
-        if (s === 0 && m % 5 === 0) setIsFlashing(true);
-        setTimeout(() => setIsFlashing(false), 800);
-        return { h, m, s };
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-  return { timeLeft, isFlashing };
-};
 
 // ── Theme config ──────────────────────────────────────────────────────────────
 const THEMES = {
@@ -68,10 +34,10 @@ const THEMES = {
 };
 
 const TourPackageCard = ({ pkg, themeColor = 'default', index = 0, onWishlistChange }) => {
-  const [isFavourite, setIsFavourite] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('dvd_wishlist') || '[]').includes(pkg?._id || pkg?.id); }
-    catch { return false; }
-  });
+  const packageId = pkg?._id || pkg?.id;
+  const { isLiked, toggleLike } = useWishlist();
+  const isFavourite = isLiked(packageId);
+
   const [imageError, setImageError] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
 
@@ -81,8 +47,6 @@ const TourPackageCard = ({ pkg, themeColor = 'default', index = 0, onWishlistCha
   const theme = THEMES[themeKey] || THEMES[tourType] || THEMES.default;
 
   const seatsLeft = useLiveSeats(pkg?.seatsLeft);
-  const weather = useWeatherSim(pkg?.location);
-  const { timeLeft, isFlashing } = useCountdownPrice(pkg?.price);
 
   const seatsKnown = typeof seatsLeft === 'number';
   const isUrgent = seatsKnown && seatsLeft <= 5;
@@ -98,20 +62,25 @@ const TourPackageCard = ({ pkg, themeColor = 'default', index = 0, onWishlistCha
 
   const fallbackImg = 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=600&q=80';
 
-  const toggleFavourite = useCallback((e) => {
+  const toggleFavourite = useCallback(async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    const newVal = !isFavourite;
-    setIsFavourite(newVal);
-    if (newVal) { setJustAdded(true); setTimeout(() => setJustAdded(false), 1500); }
-    try {
-      const list = JSON.parse(localStorage.getItem('dvd_wishlist') || '[]');
-      const id = pkg?._id || pkg?.id;
-      const updated = newVal ? [...list, id] : list.filter(x => x !== id);
-      localStorage.setItem('dvd_wishlist', JSON.stringify(updated));
-    } catch {}
-    onWishlistChange?.(pkg, newVal);
-  }, [isFavourite, pkg, onWishlistChange]);
+    if (!packageId) return;
+
+    const willLike = !isFavourite;
+    if (willLike) { setJustAdded(true); setTimeout(() => setJustAdded(false), 1500); }
+
+    const result = await toggleLike(packageId);
+    if (!result.ok && result.requiresLogin) {
+      // Not logged in — heart button can't persist a wishlist without an
+      // account. Let the parent page decide how to prompt (e.g. open the
+      // login modal) via onWishlistChange, rather than this card silently
+      // pretending the like was saved.
+      onWishlistChange?.(pkg, false, { requiresLogin: true });
+      return;
+    }
+    onWishlistChange?.(pkg, willLike);
+  }, [isFavourite, packageId, pkg, toggleLike, onWishlistChange]);
 
   const locationDisplay = pkg?.location
     ? pkg.location.charAt(0).toUpperCase() + pkg.location.slice(1)
@@ -510,14 +479,6 @@ const TourPackageCard = ({ pkg, themeColor = 'default', index = 0, onWishlistCha
               <FaMapMarkerAlt size={11} />
               <span>{locationDisplay}</span>
             </div>
-
-            {/* Bottom-right: weather */}
-            {weather && (
-              <div className="tc-weather show">
-                <span>{weather.icon}</span>
-                <span>{weather.temp}°C · {weather.desc}</span>
-              </div>
-            )}
           </div>
 
           {/* ── Body ── */}
@@ -527,6 +488,11 @@ const TourPackageCard = ({ pkg, themeColor = 'default', index = 0, onWishlistCha
             <h3 className="tc-title">
               {pkg?.title || pkg?.caption || 'Explore Amazing Destinations'}
             </h3>
+
+            {/* Description */}
+            {/* <p className="tc-desc">
+              {pkg?.description || pkg?.caption || 'Discover the beauty and culture with our carefully crafted tour packages.'}
+            </p> */}
 
             {/* Feature pills */}
             <div className="tc-pills">
@@ -548,7 +514,7 @@ const TourPackageCard = ({ pkg, themeColor = 'default', index = 0, onWishlistCha
 
             <hr className="tc-divider" />
 
-            {/* Seats bar — driven by real Package.seatsLeft from the backend */}
+            {/* Seats bar — now driven by real Package.seatsLeft (Part C) */}
             {!pkg?.soldOut && seatsKnown && (
               <div className="tc-seats">
                 <div className="tc-seats-row">
@@ -568,23 +534,13 @@ const TourPackageCard = ({ pkg, themeColor = 'default', index = 0, onWishlistCha
               </div>
             )}
 
-            {/* Countdown */}
-            {(isUrgent || discountPct) && (
-              <div className={`tc-timer ${isFlashing ? 'flash' : ''}`}>
-                <FaBolt size={11} className="tc-timer-icon" />
-                <span className="tc-timer-label">Price goes up in</span>
-                <span className="tc-timer-digits">
-                  {String(timeLeft.h).padStart(2,'0')}:{String(timeLeft.m).padStart(2,'0')}:{String(timeLeft.s).padStart(2,'0')}
-                </span>
-              </div>
-            )}
-
             {/* Star rating row */}
             <div className="tc-rating-row">
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <span className="tc-stars">{'★'.repeat(5)}</span>
                 <span className="tc-rating-num">{pkg?.rating || '4.8'}</span>
               </div>
+              {/* <span className="tc-reviews">({pkg?.reviews || '128'} reviews)</span> */}
             </div>
 
             <hr className="tc-divider" />
